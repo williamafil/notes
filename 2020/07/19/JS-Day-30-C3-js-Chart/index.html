@@ -5,27 +5,23 @@
   
 
   
-  <title>William&#39;s Notes</title>
+  <title>JS Day 30: C3.js Chart | William&#39;s Notes</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="William&#39;s Notes">
-<meta property="og:url" content="https://williamafil.github.io/notes/index.html">
+  <meta name="description" content="JS Day 30: C3.js Chart目標運用 axios 把 JSON 資料載入，再使用 C3.js graph 把數據呈現出來 練習https:&#x2F;&#x2F;codepen.io&#x2F;william_k&#x2F;pen&#x2F;LYGXLeV https:&#x2F;&#x2F;codepen.io&#x2F;william_k&#x2F;pen&#x2F;LYGXLeV 載入 C3.js &amp; CSS Style123456&lt;!-- CSS Style">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS Day 30: C3.js Chart">
+<meta property="og:url" content="https://williamafil.github.io/notes/2020/07/19/JS-Day-30-C3-js-Chart/index.html">
 <meta property="og:site_name" content="William&#39;s Notes">
+<meta property="og:description" content="JS Day 30: C3.js Chart目標運用 axios 把 JSON 資料載入，再使用 C3.js graph 把數據呈現出來 練習https:&#x2F;&#x2F;codepen.io&#x2F;william_k&#x2F;pen&#x2F;LYGXLeV https:&#x2F;&#x2F;codepen.io&#x2F;william_k&#x2F;pen&#x2F;LYGXLeV 載入 C3.js &amp; CSS Style123456&lt;!-- CSS Style">
 <meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://williamafil.github.io/notes/2020/07/19/JS-Day-30-C3-js-Chart/JS%20Day%2030%20C3%20js%20Chart%20596ae2ec69c04c08b18a60b77394d6dd/Screen_Shot_2020-07-18_at_11.04.51_PM.png">
+<meta property="og:image" content="https://williamafil.github.io/notes/2020/07/19/JS-Day-30-C3-js-Chart/JS%20Day%2030%20C3%20js%20Chart%20596ae2ec69c04c08b18a60b77394d6dd/Screen_Shot_2020-07-18_at_11.18.06_PM.png">
+<meta property="article:published_time" content="2020-07-18T16:05:30.000Z">
+<meta property="article:modified_time" content="2020-07-18T16:07:25.910Z">
 <meta property="article:author" content="Will Doe">
-<meta property="article:tag" content="f2e">
-<meta property="article:tag" content=" 前端">
-<meta property="article:tag" content=" 程式">
-<meta property="article:tag" content=" 後端">
-<meta property="article:tag" content=" 工程師">
-<meta property="article:tag" content=" Front-end">
-<meta property="article:tag" content=" JavaScript">
-<meta property="article:tag" content=" Ruby on Rails">
-<meta property="article:tag" content=" HTML">
-<meta property="article:tag" content=" CSS">
-<meta property="article:tag" content=" Git">
-<meta property="article:tag" content=" Vue.js">
+<meta property="article:tag" content="JSnewbie, JavaScript">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://williamafil.github.io/notes/2020/07/19/JS-Day-30-C3-js-Chart/JS%20Day%2030%20C3%20js%20Chart%20596ae2ec69c04c08b18a60b77394d6dd/Screen_Shot_2020-07-18_at_11.04.51_PM.png">
   
     <link rel="alternate" href="/notes/atom.xml" title="William&#39;s Notes" type="application/atom+xml">
   
@@ -78,9 +74,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-JS-Day-30-C3-js-Chart" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-JS-Day-30-C3-js-Chart" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/notes/2020/07/19/JS-Day-30-C3-js-Chart/" class="article-date">
   <time datetime="2020-07-18T16:05:30.000Z" itemprop="datePublished">2020-07-19</time>
@@ -93,8 +87,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/notes/2020/07/19/JS-Day-30-C3-js-Chart/">JS Day 30: C3.js Chart</a>
+    <h1 class="article-title" itemprop="name">
+      JS Day 30: C3.js Chart
     </h1>
   
 
@@ -149,60 +143,19 @@
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/notes/2020/07/18/hello-world/" class="article-date">
-  <time datetime="2020-07-18T13:02:00.740Z" itemprop="datePublished">2020-07-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/notes/2020/07/18/hello-world/">Hello World</a>
-    </h1>
+    <a href="/notes/2020/07/18/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hello World</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://williamafil.github.io/notes/2020/07/18/hello-world/" data-id="ckcruhcqg0001o43vdqcx8u1l" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
   
 </article>
-
-
-  
-
 
 </section>
         
