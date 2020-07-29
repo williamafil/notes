@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     
-    <title>Hello World | William&#39;s Notes</title>
+    <title>JS Day 36: ES6 函式參數的解構賦予值 | William&#39;s Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     
@@ -91,7 +91,7 @@
       <section class="inner">
         <section class="inner-main">
           <div class="post">
-    <article id="post-ckd7nopze0005kg3v5tftcfkm" class="article article-type-post" itemscope
+    <article id="post-ckd7nopz90001kg3v3rmn3wb1" class="article article-type-post" itemscope
     itemprop="blogPost">
 
     <div class="article-inner">
@@ -103,7 +103,7 @@
             
   
     <h1 class="article-title" itemprop="name">
-      Hello World
+      JS Day 36: ES6 函式參數的解構賦予值
     </h1>
   
 
@@ -113,11 +113,19 @@
         <div class="article-more-info article-more-info-post hairline">
 
             <div class="article-date">
-  <time datetime="2020-07-18T13:02:00.740Z" itemprop="datePublished">2020-07-18</time>
+  <time datetime="2020-07-29T17:39:11.000Z" itemprop="datePublished">2020-07-30</time>
 </div>
 
             
+            <div class="article-category">
+                <a class="article-category-link" href="/notes/categories/JavaScript/">JavaScript</a>
+            </div>
+            
 
+            
+            <div class="article-tag">
+                <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li></ul>
+            </div>
             
 
             
@@ -128,15 +136,89 @@
         </div>
 
         <div class="article-entry post-inner-html hairline" itemprop="articleBody">
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;</code></pre>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server</code></pre>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate</code></pre>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy</code></pre>
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+            <h1 id="Function-Argument-Default-函式參數預設值"><a href="#Function-Argument-Default-函式參數預設值" class="headerlink" title="Function Argument Default 函式參數預設值"></a>Function Argument Default 函式參數預設值</h1><p>在 ES6 之前傳進來的參數必須要透過判斷才可以確定有沒有存在，無法直接設定預設值。現在可以直接在參數後面定義 <code>function checkBMI(bmi = 0) { ... }</code>。</p>
+<p>範例：</p>
+<pre><code class="jsx">function funcName(foo = &#39;x&#39;, bar = &#39;y&#39;) {
+    console.log(foo, bar);
+};
+
+funcName(&#39;喔&#39;)
+// =&gt; 喔 y
+
+funcName(&#39;喔&#39;, undefined)
+// =&gt; 喔 y
+
+funcName(&#39;喔&#39;, &#39;椰&#39;)
+// =&gt; 喔 椰</code></pre>
+<pre><code class="jsx">// 如果沒有傳入參數，bmi 為 0
+function checkBMI(bmi = 0) {
+  if (bmi.value === 0) {
+    // ... 略過
+  }
+};</code></pre>
+<h1 id="Object-Destructuring-Assignment-解構賦值"><a href="#Object-Destructuring-Assignment-解構賦值" class="headerlink" title="Object Destructuring Assignment 解構賦值"></a>Object Destructuring Assignment 解構賦值</h1><pre><code class="jsx">const data = [
+  {
+    name: &#39;小傑&#39;,
+    height: 175,
+    weight: 70,
+    properties: {
+      bmi: 22.9,
+      state: &#39;理想&#39;
+    }
+  },
+  {
+    name: &#39;Daniel&#39;,
+    height: 200,
+    weight: 68,
+    properties: {
+      bmi: 17,
+      state: &#39;體重過輕&#39;
+    }
+  },
+];
+
+// for...of 迭代陣列
+// person ＝ 每筆物件
+for (const person of data) {
+  renderData(person);
+  render(person);
+};
+
+// 方法一
+function render(person) {
+    // 如果層次太多，會變得落落長一串
+  console.log(&#39;物件： &#39; + person.name, person.properties.bmi, person.properties.state);
+};
+
+// 方法二
+// 跟解構變數賦予值方式ㄧ樣
+function renderData(
+  {
+    name, 
+    height, 
+    weight, 
+    properties: { 
+      bmi: bmiValue,
+      state: stateText
+    }
+  }) {
+  console.log(&#39;物件解構： &#39; + name, bmiValue, stateText); // 變得簡潔
+};</code></pre>
+<p>解構變數賦予值</p>
+<pre><code class="jsx">const data = {
+  name: &#39;小傑&#39;,
+  height: 175,
+  weight: 70,
+  properties: {
+    bmi: 22.9,
+    state: &#39;理想&#39;
+  }
+};
+
+let { name, height, weight, properties: {bmi: bmiValue, state: stateText} } = data;
+console.log(name, bmiValue, stateText);
+</code></pre>
+<p>Reference:<br><a href="https://es6.ruanyifeng.com/#docs/function" target="_blank" rel="noopener">ECMAScript 6 入門</a><br><a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment" target="_blank" rel="noopener">解構賦值</a></p>
 
         </div>
 
@@ -161,15 +243,11 @@
     
 <nav class="article-nav">
   
-    <a href="/notes/2020/07/19/JS-Day-30-C3-js-Chart/" id="article-nav-newer" class="article-nav-link-wrap">
-      <div class="article-nav-caption">下一篇</div>
-      <div class="article-nav-title">
-        
-          JS Day 30: C3.js Chart
-        
-      </div>
-    </a>
   
+    <a href="/notes/2020/07/28/Selenium-WebDriver-with-Ruby-on-Headless-Chrome-Firefox-%E7%84%A1%E9%A0%AD%E7%88%AC%E8%9F%B2%E6%A8%A1%E5%BC%8F/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-caption">上一篇</div>
+      <div class="article-nav-title">Selenium WebDriver with Ruby on Headless Chrome/Firefox 無頭爬蟲模式</div>
+    </a>
   
 </nav>
 
@@ -177,15 +255,15 @@
     <section class="share">
         <div class="share-title">分享</div>
         <a class="share-item" target="_blank"
-            href="https://twitter.com/share?text=Hello World - William's Notes&url=https://williamafil.github.io/notes/2020/07/18/hello-world/">
+            href="https://twitter.com/share?text=JS Day 36: ES6 函式參數的解構賦予值 - William's Notes&url=https://williamafil.github.io/notes/2020/07/30/JS-ES6-%E5%87%BD%E5%BC%8F%E5%8F%83%E6%95%B8%E7%9A%84%E8%A7%A3%E6%A7%8B%E8%B3%A6%E4%BA%88%E5%80%BC/">
             <box-icon type='logo' name='twitter'></box-icon>
         </a>
         <a class="share-item" target="_blank"
-            href="https://www.facebook.com/sharer.php?title=Hello World - William's Notes&u=https://williamafil.github.io/notes/2020/07/18/hello-world/">
+            href="https://www.facebook.com/sharer.php?title=JS Day 36: ES6 函式參數的解構賦予值 - William's Notes&u=https://williamafil.github.io/notes/2020/07/30/JS-ES6-%E5%87%BD%E5%BC%8F%E5%8F%83%E6%95%B8%E7%9A%84%E8%A7%A3%E6%A7%8B%E8%B3%A6%E4%BA%88%E5%80%BC/">
             <box-icon name='facebook-square' type='logo' ></box-icon>
         </a>
         <!-- <a class="share-item" target="_blank"
-            href="https://service.weibo.com/share/share.php?title=Hello World - William's Notes&url=https://williamafil.github.io/notes/2020/07/18/hello-world/&pic=">
+            href="https://service.weibo.com/share/share.php?title=JS Day 36: ES6 函式參數的解構賦予值 - William's Notes&url=https://williamafil.github.io/notes/2020/07/30/JS-ES6-%E5%87%BD%E5%BC%8F%E5%8F%83%E6%95%B8%E7%9A%84%E8%A7%A3%E6%A7%8B%E8%B3%A6%E4%BA%88%E5%80%BC/&pic=">
             <div class="n-icon n-icon-weibo"></div>
         </a> -->
     </section>
