@@ -35,7 +35,7 @@
                 <img src="/images/avatar.jpg" alt="Will Doe">
             </div>
             
-            <a href="/">William&#39;s Notes</a>
+            <a href="https://williamafil.github.io/notes">William&#39;s Notes</a>
             
         </div>
         <div class="header-menu">
@@ -91,6 +91,183 @@
       <section class="inner">
         <section class="inner-main">
           <div class="index">
+  
+    
+      <article
+  id="post-JS-Day-37-var-let-and-const"
+  class="article article-type-post"
+>
+
+  <div class="article-inner">
+    
+
+    <div class="article-body">
+      <header class="article-title">
+        <a href="/notes/2020/07/30/JS-Day-37-var-let-and-const/">JS Day 37: var, let and const</a>
+      </header>
+      <div class="article-entry post-inner-html">
+        
+          <h1 id="var-amp-let"><a href="#var-amp-let" class="headerlink" title="var &amp; let"></a>var &amp; let</h1><pre><code class="jsx">{
+  var a = &#39;A&#39;;
+  let b = &#39;B&#39;;
+}
+console.log(&#39;var a: &#39; + a);
+console.log(&#39;let b: &#39; + b);
+
+// output
+// =&gt; &quot;var a: A&quot;
+// =&gt; ReferenceError: b is not defined </code></pre>
+<p>用 <code>var</code> 來宣告一個全域變數，<code>let</code> 的作用域僅 <strong><em>scope</em></strong> 限於 <code>{ ... }</code> 區塊。</p>
+<pre><code class="jsx"></code></pre>
+<h2 id="哪裡適合用-let"><a href="#哪裡適合用-let" class="headerlink" title="哪裡適合用 let"></a>哪裡適合用 let</h2><pre><code class="jsx">for (let i = 0; i &lt; 5; i++) {
+    console.log(i);
+};
+
+console.log(i);
+
+// output
+// 1
+// 2
+// 3
+// 4
+// ReferenceError: i is not defined</code></pre>
+<p><code>let i</code> 在 for loop 裡頭才有計次效用，在 <code>{ ... }</code> 外呼叫會得到 ReferenceError 錯誤， <code>i</code> 並沒有被宣告。</p>
+<pre><code class="jsx">for (var i = 0; i &lt; 5; i++) {
+    console.log(i);
+};
+
+console.log(i);
+
+// output
+// --- LOOP 開始
+// 0
+// 1
+// 2
+// 3
+// 4
+// --- LOOP 結束
+// 5   { ... } 外面呼叫 i 得到的結果
+</code></pre>
+<h1 id="Hoisting-提升"><a href="#Hoisting-提升" class="headerlink" title="Hoisting 提升"></a>Hoisting 提升</h1><h2 id="Var-Hoisting-變數提升"><a href="#Var-Hoisting-變數提升" class="headerlink" title="Var Hoisting 變數提升"></a>Var Hoisting 變數提升</h2><pre><code class="jsx">console.log(a); // undefined
+var a = &#39;A&#39;;
+
+// ---- 分隔線 ----
+
+// 實際上這段程式碼對編譯器來說是長這樣
+var a; // 只有宣告 a 這個變數
+console.log(a); // 只有被宣告，但沒有賦予值，自然是 undefined
+var a = &#39;A&#39;;
+console.log(a); //=&gt; &#39;A&#39;</code></pre>
+<p>這樣子比較好理解。</p>
+<pre><code class="jsx">var a;
+console.log(a);  // undefined</code></pre>
+<p>使用 var 跟 let 的結果：</p>
+<pre><code class="jsx">console.log(a); // Undefined
+var a = &#39;A&#39;;
+
+console.log(b);  // ReferenceError
+let b = &#39;B&#39;; </code></pre>
+<p><a href="https://drive.google.com/uc?export=view&id=1ut6WFtMB7-4MUNbgfCZyn24ZzzjFdBxG" target="_blank" rel="noopener">https://drive.google.com/uc?export=view&amp;id=1ut6WFtMB7-4MUNbgfCZyn24ZzzjFdBxG</a></p>
+<p>使用 <code>var</code> 會出現 hoisting，反之 <code>let</code> 則不會出現 hoisting，因為變數 <code>b</code> 之前不存在，所以會出錯。</p>
+<pre><code class="jsx">alpha(); // &#39;Alpha calling...&#39;
+console.log(a); // undefined
+var a = &#39;A&#39;;
+
+function alpha() {
+    console.log(&#39;Alpha calling...&#39;);
+};</code></pre>
+<p><a href="https://drive.google.com/uc?export=view&id=1Pi0OoGeR92Ev1s3pd6uK8I22ovHGjRAQ" target="_blank" rel="noopener">https://drive.google.com/uc?export=view&amp;id=1Pi0OoGeR92Ev1s3pd6uK8I22ovHGjRAQ</a></p>
+<pre><code class="jsx">var findProd = function() {
+  console.log(&#39;Product Name&#39;);
+};
+findProd(); // 呼叫函式</code></pre>
+<p>正常，沒有出現錯誤</p>
+<p><a href="https://drive.google.com/uc?export=view&id=1o6jbz45kT73tefN00vyJBWhXcSgQE1kX" target="_blank" rel="noopener">https://drive.google.com/uc?export=view&amp;id=1o6jbz45kT73tefN00vyJBWhXcSgQE1kX</a></p>
+<pre><code class="jsx">findProd(); // 呼叫函式
+var findProd = function() {
+  console.log(&#39;Product Name&#39;);
+};</code></pre>
+<p>出錯了，findProd is not a function。</p>
+<p><a href="https://drive.google.com/uc?export=view&id=1t_2ZwQBRVWG2Bz-sPbRjUSBeqX7AAMXm" target="_blank" rel="noopener">https://drive.google.com/uc?export=view&amp;id=1t_2ZwQBRVWG2Bz-sPbRjUSBeqX7AAMXm</a></p>
+<p>這段程式碼編譯器解讀為：</p>
+<pre><code class="jsx">var findProd; // 宣告全域變數
+findProd(); // 呼叫 findProduct() 函式
+findProd = function() {
+  console.log(&#39;Product Name&#39;);
+};</code></pre>
+<p>用 let 宣告 函式表達式 function expression</p>
+<pre><code class="jsx">findProd(); // 呼叫函式
+let findProd = function() {
+  console.log(&#39;Product Name&#39;);
+};</code></pre>
+<p><a href="https://drive.google.com/uc?export=view&id=1TG3yEMxGQJ2Y39n2l4vJjl-eJKpxwc0M" target="_blank" rel="noopener">https://drive.google.com/uc?export=view&amp;id=1TG3yEMxGQJ2Y39n2l4vJjl-eJKpxwc0M</a></p>
+<p><a href="https://doc-08-58-docs.googleusercontent.com/docs/securesc/rm8s8hl758jplvoivs97fi3n32na874v/8v7etgn3k77mntoduvhk5ph1gqn4krao/1596083550000/14919367619391571052/10423814143901834654Z/1TG3yEMxGQJ2Y39n2l4vJjl-eJKpxwc0M?e=view&nonce=adg3vcrhf3c2k&user=10423814143901834654Z&hash=2p6le3ue5mto3nqf33caqfju9mdqce7s" target="_blank" rel="noopener"></a></p>
+<p><a href=""></a></p>
+<p>用 <code>let</code> 或 <code>const</code> 宣告 function expression 都會出現很明確的錯誤：ReferenceError: can’t access lexical declaration ‘findProd’ before initialization （Temporal Dead Zone, TDZ）。</p>
+<h2 id="函式提升-Function-Hoisting"><a href="#函式提升-Function-Hoisting" class="headerlink" title="函式提升 Function Hoisting"></a>函式提升 Function Hoisting</h2><pre><code class="jsx">console.log(a);
+var a;
+function a() {
+    console.log(&#39;say a word&#39;);
+};
+</code></pre>
+<pre><code class="jsx">function a(){};
+var a;
+console.log(a);
+function a() {
+    console.log(&#39;say a word&#39;);
+};</code></pre>
+<h2 id="重複宣告-var-let-const"><a href="#重複宣告-var-let-const" class="headerlink" title="重複宣告 var, let, const"></a>重複宣告 var, let, const</h2><pre><code class="jsx">var a = &#39;A&#39;;
+var a = &#39;B&#39;;
+console.log(a);
+// B</code></pre>
+<p><code>var</code> 可以重複宣告</p>
+<pre><code class="jsx">let a = &#39;A&#39;;
+let a = &#39;B&#39;;
+console.log(a);
+// SyntaxError: redeclaration of let a</code></pre>
+<p>let 無法重新宣告</p>
+<pre><code class="jsx">const a = &#39;A&#39;;
+const a = &#39;B&#39;;
+console.log(a);
+// SyntaxError: redeclaration of const a</code></pre>
+<p>const 無法重新宣告</p>
+<h2 id="Hoisting-優先權"><a href="#Hoisting-優先權" class="headerlink" title="Hoisting 優先權"></a>Hoisting 優先權</h2><ul>
+<li>函式提升 &gt; 變數提升</li>
+</ul>
+<p>Reference:</p>
+<p><a href="https://es6.ruanyifeng.com/#docs/let" target="_blank" rel="noopener">ECMAScript 6 入門: let 和 const 命令</a></p>
+<p><a href="https://ithelp.ithome.com.tw/articles/10191549" target="_blank" rel="noopener">重新認識 JavaScript: Day 10 函式 Functions 的基本概念</a></p>
+<p><a href="https://blog.techbridge.cc/2018/11/10/javascript-hoisting/" target="_blank" rel="noopener">我知道你懂 hoisting，可是你了解到多深？</a></p>
+<p><a href="http://www.ecma-international.org/ecma-262/5.1/#sec-10.5" target="_blank" rel="noopener">10.5 Declaration Binding Instantiation - ECMA</a> (這個我看不懂，放上來好看而已）</p>
+
+        
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="article-footer">
+    <div class="article-more-info">
+      <div class="article-date">
+  <time datetime="2020-07-30T12:02:10.000Z" itemprop="datePublished">2020-07-30</time>
+</div>
+      
+        <div class="article-category">
+          <a class="article-category-link" href="/notes/categories/JavaScript/">JavaScript</a>
+        </div>
+      
+      
+        <div class="article-tag">
+          <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li></ul>
+        </div>
+      
+    </div>
+  </footer>
+
+
+</article>
+
+    
   
     
       <article
@@ -855,6 +1032,10 @@ Object.entries(chartObj);
       <ul>
         
           <li>
+            <a href="/notes/2020/07/30/JS-Day-37-var-let-and-const/">JS Day 37: var, let and const</a>
+          </li>
+        
+          <li>
             <a href="/notes/2020/07/30/JS-ES6-%E5%87%BD%E5%BC%8F%E5%8F%83%E6%95%B8%E7%9A%84%E8%A7%A3%E6%A7%8B%E8%B3%A6%E4%BA%88%E5%80%BC/">JS Day 36: ES6 函式參數的解構賦予值</a>
           </li>
         
@@ -868,10 +1049,6 @@ Object.entries(chartObj);
         
           <li>
             <a href="/notes/2020/07/22/JS-Array-Methods-%E4%BF%AE%E6%94%B9%E5%8E%9F%E5%A7%8B%E9%99%A3%E5%88%97%E7%9A%84%E6%96%B9%E6%B3%95/">JS Day 28:  Array Methods - 修改原始陣列的方法</a>
-          </li>
-        
-          <li>
-            <a href="/notes/2020/07/19/JS-Day-30-C3-js-Chart/">JS Day 30: C3.js Chart</a>
           </li>
         
       </ul>

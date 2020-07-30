@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     
-    <title>JS Day 36: ES6 函式參數的解構賦予值 | William&#39;s Notes</title>
+    <title>JS Day 37: var, let and const | William&#39;s Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     
@@ -91,7 +91,7 @@
       <section class="inner">
         <section class="inner-main">
           <div class="post">
-    <article id="post-ckd8r1q1500019j3veyu20kld" class="article article-type-post" itemscope
+    <article id="post-ckd8r1q1100009j3vazos9a39" class="article article-type-post" itemscope
     itemprop="blogPost">
 
     <div class="article-inner">
@@ -103,7 +103,7 @@
             
   
     <h1 class="article-title" itemprop="name">
-      JS Day 36: ES6 函式參數的解構賦予值
+      JS Day 37: var, let and const
     </h1>
   
 
@@ -113,7 +113,7 @@
         <div class="article-more-info article-more-info-post hairline">
 
             <div class="article-date">
-  <time datetime="2020-07-29T17:39:11.000Z" itemprop="datePublished">2020-07-30</time>
+  <time datetime="2020-07-30T12:02:10.000Z" itemprop="datePublished">2020-07-30</time>
 </div>
 
             
@@ -136,89 +136,138 @@
         </div>
 
         <div class="article-entry post-inner-html hairline" itemprop="articleBody">
-            <h1 id="Function-Argument-Default-函式參數預設值"><a href="#Function-Argument-Default-函式參數預設值" class="headerlink" title="Function Argument Default 函式參數預設值"></a>Function Argument Default 函式參數預設值</h1><p>在 ES6 之前傳進來的參數必須要透過判斷才可以確定有沒有存在，無法直接設定預設值。現在可以直接在參數後面定義 <code>function checkBMI(bmi = 0) { ... }</code>。</p>
-<p>範例：</p>
-<pre><code class="jsx">function funcName(foo = &#39;x&#39;, bar = &#39;y&#39;) {
-    console.log(foo, bar);
+            <h1 id="var-amp-let"><a href="#var-amp-let" class="headerlink" title="var &amp; let"></a>var &amp; let</h1><pre><code class="jsx">{
+  var a = &#39;A&#39;;
+  let b = &#39;B&#39;;
+}
+console.log(&#39;var a: &#39; + a);
+console.log(&#39;let b: &#39; + b);
+
+// output
+// =&gt; &quot;var a: A&quot;
+// =&gt; ReferenceError: b is not defined </code></pre>
+<p>用 <code>var</code> 來宣告一個全域變數，<code>let</code> 的作用域僅 <strong><em>scope</em></strong> 限於 <code>{ ... }</code> 區塊。</p>
+<pre><code class="jsx"></code></pre>
+<h2 id="哪裡適合用-let"><a href="#哪裡適合用-let" class="headerlink" title="哪裡適合用 let"></a>哪裡適合用 let</h2><pre><code class="jsx">for (let i = 0; i &lt; 5; i++) {
+    console.log(i);
 };
 
-funcName(&#39;喔&#39;)
-// =&gt; 喔 y
+console.log(i);
 
-funcName(&#39;喔&#39;, undefined)
-// =&gt; 喔 y
-
-funcName(&#39;喔&#39;, &#39;椰&#39;)
-// =&gt; 喔 椰</code></pre>
-<pre><code class="jsx">// 如果沒有傳入參數，bmi 為 0
-function checkBMI(bmi = 0) {
-  if (bmi.value === 0) {
-    // ... 略過
-  }
-};</code></pre>
-<h1 id="Object-Destructuring-Assignment-解構賦值"><a href="#Object-Destructuring-Assignment-解構賦值" class="headerlink" title="Object Destructuring Assignment 解構賦值"></a>Object Destructuring Assignment 解構賦值</h1><pre><code class="jsx">const data = [
-  {
-    name: &#39;小傑&#39;,
-    height: 175,
-    weight: 70,
-    properties: {
-      bmi: 22.9,
-      state: &#39;理想&#39;
-    }
-  },
-  {
-    name: &#39;Daniel&#39;,
-    height: 200,
-    weight: 68,
-    properties: {
-      bmi: 17,
-      state: &#39;體重過輕&#39;
-    }
-  },
-];
-
-// for...of 迭代陣列
-// person ＝ 每筆物件
-for (const person of data) {
-  renderData(person);
-  render(person);
+// output
+// 1
+// 2
+// 3
+// 4
+// ReferenceError: i is not defined</code></pre>
+<p><code>let i</code> 在 for loop 裡頭才有計次效用，在 <code>{ ... }</code> 外呼叫會得到 ReferenceError 錯誤， <code>i</code> 並沒有被宣告。</p>
+<pre><code class="jsx">for (var i = 0; i &lt; 5; i++) {
+    console.log(i);
 };
 
-// 方法一
-function render(person) {
-    // 如果層次太多，會變得落落長一串
-  console.log(&#39;物件： &#39; + person.name, person.properties.bmi, person.properties.state);
-};
+console.log(i);
 
-// 方法二
-// 跟解構變數賦予值方式ㄧ樣
-function renderData(
-  {
-    name, 
-    height, 
-    weight, 
-    properties: { 
-      bmi: bmiValue,
-      state: stateText
-    }
-  }) {
-  console.log(&#39;物件解構： &#39; + name, bmiValue, stateText); // 變得簡潔
-};</code></pre>
-<p>解構變數賦予值</p>
-<pre><code class="jsx">const data = {
-  name: &#39;小傑&#39;,
-  height: 175,
-  weight: 70,
-  properties: {
-    bmi: 22.9,
-    state: &#39;理想&#39;
-  }
-};
-
-let { name, height, weight, properties: {bmi: bmiValue, state: stateText} } = data;
-console.log(name, bmiValue, stateText);
+// output
+// --- LOOP 開始
+// 0
+// 1
+// 2
+// 3
+// 4
+// --- LOOP 結束
+// 5   { ... } 外面呼叫 i 得到的結果
 </code></pre>
-<p>Reference:<br><a href="https://es6.ruanyifeng.com/#docs/function" target="_blank" rel="noopener">ECMAScript 6 入門</a><br><a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment" target="_blank" rel="noopener">解構賦值</a></p>
+<h1 id="Hoisting-提升"><a href="#Hoisting-提升" class="headerlink" title="Hoisting 提升"></a>Hoisting 提升</h1><h2 id="Var-Hoisting-變數提升"><a href="#Var-Hoisting-變數提升" class="headerlink" title="Var Hoisting 變數提升"></a>Var Hoisting 變數提升</h2><pre><code class="jsx">console.log(a); // undefined
+var a = &#39;A&#39;;
+
+// ---- 分隔線 ----
+
+// 實際上這段程式碼對編譯器來說是長這樣
+var a; // 只有宣告 a 這個變數
+console.log(a); // 只有被宣告，但沒有賦予值，自然是 undefined
+var a = &#39;A&#39;;
+console.log(a); //=&gt; &#39;A&#39;</code></pre>
+<p>這樣子比較好理解。</p>
+<pre><code class="jsx">var a;
+console.log(a);  // undefined</code></pre>
+<p>使用 var 跟 let 的結果：</p>
+<pre><code class="jsx">console.log(a); // Undefined
+var a = &#39;A&#39;;
+
+console.log(b);  // ReferenceError
+let b = &#39;B&#39;; </code></pre>
+<p><a href="https://drive.google.com/uc?export=view&id=1ut6WFtMB7-4MUNbgfCZyn24ZzzjFdBxG" target="_blank" rel="noopener">https://drive.google.com/uc?export=view&amp;id=1ut6WFtMB7-4MUNbgfCZyn24ZzzjFdBxG</a></p>
+<p>使用 <code>var</code> 會出現 hoisting，反之 <code>let</code> 則不會出現 hoisting，因為變數 <code>b</code> 之前不存在，所以會出錯。</p>
+<pre><code class="jsx">alpha(); // &#39;Alpha calling...&#39;
+console.log(a); // undefined
+var a = &#39;A&#39;;
+
+function alpha() {
+    console.log(&#39;Alpha calling...&#39;);
+};</code></pre>
+<p><a href="https://drive.google.com/uc?export=view&id=1Pi0OoGeR92Ev1s3pd6uK8I22ovHGjRAQ" target="_blank" rel="noopener">https://drive.google.com/uc?export=view&amp;id=1Pi0OoGeR92Ev1s3pd6uK8I22ovHGjRAQ</a></p>
+<pre><code class="jsx">var findProd = function() {
+  console.log(&#39;Product Name&#39;);
+};
+findProd(); // 呼叫函式</code></pre>
+<p>正常，沒有出現錯誤</p>
+<p><a href="https://drive.google.com/uc?export=view&id=1o6jbz45kT73tefN00vyJBWhXcSgQE1kX" target="_blank" rel="noopener">https://drive.google.com/uc?export=view&amp;id=1o6jbz45kT73tefN00vyJBWhXcSgQE1kX</a></p>
+<pre><code class="jsx">findProd(); // 呼叫函式
+var findProd = function() {
+  console.log(&#39;Product Name&#39;);
+};</code></pre>
+<p>出錯了，findProd is not a function。</p>
+<p><a href="https://drive.google.com/uc?export=view&id=1t_2ZwQBRVWG2Bz-sPbRjUSBeqX7AAMXm" target="_blank" rel="noopener">https://drive.google.com/uc?export=view&amp;id=1t_2ZwQBRVWG2Bz-sPbRjUSBeqX7AAMXm</a></p>
+<p>這段程式碼編譯器解讀為：</p>
+<pre><code class="jsx">var findProd; // 宣告全域變數
+findProd(); // 呼叫 findProduct() 函式
+findProd = function() {
+  console.log(&#39;Product Name&#39;);
+};</code></pre>
+<p>用 let 宣告 函式表達式 function expression</p>
+<pre><code class="jsx">findProd(); // 呼叫函式
+let findProd = function() {
+  console.log(&#39;Product Name&#39;);
+};</code></pre>
+<p><a href="https://drive.google.com/uc?export=view&id=1TG3yEMxGQJ2Y39n2l4vJjl-eJKpxwc0M" target="_blank" rel="noopener">https://drive.google.com/uc?export=view&amp;id=1TG3yEMxGQJ2Y39n2l4vJjl-eJKpxwc0M</a></p>
+<p><a href="https://doc-08-58-docs.googleusercontent.com/docs/securesc/rm8s8hl758jplvoivs97fi3n32na874v/8v7etgn3k77mntoduvhk5ph1gqn4krao/1596083550000/14919367619391571052/10423814143901834654Z/1TG3yEMxGQJ2Y39n2l4vJjl-eJKpxwc0M?e=view&nonce=adg3vcrhf3c2k&user=10423814143901834654Z&hash=2p6le3ue5mto3nqf33caqfju9mdqce7s" target="_blank" rel="noopener"></a></p>
+<p><a href=""></a></p>
+<p>用 <code>let</code> 或 <code>const</code> 宣告 function expression 都會出現很明確的錯誤：ReferenceError: can’t access lexical declaration ‘findProd’ before initialization （Temporal Dead Zone, TDZ）。</p>
+<h2 id="函式提升-Function-Hoisting"><a href="#函式提升-Function-Hoisting" class="headerlink" title="函式提升 Function Hoisting"></a>函式提升 Function Hoisting</h2><pre><code class="jsx">console.log(a);
+var a;
+function a() {
+    console.log(&#39;say a word&#39;);
+};
+</code></pre>
+<pre><code class="jsx">function a(){};
+var a;
+console.log(a);
+function a() {
+    console.log(&#39;say a word&#39;);
+};</code></pre>
+<h2 id="重複宣告-var-let-const"><a href="#重複宣告-var-let-const" class="headerlink" title="重複宣告 var, let, const"></a>重複宣告 var, let, const</h2><pre><code class="jsx">var a = &#39;A&#39;;
+var a = &#39;B&#39;;
+console.log(a);
+// B</code></pre>
+<p><code>var</code> 可以重複宣告</p>
+<pre><code class="jsx">let a = &#39;A&#39;;
+let a = &#39;B&#39;;
+console.log(a);
+// SyntaxError: redeclaration of let a</code></pre>
+<p>let 無法重新宣告</p>
+<pre><code class="jsx">const a = &#39;A&#39;;
+const a = &#39;B&#39;;
+console.log(a);
+// SyntaxError: redeclaration of const a</code></pre>
+<p>const 無法重新宣告</p>
+<h2 id="Hoisting-優先權"><a href="#Hoisting-優先權" class="headerlink" title="Hoisting 優先權"></a>Hoisting 優先權</h2><ul>
+<li>函式提升 &gt; 變數提升</li>
+</ul>
+<p>Reference:</p>
+<p><a href="https://es6.ruanyifeng.com/#docs/let" target="_blank" rel="noopener">ECMAScript 6 入門: let 和 const 命令</a></p>
+<p><a href="https://ithelp.ithome.com.tw/articles/10191549" target="_blank" rel="noopener">重新認識 JavaScript: Day 10 函式 Functions 的基本概念</a></p>
+<p><a href="https://blog.techbridge.cc/2018/11/10/javascript-hoisting/" target="_blank" rel="noopener">我知道你懂 hoisting，可是你了解到多深？</a></p>
+<p><a href="http://www.ecma-international.org/ecma-262/5.1/#sec-10.5" target="_blank" rel="noopener">10.5 Declaration Binding Instantiation - ECMA</a> (這個我看不懂，放上來好看而已）</p>
 
         </div>
 
@@ -243,19 +292,10 @@ console.log(name, bmiValue, stateText);
     
 <nav class="article-nav">
   
-    <a href="/notes/2020/07/30/JS-Day-37-var-let-and-const/" id="article-nav-newer" class="article-nav-link-wrap">
-      <div class="article-nav-caption">下一篇</div>
-      <div class="article-nav-title">
-        
-          JS Day 37: var, let and const
-        
-      </div>
-    </a>
   
-  
-    <a href="/notes/2020/07/28/Selenium-WebDriver-with-Ruby-on-Headless-Chrome-Firefox-%E7%84%A1%E9%A0%AD%E7%88%AC%E8%9F%B2%E6%A8%A1%E5%BC%8F/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/notes/2020/07/30/JS-ES6-%E5%87%BD%E5%BC%8F%E5%8F%83%E6%95%B8%E7%9A%84%E8%A7%A3%E6%A7%8B%E8%B3%A6%E4%BA%88%E5%80%BC/" id="article-nav-older" class="article-nav-link-wrap">
       <div class="article-nav-caption">上一篇</div>
-      <div class="article-nav-title">Selenium WebDriver with Ruby on Headless Chrome/Firefox 無頭爬蟲模式</div>
+      <div class="article-nav-title">JS Day 36: ES6 函式參數的解構賦予值</div>
     </a>
   
 </nav>
@@ -264,15 +304,15 @@ console.log(name, bmiValue, stateText);
     <section class="share">
         <div class="share-title">分享</div>
         <a class="share-item" target="_blank"
-            href="https://twitter.com/share?text=JS Day 36: ES6 函式參數的解構賦予值 - William's Notes&url=https://williamafil.github.io/notes/2020/07/30/JS-ES6-%E5%87%BD%E5%BC%8F%E5%8F%83%E6%95%B8%E7%9A%84%E8%A7%A3%E6%A7%8B%E8%B3%A6%E4%BA%88%E5%80%BC/">
+            href="https://twitter.com/share?text=JS Day 37: var, let and const - William's Notes&url=https://williamafil.github.io/notes/2020/07/30/JS-Day-37-var-let-and-const/">
             <box-icon type='logo' name='twitter'></box-icon>
         </a>
         <a class="share-item" target="_blank"
-            href="https://www.facebook.com/sharer.php?title=JS Day 36: ES6 函式參數的解構賦予值 - William's Notes&u=https://williamafil.github.io/notes/2020/07/30/JS-ES6-%E5%87%BD%E5%BC%8F%E5%8F%83%E6%95%B8%E7%9A%84%E8%A7%A3%E6%A7%8B%E8%B3%A6%E4%BA%88%E5%80%BC/">
+            href="https://www.facebook.com/sharer.php?title=JS Day 37: var, let and const - William's Notes&u=https://williamafil.github.io/notes/2020/07/30/JS-Day-37-var-let-and-const/">
             <box-icon name='facebook-square' type='logo' ></box-icon>
         </a>
         <!-- <a class="share-item" target="_blank"
-            href="https://service.weibo.com/share/share.php?title=JS Day 36: ES6 函式參數的解構賦予值 - William's Notes&url=https://williamafil.github.io/notes/2020/07/30/JS-ES6-%E5%87%BD%E5%BC%8F%E5%8F%83%E6%95%B8%E7%9A%84%E8%A7%A3%E6%A7%8B%E8%B3%A6%E4%BA%88%E5%80%BC/&pic=">
+            href="https://service.weibo.com/share/share.php?title=JS Day 37: var, let and const - William's Notes&url=https://williamafil.github.io/notes/2020/07/30/JS-Day-37-var-let-and-const/&pic=">
             <div class="n-icon n-icon-weibo"></div>
         </a> -->
     </section>
