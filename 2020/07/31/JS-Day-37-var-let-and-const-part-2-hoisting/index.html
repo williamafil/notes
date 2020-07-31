@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     
-    <title>Selenium WebDriver with Ruby on Headless Chrome/Firefox 無頭爬蟲模式 | William&#39;s Notes</title>
+    <title>JS Day 37: Var, Let and Const, part 2 - Hoisting | William&#39;s Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     
@@ -91,7 +91,7 @@
       <section class="inner">
         <section class="inner-main">
           <div class="post">
-    <article id="post-ckdadg4pv000aoj3v1dfxhdwy" class="article article-type-post" itemscope
+    <article id="post-ckdadg4pk0004oj3v5zyyegua" class="article article-type-post" itemscope
     itemprop="blogPost">
 
     <div class="article-inner">
@@ -103,7 +103,7 @@
             
   
     <h1 class="article-title" itemprop="name">
-      Selenium WebDriver with Ruby on Headless Chrome/Firefox 無頭爬蟲模式
+      JS Day 37: Var, Let and Const, part 2 - Hoisting
     </h1>
   
 
@@ -113,18 +113,18 @@
         <div class="article-more-info article-more-info-post hairline">
 
             <div class="article-date">
-  <time datetime="2020-07-27T16:56:06.000Z" itemprop="datePublished">2020-07-28</time>
+  <time datetime="2020-07-31T15:13:55.000Z" itemprop="datePublished">2020-07-31</time>
 </div>
 
             
             <div class="article-category">
-                <a class="article-category-link" href="/notes/categories/Ruby/">Ruby</a>
+                <a class="article-category-link" href="/notes/categories/JavaScript/">JavaScript</a>
             </div>
             
 
             
             <div class="article-tag">
-                <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li></ul>
+                <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li></ul>
             </div>
             
 
@@ -136,59 +136,130 @@
         </div>
 
         <div class="article-entry post-inner-html hairline" itemprop="articleBody">
-            <p>使用 geckodriver 來連接 headless Firefox 與 Selenium 或是使用 chromedriver 來連接 Chrome 與 Selenium</p>
-<p>安裝 Geckodriver / Chromedriver</p>
-<pre><code class="bash">$ brew install geckodriver // Firefox
-$ brew cask install chromedriver // Chrome</code></pre>
-<p>安裝 Selenium Gem</p>
-<pre><code class="bash">$ gem install selenium-webdriver</code></pre>
-<p>引用 Selenium WebDriver 模組</p>
-<pre><code class="ruby">require &#39;selenium-webdriver&#39;</code></pre>
-<p>指定欲使用的瀏覽器</p>
-<p>Firefox</p>
-<pre><code class="ruby">options = Selenium::WebDriver::Firefox::Options.new(args: [&#39;-headless&#39;])
-driver = Selenium::WebDriver.for :firefox, options: options</code></pre>
-<p>Chrome</p>
-<pre><code class="ruby">options = Selenium::WebDriver::Chrome::Options.new(args: [&#39;headless&#39;])
-driver = Selenium::WebDriver.for :chrome, options: options</code></pre>
-<p>使用 selenium 操控無頭瀏覽器</p>
-<pre><code class="ruby"># 連結到台灣電子地圖服務網
-driver.get(&#39;http://www.map.com.tw&#39;)
+            <h1 id="Hoisting-提升"><a href="#Hoisting-提升" class="headerlink" title="Hoisting 提升"></a>Hoisting 提升</h1><h2 id="Var-Hoisting-變數提升"><a href="#Var-Hoisting-變數提升" class="headerlink" title="Var Hoisting 變數提升"></a>Var Hoisting 變數提升</h2><pre><code class="jsx">console.log(a); // undefined
+var a = &#39;A&#39;;
 
-# 點擊搜尋欄位
-# &lt;input type=&quot;text&quot; style=&quot;margin-left:7px;&quot; id=&quot;searchWord&quot; value=&quot;例如:新北市中和區中正路716號&quot; ondblclick=&quot;this.value=&#39;&#39;&quot;&gt;
-driver.find_element(id: &#39;searchWord&#39;).click
+// ---- 分隔線 ----
+
+// 實際上這段程式碼對編譯器來說是長這樣
+var a; // 只有宣告 a 這個變數
+console.log(a); // 只有被宣告，但沒有賦予值，自然是 undefined
+a = &#39;A&#39;; // assignment 不會被提升
 </code></pre>
-<pre><code class="ruby"># 由於 input 的值設定為&#39;例如:新北市中和區中正路716號&#39;，所以必須先清除掉
-driver.find_element(id: &#39;searchWord&#39;).clear
+<p>把上面的例子拆分，這樣子比較好理解。</p>
+<pre><code class="jsx">var a; // 有宣告，但沒有賦予任何值
+console.log(a);  // a 會是 undefined</code></pre>
+<p>使用 var 跟 let 的結果：</p>
+<pre><code class="jsx">console.log(a); // Undefined
+var a = &#39;A&#39;;
 
-# 讓瀏覽器代替輸入&#39;高雄市苓雅區和平一路147號&#39;並送出表單
-driver.find_element(id: &#39;searchWord&#39;).send_keys &#39;高雄市苓雅區和平一路147號&#39;, :return
+console.log(b);  // ReferenceError
+let b = &#39;B&#39;; 
 
-# 這邊要等待兩秒, 否則 .winfoIframe 還沒有產生會發生找不到 element
-# 當初在這邊卡超久的，幸好有看到花哥分享了 Python 爬蟲有寫到等待，才發現可以這樣用
-sleep 2
+console.log(c);  // ReferenceError
+const c = &#39;C&#39;; </code></pre>
+<p><img src="https://drive.google.com/uc?export=view&id=1ut6WFtMB7-4MUNbgfCZyn24ZzzjFdBxG" alt="https://drive.google.com/uc?export=view&amp;id=1ut6WFtMB7-4MUNbgfCZyn24ZzzjFdBxG"></p>
+<p>使用 <code>var</code> 會出現 hoisting，反之 <code>let</code>&amp; <code>const</code> 則不會出現 hoisting，因為變數 <code>b</code> 之前不存在，所以會出錯。</p>
+<h2 id="提升-＆-函式-Hoisting-amp-Functions"><a href="#提升-＆-函式-Hoisting-amp-Functions" class="headerlink" title="提升 ＆ 函式 (Hoisting &amp; Functions)"></a>提升 ＆ 函式 (Hoisting &amp; Functions)</h2><h3 id="函式運算式-Function-Declaration"><a href="#函式運算式-Function-Declaration" class="headerlink" title="函式運算式 (Function Declaration)"></a>函式運算式 (Function Declaration)</h3><h2 id=""><a href="#" class="headerlink" title=""></a></h2><p>延續上方，<code>console.log(a)</code> 會是 <code>undefined</code></p>
+<pre><code class="jsx">alpha(); // &#39;Alpha calling...&#39;, function 會被提升
+console.log(a); // undefined, var a 會被提升，但 assignment 不會
+var a = &#39;A&#39;;
 
-# store iframe web element
-# 另一種方法 iframe = driver.find_element(:css, &quot;.windowInfo &gt; iframe&quot;)
-iframe = driver.find_element(class: &#39;winfoIframe&#39;)
+function alpha() {
+    console.log(&#39;Alpha calling...&#39;);
+};
 
-# 切換到 iframe
-driver.switch_to.frame(iframe)
+// output
+// Alpha calling...
+// undefined</code></pre>
+<pre><code class="jsx">console.log(a); // function a()
+var a;
+function a() {
+    console.log(&#39;say a word&#39;);
+};</code></pre>
+<p>為何不是 <code>undefined</code>? 因為 function 被提升了。</p>
+<p>類似範例：</p>
+<pre><code class="jsx">aTest(); // 我被提升了
+function aTest() {
+    console.log(&#39;我被提升了&#39;);
+};</code></pre>
+<p>範例1：</p>
+<pre><code class="jsx">var a = 0;
 
-# 點擊 &#39;座標&#39; 圖示進行跳頁
-driver.find_elements(class: &#39;fun&#39;)[1].click
+function a() {
+    return 1;
+};
 
-# 使用 xpath 取得頁面上的經緯度
-coordinates = driver.find_element(xpath: &quot;/html/body/form/div[5]/table/tbody/tr[2]/td&quot;).text.split(&#39; &#39;)
+console.log(typeof a); // number</code></pre>
+<p>可以這樣解讀範例1：</p>
+<pre><code class="jsx">var a; // 提升
 
-# 經緯度
-latitude = coordinates[0].split(&#39;：&#39;)[1]
-longitude = coordinates[1].split(&#39;：&#39;)[1]
+function a() {
+    return 1;
+};
 
-puts latitude
-puts longitude</code></pre>
-<p>Reference:<br><a href="https://medium.com/%E8%8A%B1%E5%93%A5%E7%9A%84%E5%A5%87%E5%B9%BB%E6%97%85%E7%A8%8B/geocoding-%E6%89%B9%E9%87%8F%E8%99%95%E7%90%86%E5%9C%B0%E5%9D%80%E8%BD%89%E6%8F%9B%E7%B6%93%E7%B7%AF%E5%BA%A6-721ab2564c88" target="_blank" rel="noopener">Geocoding - 批量處理地址轉換經緯度</a><br><a href="https://www.selenium.dev/documentation/en/getting_started_with_webdriver/locating_elements/" target="_blank" rel="noopener">Selenium</a></p>
+// 初始化, 不會被提升
+a = 0
+
+console.log(typeof a); // number</code></pre>
+<p><img src="https://drive.google.com/uc?export=view&id=12oaRQd-9WaquBjqIhyNXLlAniBSu1ohq" alt="https://drive.google.com/uc?export=view&amp;id=12oaRQd-9WaquBjqIhyNXLlAniBSu1ohq"></p>
+<p>這樣子寫 console 輸出也是 number。</p>
+<p>範例2：</p>
+<pre><code class="jsx">// var
+var a;
+function a() {
+  return 1;
+};
+
+console.log(typeof a); // function
+
+// let
+let a;
+function a() {
+  return 1;
+};
+
+console.log(typeof a); // 重複宣告 let a
+                                             // SyntaxError: redeclaration of let a</code></pre>
+<h3 id="函式陳述式-Function-Expression"><a href="#函式陳述式-Function-Expression" class="headerlink" title="函式陳述式 (Function Expression)"></a>函式陳述式 (Function Expression)</h3><pre><code class="jsx">console.log(typeof aTest); // undefined
+aTest(); // function 沒有被提升，出錯了。
+         // TypeError: aTest is not a function
+var aTest = function hoist() {
+    console.log(&#39;我被提升了&#39;);
+};
+</code></pre>
+<p>var aTest 有被提升，但是 function 沒有，aTest 沒有被 initialize，所以是 undefined。</p>
+<pre><code class="jsx">//
+// var
+aTest(); // function 沒有被提升，出錯了。
+         // TypeError: aTest is not a function
+var aTest = function() {
+    console.log(&#39;我被提升了&#39;);
+};
+
+//
+// let
+aTest(); // function 沒有被提升，出錯了。
+         // ReferenceError: can&#39;t access lexical declaration &#39;aTest&#39; before initialization
+let aTest = function() {
+    console.log(&#39;我被提升了&#39;);
+};
+
+//
+// const
+aTest(); // function 沒有被提升，出錯了。
+         // ReferenceError: can&#39;t access lexical declaration &#39;aTest&#39; before initialization
+const aTest = function() {
+    console.log(&#39;我被提升了&#39;);
+};</code></pre>
+<p>一樣都是 function，怎麼一個有被提升一個沒有呢？</p>
+<p>用 <code>let</code> 或 <code>const</code> 宣告 function expression 都會出現很明確的錯誤：ReferenceError: can’t access lexical declaration ‘findProd’ before initialization （暫時性死區 Temporal Dead Zone, TDZ）。</p>
+<ul>
+<li>函式提升 &gt; 變數提升</li>
+<li>assignment (<code>=</code>) 不會被提升</li>
+<li>Function Expression 不會被提升，function declaration 則會</li>
+</ul>
+<p>Reference:<br><a href="https://es6.ruanyifeng.com/#docs/let" target="_blank" rel="noopener">ECMAScript 6 入門: let 和 const 命令</a><br><a href="https://ithelp.ithome.com.tw/articles/10191549" target="_blank" rel="noopener">重新認識 JavaScript: Day 10 函式 Functions 的基本概念</a><br><a href="https://blog.techbridge.cc/2018/11/10/javascript-hoisting/" target="_blank" rel="noopener">我知道你懂 hoisting，可是你了解到多深？</a><br><a href="https://scotch.io/tutorials/understanding-hoisting-in-javascript#toc-hoisting-functions" target="_blank" rel="noopener">Hoisting in JavaScript</a></p>
 
         </div>
 
@@ -213,19 +284,10 @@ puts longitude</code></pre>
     
 <nav class="article-nav">
   
-    <a href="/notes/2020/07/30/JS-ES6-%E5%87%BD%E5%BC%8F%E5%8F%83%E6%95%B8%E7%9A%84%E8%A7%A3%E6%A7%8B%E8%B3%A6%E4%BA%88%E5%80%BC/" id="article-nav-newer" class="article-nav-link-wrap">
-      <div class="article-nav-caption">下一篇</div>
-      <div class="article-nav-title">
-        
-          JS Day 36: ES6 函式參數的解構賦予值
-        
-      </div>
-    </a>
   
-  
-    <a href="/notes/2020/07/24/JS-%E4%B8%AD%E8%8B%B1%E6%96%87%E5%AD%97%E4%B8%B2%E9%95%B7%E5%BA%A6%E5%88%A4%E6%96%B7/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/notes/2020/07/30/JS-Day-37-var-let-and-const/" id="article-nav-older" class="article-nav-link-wrap">
       <div class="article-nav-caption">上一篇</div>
-      <div class="article-nav-title">JS Day 34: 中英文字串長度判斷</div>
+      <div class="article-nav-title">JS Day 37: Var, Let and Const</div>
     </a>
   
 </nav>
@@ -234,15 +296,15 @@ puts longitude</code></pre>
     <section class="share">
         <div class="share-title">分享</div>
         <a class="share-item" target="_blank"
-            href="https://twitter.com/share?text=Selenium WebDriver with Ruby on Headless Chrome/Firefox 無頭爬蟲模式 - William's Notes&url=https://williamafil.github.io/notes/2020/07/28/Selenium-WebDriver-with-Ruby-on-Headless-Chrome-Firefox-%E7%84%A1%E9%A0%AD%E7%88%AC%E8%9F%B2%E6%A8%A1%E5%BC%8F/">
+            href="https://twitter.com/share?text=JS Day 37: Var, Let and Const, part 2 - Hoisting - William's Notes&url=https://williamafil.github.io/notes/2020/07/31/JS-Day-37-var-let-and-const-part-2-hoisting/">
             <box-icon type='logo' name='twitter'></box-icon>
         </a>
         <a class="share-item" target="_blank"
-            href="https://www.facebook.com/sharer.php?title=Selenium WebDriver with Ruby on Headless Chrome/Firefox 無頭爬蟲模式 - William's Notes&u=https://williamafil.github.io/notes/2020/07/28/Selenium-WebDriver-with-Ruby-on-Headless-Chrome-Firefox-%E7%84%A1%E9%A0%AD%E7%88%AC%E8%9F%B2%E6%A8%A1%E5%BC%8F/">
+            href="https://www.facebook.com/sharer.php?title=JS Day 37: Var, Let and Const, part 2 - Hoisting - William's Notes&u=https://williamafil.github.io/notes/2020/07/31/JS-Day-37-var-let-and-const-part-2-hoisting/">
             <box-icon name='facebook-square' type='logo' ></box-icon>
         </a>
         <!-- <a class="share-item" target="_blank"
-            href="https://service.weibo.com/share/share.php?title=Selenium WebDriver with Ruby on Headless Chrome/Firefox 無頭爬蟲模式 - William's Notes&url=https://williamafil.github.io/notes/2020/07/28/Selenium-WebDriver-with-Ruby-on-Headless-Chrome-Firefox-%E7%84%A1%E9%A0%AD%E7%88%AC%E8%9F%B2%E6%A8%A1%E5%BC%8F/&pic=">
+            href="https://service.weibo.com/share/share.php?title=JS Day 37: Var, Let and Const, part 2 - Hoisting - William's Notes&url=https://williamafil.github.io/notes/2020/07/31/JS-Day-37-var-let-and-const-part-2-hoisting/&pic=">
             <div class="n-icon n-icon-weibo"></div>
         </a> -->
     </section>
