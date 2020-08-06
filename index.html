@@ -94,6 +94,166 @@
   
     
       <article
+  id="post-JS-Day-41-Date-型別"
+  class="article article-type-post"
+>
+
+  <div class="article-inner">
+    
+
+    <div class="article-body">
+      <header class="article-title">
+        <a href="/notes/2020/08/06/JS-Day-41-Date-%E5%9E%8B%E5%88%A5/">JS Day 41: Date() 型別</a>
+      </header>
+      <div class="article-entry post-inner-html">
+        
+          <h1 id="Date-物件"><a href="#Date-物件" class="headerlink" title="Date 物件"></a>Date 物件</h1><h2 id="建立-Date-物件的-4-種方法"><a href="#建立-Date-物件的-4-種方法" class="headerlink" title="建立 Date 物件的 4 種方法"></a>建立 Date 物件的 4 種方法</h2><pre><code class="jsx">// 1.
+new Date();
+// 2.
+new Date(value);
+// 3.
+new Date(dateString);
+// 4.
+new Date(year, month[, day[, hour[, minutes[, seconds[, milliseconds]]]]]);</code></pre>
+<h3 id="1-new-Date"><a href="#1-new-Date" class="headerlink" title="1. new Date()"></a>1. new Date()</h3><pre><code class="jsx">var current = new Date();
+// Thu Aug 06 2020 20:02:42 GMT+0800 (Taipei Standard Time)
+
+var current = Date();
+// &quot;Thu Aug 06 2020 20:02:42 GMT+0800 (Taipei Standard Time)&quot;</code></pre>
+<p>回傳當下日期時間、時間。如果少了 <code>new</code> 則是會回傳一個當下時間的字串。 </p>
+<h3 id="2-new-Date-value"><a href="#2-new-Date-value" class="headerlink" title="2. new Date(value)"></a>2. new Date(value)</h3><pre><code class="jsx"># 取得現在時間（毫秒）
+const dateNow = Date.now(); // 1596715024359
+const getTime = new Date().getTime(); // 1596715024359
+const getValue = new Date().valueOf(); // 1596715024359
+
+new Date(dateNow); // Thu Aug 06 2020 19:57:04 GMT+0800 (Taipei Standard Time)
+new Date(getTime); // Thu Aug 06 2020 19:57:04 GMT+0800 (Taipei Standard Time)
+new Date(getValue);
+
+new Date(1596715024359);
+// Thu Aug 06 2020 19:57:04 GMT+0800 (Taipei Standard Time)
+// 只要傳入參數是 timestamp，new Date() 會轉換成我們可以字串，我們可閱讀的格式</code></pre>
+<p><code>Date.now()</code> 回傳對應於當下時間的數值 - 1970/01/01 00:00:00 (UTC) 到當下的毫秒數。</p>
+<p><code>new Date().getTime()</code> 取得格林威治標準時間 1970/01/01 00:00:00 (UTC) 到現在的時間(毫秒)。</p>
+<p><code>new Date().valueOf()</code> 取得 <code>Date</code> 的原始值。</p>
+<h3 id="3-new-Date-dataString"><a href="#3-new-Date-dataString" class="headerlink" title="3. new Date(dataString)"></a>3. new Date(dataString)</h3><pre><code class="jsx">var today = new Date(&#39;August 06, 2020 20:42:15&#39;);
+// Thu Aug 06 2020 20:42:15 GMT+0800 (Taipei Standard Time)
+var today = new Date(&#39;2020-08-06T20:42:15&#39;);
+// Thu Aug 06 2020 20:42:15 GMT+0800 (Taipei Standard Time)
+
+var today = new Date(2020, 08, 06);
+// Sun Sep 06 2020 00:00:00 GMT+0800 (Taipei Standard Time)
+// 雖然 dateString 是 2002, 08, 06 (星期四)，但回傳的卻是 星期日 九月六日 🤔
+// 啊，原來忘記用 quotation 包住。誤會一場。
+
+var today = new Date(&#39;2020, 08, 06&#39;);
+// Thu Aug 06 2020 00:00:00 GMT+0800 (Taipei Standard Time)</code></pre>
+<p>瀏覽器間解析日期字串的方式有所差異，MDN 不建議用此方法建立日期物件。</p>
+<pre><code class="jsx">new Date(&#39;2020-08-06&#39;);
+// Thu Aug 06 2020 08:00:00 GMT+0800 (Taipei Standard Time)</code></pre>
+<p>上方範例回傳<code>08:00:00</code> ，Chrome 瀏覽器會解讀成 格林威治標準時間(GMT) 的日期格式，而本地時間是 GMT+8 所以時間顯示會再加上 8 小時。</p>
+<p>下方範例回傳 <code>00:00:00</code> ，顯示為本地時間，上下兩者相差了 8 小時。如果瀏覽器位於不同時區打開，顯示的本地時間不一定相同。</p>
+<pre><code class="jsx">new Date(&#39;2020-8-06&#39;);
+// Thu Aug 06 2020 00:00:00 GMT+0800 (Taipei Standard Time)
+
+new Date(&#39;2020/08/06&#39;);
+// Thu Aug 06 2020 00:00:00 GMT+0800 (Taipei Standard Time)
+
+new Date(&#39;2020/8/06&#39;);
+// Thu Aug 06 2020 00:00:00 GMT+0800 (Taipei Standard Time)
+
+new Date(&#39;06 August, 2020&#39;);
+// Thu Aug 06 2020 00:00:00 GMT+0800 (Taipei Standard Time)</code></pre>
+<h3 id="4-new-Date-year-month-day-hour-minutes-seconds-milliseconds"><a href="#4-new-Date-year-month-day-hour-minutes-seconds-milliseconds" class="headerlink" title="4. new Date(year, month[, day[, hour[, minutes[, seconds[, milliseconds]]]]]);"></a>4. new Date(year, month[, day[, hour[, minutes[, seconds[, milliseconds]]]]]);</h3><p>這邊的參數傳入不是字串，不需要用 quotation ，但是傳入的數字有其規範。</p>
+<p><strong><code>year</code></strong></p>
+<p>表示年份的整數。當數值落在 0 到 99 之間，表示 1900 到 1999 之間的年份。參考<a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Date#Two_digit_years_map_to_1900_-_1999" target="_blank" rel="noopener">下面的範例</a>.</p>
+<p><strong><code>month</code></strong></p>
+<p>表示月份的整數。由 0 開始（一月）到 11 （十二月）。</p>
+<p><strong><code>day</code></strong></p>
+<p>選用。表示月份中第幾天的整數值。</p>
+<p><strong><code>hour</code></strong></p>
+<p>選用。表示小時數的整數值。</p>
+<p><strong><code>minute</code></strong></p>
+<p>選用。表示分鐘數的整數值。</p>
+<p><strong><code>second</code></strong></p>
+<p>選用。表示秒數的整數值。</p>
+<p><strong><code>millisecond</code></strong></p>
+<p>選用。表示毫秒數的整數值。</p>
+<p>– 擷取自 <a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" rel="noopener">MDN web doc</a></p>
+<pre><code class="jsx">var today = new Date(2020, 08, 06);
+// Sun Sep 06 2020 00:00:00 GMT+0800 (Taipei Standard Time)
+
+// month 的起始值是 0(一月)，08 則是九月，所以整個回傳的日期是 九月六日，二零二零年。</code></pre>
+<pre><code class="jsx">// new Date(year, month[, day[, hour[, minutes[, seconds[, milliseconds]]]]]);
+// 把上面這個方法看成下方這樣對我來說比較好理解
+// new Date(year, month, day, hour, minutes, seconds, milliseconds)
+
+new Date(98);
+// Thu Jan 01 1970 08:00:00 GMT+0800 (Taipei Standard Time)
+new Date(2020); 
+// Thu Jan 01 1970 08:00:02 GMT+0800 (Taipei Standard Time)</code></pre>
+<p>這部分有點不解！傳入一個參數回傳都是從 1970 開始。</p>
+<pre><code class="jsx">new Date(2020, 07); // month 是從 0 開始, 07 等於八月
+// Sat Aug 01 2020 00:00:00 GMT+0800 (Taipei Standard Time)
+// 參數只有年、月，所以日期會被設為 1
+
+new Date(2020, 07, 06);
+// Thu Aug 06 2020 00:00:00 GMT+0800 (Taipei Standard Time)</code></pre>
+<p>規則：</p>
+<ul>
+<li>如果沒有傳入任務參數到建構子，會依系統設定建立出代表當下時間的 Date 物件。</li>
+<li>如果傳入至少兩個參數，缺少日期的話會設為 1，其它參數則會被設定為 0。</li>
+</ul>
+<h1 id="日期字串格式規範"><a href="#日期字串格式規範" class="headerlink" title="日期字串格式規範"></a>日期字串格式規範</h1><p><a href="http://www.ecma-international.org/ecma-262/5.1/" target="_blank" rel="noopener">ECMA-262 Edition 5.1</a> 對 Date Time String Format 做出個規範：</p>
+<pre><code class="jsx">// ISO 8601 Extended Format
+YYYY-MM-DDTHH:mm:ss.SSSZ</code></pre>
+<pre><code class="jsx">// 即使只有年份也可以
+new Date(&#39;2020&#39;);
+// Wed Jan 01 2020 08:00:00 GMT+0800 (Taipei Standard Time)
+new Date(&#39;2020-08&#39;);
+// Sat Aug 01 2020 08:00:00 GMT+0800 (Taipei Standard Time)
+new Date(&#39;2020-08-06&#39;);
+// Thu Aug 06 2020 08:00:00 GMT+0800 (Taipei Standard Time)</code></pre>
+<p>如果要傳入時間(時：分)，日期(DD) 的部分則不能省略，秒(ss) 則可以省略。。</p>
+<p><strong><em>YYYY-MM-DD<code>T</code>HH:mm:ss.SSSZ</em></strong> 日期跟時間中間會用英文字母 <code>T</code> 來做分隔。</p>
+<p><strong><em>YYYY-MM-DDTHH:mm:ss.SSS<code>Z</code></em></strong> 最後面的 <code>Z</code> 代表時區，它可以被省略。</p>
+<pre><code class="jsx">new Date(&#39;2020-08-06T20:55&#39;);
+// Thu Aug 06 2020 20:55:00 GMT+0800 (Taipei Standard Time)
+new Date(&#39;2020-08-06T20:55:33&#39;);
+// Thu Aug 06 2020 20:55:33 GMT+0800 (Taipei Standard Time)</code></pre>
+<p>Reference:<br><a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" rel="noopener">Date - MDN web docs</a><br><a href="https://blog.miniasp.com/post/2016/09/25/JavaScript-Date-usage-in-details" target="_blank" rel="noopener">前端工程研究：關於 JavaScript 中 Date 型別的常見地雷與建議作法 — The Will Will Web</a></p>
+
+        
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="article-footer">
+    <div class="article-more-info">
+      <div class="article-date">
+  <time datetime="2020-08-06T15:36:30.000Z" itemprop="datePublished">2020-08-06</time>
+</div>
+      
+        <div class="article-category">
+          <a class="article-category-link" href="/notes/categories/JavaScript/">JavaScript</a>
+        </div>
+      
+      
+        <div class="article-tag">
+          <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li></ul>
+        </div>
+      
+    </div>
+  </footer>
+
+
+</article>
+
+    
+  
+    
+      <article
   id="post-JS-Day-39-Arrow-Function-this"
   class="article article-type-post"
 >
@@ -1353,7 +1513,7 @@ Object.entries(chartObj);
   <div class="widget-wrap widget-tags">
     <div class="widget-title"><span>Tags</span></div>
     <div class="widget-inner">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
     </div>
   </div>
 
@@ -1364,6 +1524,10 @@ Object.entries(chartObj);
     <div class="widget-title"><span>Recent Posts</span></div>
     <div class="widget-inner">
       <ul>
+        
+          <li>
+            <a href="/notes/2020/08/06/JS-Day-41-Date-%E5%9E%8B%E5%88%A5/">JS Day 41: Date() 型別</a>
+          </li>
         
           <li>
             <a href="/notes/2020/08/02/JS-Day-39-Arrow-Function-this/">JS Day 39: Arrow Function &amp; this</a>
@@ -1379,10 +1543,6 @@ Object.entries(chartObj);
         
           <li>
             <a href="/notes/2020/07/30/JS-ES6-%E5%87%BD%E5%BC%8F%E5%8F%83%E6%95%B8%E7%9A%84%E8%A7%A3%E6%A7%8B%E8%B3%A6%E4%BA%88%E5%80%BC/">JS Day 36: ES6 函式參數的解構賦予值</a>
-          </li>
-        
-          <li>
-            <a href="/notes/2020/07/28/Selenium-WebDriver-with-Ruby-on-Headless-Chrome-Firefox-%E7%84%A1%E9%A0%AD%E7%88%AC%E8%9F%B2%E6%A8%A1%E5%BC%8F/">Selenium WebDriver with Ruby on Headless Chrome/Firefox 無頭爬蟲模式</a>
           </li>
         
       </ul>
