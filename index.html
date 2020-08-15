@@ -94,6 +94,401 @@
   
     
       <article
+  id="post-JS-Day-47-AJAX-Request-XMLHttpRequest-Fetch-AXIOS"
+  class="article article-type-post"
+>
+
+  <div class="article-inner">
+    
+
+    <div class="article-body">
+      <header class="article-title">
+        <a href="/notes/2020/08/16/JS-Day-47-AJAX-Request-XMLHttpRequest-Fetch-AXIOS/">JS Day 47: AJAX Request - XMLHttpRequest, Fetch, AXIOS</a>
+      </header>
+      <div class="article-entry post-inner-html">
+        
+          <h1 id="XMLHttpRequest"><a href="#XMLHttpRequest" class="headerlink" title="XMLHttpRequest"></a>XMLHttpRequest</h1><ul>
+<li>JavaScript 原生的方法傳送請求</li>
+<li>不支援 Promises</li>
+<li>語法攏長，較多 callbacks，不好記</li>
+</ul>
+<h2 id="GET-request"><a href="#GET-request" class="headerlink" title="GET request"></a>GET request</h2><pre><code class="jsx">// GET request
+const myReq = new XMLHttpRequest();
+
+myReq.onload = function() {
+  const data = JSON.parse(this.responseText);
+};
+
+myReq.onerror = function(err) {
+  console.log(&#39;Error!&#39;, err);
+};
+
+myReq.open(&#39;get&#39;, &#39;https://www.icanhazdadjoke.com/&#39;, true&#39;);
+myReq.setRequestHeader(&#39;Accept&#39;, &#39;application/json&#39;);
+myReq.send();</code></pre>
+<h2 id="POST-request"><a href="#POST-request" class="headerlink" title="POST request"></a>POST request</h2><pre><code class="jsx">// POST request
+let xhr = new XMLHttpRequest();
+xhr.open(&#39;POST&#39;, &#39;https://hexschool-tutorial.herokuapp.com/api/signup&#39;, true);
+
+// 格式：application/x-www-form-urlencoded
+xhr.setRequestHeader(&quot;Content-type&quot;, &quot;application/x-www-form-urlencoded&quot;);
+xhr.send(&#39;email=abcde@gmail.com&#39;);
+
+// 格式：JSON
+// let account = {
+//   email:&#39;abcdef@gmail.com&#39;,
+//   password: &#39;1234&#39;
+// };
+
+// xhr.setRequestHeader(&quot;Content-type&quot;, &quot;application/json&quot;);
+// xhr.send(JSON.stringify(account));</code></pre>
+<h2 id="範例：GET-Request-StarWars-API-www-swapi-dev"><a href="#範例：GET-Request-StarWars-API-www-swapi-dev" class="headerlink" title="範例：GET Request StarWars API (www.swapi.dev)"></a>範例：GET Request StarWars API (<a href="https://www.swapi.dev" target="_blank" rel="noopener">www.swapi.dev</a>)</h2><pre><code class="jsx">const req = new XMLHttpRequest();
+req.addEventListener(&#39;load&#39;, function() {
+  console.log(&#39;請求成功!&#39;);
+  const data = JSON.parse(this.responseText);
+  for (let planet of data.results) {
+    console.log(planet.name); // 列出星球名稱
+  }
+});
+
+req.addEventListener(&#39;error&#39;, () =&gt; {
+  console.log(&#39;錯誤&#39;);
+});
+
+req.open(&#39;GET&#39;, &#39;https://swapi.dev/api/planets/&#39;)
+req.send();
+console.log(&#39;request send&#39;)</code></pre>
+<p><strong>Planet Request 結果</strong>：第一筆資料</p>
+<pre><code class="json">GET /api/planets/
+HTTP 200 OK
+Content-Type: application/json
+Vary: Accept
+Allow: GET, HEAD, OPTIONS
+
+{
+    &quot;count&quot;: 60, 
+    &quot;next&quot;: &quot;http://swapi.dev/api/planets/?page=2&quot;, 
+    &quot;previous&quot;: null, 
+    &quot;results&quot;: [
+        {
+            &quot;name&quot;: &quot;Tatooine&quot;, 
+            &quot;rotation_period&quot;: &quot;23&quot;, 
+            &quot;orbital_period&quot;: &quot;304&quot;, 
+            &quot;diameter&quot;: &quot;10465&quot;, 
+            &quot;climate&quot;: &quot;arid&quot;, 
+            &quot;gravity&quot;: &quot;1 standard&quot;, 
+            &quot;terrain&quot;: &quot;desert&quot;, 
+            &quot;surface_water&quot;: &quot;1&quot;, 
+            &quot;population&quot;: &quot;200000&quot;, 
+            &quot;residents&quot;: [
+                &quot;http://swapi.dev/api/people/1/&quot;, 
+                &quot;http://swapi.dev/api/people/2/&quot;, 
+                &quot;http://swapi.dev/api/people/4/&quot;, 
+                &quot;http://swapi.dev/api/people/6/&quot;, 
+                &quot;http://swapi.dev/api/people/7/&quot;, 
+                &quot;http://swapi.dev/api/people/8/&quot;, 
+                &quot;http://swapi.dev/api/people/9/&quot;, 
+                &quot;http://swapi.dev/api/people/11/&quot;, 
+                &quot;http://swapi.dev/api/people/43/&quot;, 
+                &quot;http://swapi.dev/api/people/62/&quot;
+            ], 
+            &quot;films&quot;: [
+                &quot;http://swapi.dev/api/films/1/&quot;, 
+                &quot;http://swapi.dev/api/films/3/&quot;, 
+                &quot;http://swapi.dev/api/films/4/&quot;, 
+                &quot;http://swapi.dev/api/films/5/&quot;, 
+                &quot;http://swapi.dev/api/films/6/&quot;
+            ], 
+            &quot;created&quot;: &quot;2014-12-09T13:50:49.641000Z&quot;, 
+            &quot;edited&quot;: &quot;2014-12-20T20:58:18.411000Z&quot;, 
+            &quot;url&quot;: &quot;http://swapi.dev/api/planets/1/&quot;
+        },
+
+...略</code></pre>
+<h2 id="Chaining-XMLHttpRequest"><a href="#Chaining-XMLHttpRequest" class="headerlink" title="Chaining XMLHttpRequest"></a>Chaining XMLHttpRequest</h2><p>每一個星球下還有很多資料，例如 films，但是要取的 films 還需要發送 request 才可以取得資料。</p>
+<p><strong>Films request 結果</strong></p>
+<pre><code class="json">// Film Instance
+
+GET /api/films/5/
+HTTP 200 OK
+Content-Type: application/json
+Vary: Accept
+Allow: GET, HEAD, OPTIONS
+
+{
+    &quot;title&quot;: &quot;Attack of the Clones&quot;, 
+    &quot;episode_id&quot;: 2, 
+    &quot;opening_crawl&quot;: &quot;There is unrest in the Galactic\r\nSenate. Several thousand solar\r\nsystems have declared their\r\nintentions to leave the Republic.\r\n\r\nThis separatist movement,\r\nunder the leadership of the\r\nmysterious Count Dooku, has\r\nmade it difficult for the limited\r\nnumber of Jedi Knights to maintain \r\npeace and order in the galaxy.\r\n\r\nSenator Amidala, the former\r\nQueen of Naboo, is returning\r\nto the Galactic Senate to vote\r\non the critical issue of creating\r\nan ARMY OF THE REPUBLIC\r\nto assist the overwhelmed\r\nJedi....&quot;, 
+    &quot;director&quot;: &quot;George Lucas&quot;, 
+    &quot;producer&quot;: &quot;Rick McCallum&quot;, 
+    &quot;release_date&quot;: &quot;2002-05-16&quot;, 
+    &quot;characters&quot;: [
+        &quot;http://swapi.dev/api/people/2/&quot;, 
+        &quot;http://swapi.dev/api/people/3/&quot;, 
+        &quot;http://swapi.dev/api/people/6/&quot;, 
+        &quot;http://swapi.dev/api/people/7/&quot;, 
+        &quot;http://swapi.dev/api/people/10/&quot;, 
+
+       .... 略</code></pre>
+<p>Film 底下還有很多資料可以 request，例如人物。如果用 XMLHttpRequest 就可以一直 nested 下去沒完沒了。</p>
+<h1 id="Fetch"><a href="#Fetch" class="headerlink" title="Fetch"></a>Fetch</h1><ul>
+<li>ES6 原生方法</li>
+<li>支援 Promises</li>
+<li>不支援 IE</li>
+</ul>
+<h2 id="POST-Request"><a href="#POST-Request" class="headerlink" title="POST Request"></a>POST Request</h2><pre><code class="jsx">// 來發個 POST Request:
+
+postData(&#39;http://example.com/answer&#39;, {answer: 42})
+  .then(data =&gt; console.log(data)) // JSON from `response.json()` call
+  .catch(error =&gt; console.error(error))
+
+function postData(url, data) {
+  // Default options are marked with *
+  return fetch(url, {
+    body: JSON.stringify(data), // must match &#39;Content-Type&#39; header
+    cache: &#39;no-cache&#39;, // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: &#39;same-origin&#39;, // include, same-origin, *omit
+    headers: {
+      &#39;user-agent&#39;: &#39;Mozilla/4.0 MDN Example&#39;,
+      &#39;content-type&#39;: &#39;application/json&#39;
+    },
+    method: &#39;POST&#39;, // *GET, POST, PUT, DELETE, etc.
+    mode: &#39;cors&#39;, // no-cors, cors, *same-origin
+    redirect: &#39;follow&#39;, // manual, *follow, error
+    referrer: &#39;no-referrer&#39;, // *client, no-referrer
+  })
+  .then(response =&gt; response.json()) // 輸出成 json
+}</code></pre>
+<p><strong>HexSchool 註冊帳號範例：</strong></p>
+<pre><code class="jsx">const api = &#39;https://hexschool-tutorial.herokuapp.com/api/signup&#39;;
+let account = {
+    email:&#39;abcdef@gmail.com&#39;,
+    password: &#39;1234&#39;
+  };
+
+postData(api, account)
+  .then(data =&gt; console.log(data)) // JSON from `response.json()` call
+  .catch(error =&gt; console.error(error))
+
+function postData(url, data) {
+  return fetch(url, {
+    body: JSON.stringify(data),
+    headers: {
+      &#39;content-type&#39;: &#39;application/json&#39;
+    },
+    method: &#39;POST&#39;,
+  })
+  .then(response =&gt; response.json()) // 輸出成 json
+}
+
+// {success: false, result: {…}, message: &quot;此帳號已被使用&quot;}</code></pre>
+<h2 id="GET-Request"><a href="#GET-Request" class="headerlink" title="GET Request"></a>GET Request</h2><pre><code class="jsx">const myReq = fetch(&#39;http://example.com/movies.json&#39;)
+  .then(function(response) {
+    return response.json();
+  })
+  .then(function(myJson) {
+    console.log(myJson);
+  });</code></pre>
+<p>範例：改寫 XMLHttpRequest 例子</p>
+<pre><code class="jsx">const fetchedData = fetch(&#39;https://swapi.dev/api/planets/&#39;)
+  .then( response =&gt; {
+    // status: 404/500 promise 一樣會是 resolved (ok 值會從 true 變成 false)
+    console.log(response);
+    if (response.status !== 202) {
+      console.log(&#39;發生錯誤：&#39;, response.status);
+      return;
+    }
+    response.json().then ( data =&gt; {
+      for (let planet of data.results) {
+        console.log(planet.name);
+      }
+    })
+  })
+  .catch( err =&gt; {
+    // 只有在網路發生錯誤或是請求中斷才會是 promise rejected
+    console.log(&#39;Error: &#39;, err);
+  })</code></pre>
+<blockquote>
+<p>fetch() 回傳的 promise 物件, resolve 和 reject 的使用方式有差異, 當遇到 HTTP Status <code>404</code>, <code>500</code> 時會使用 resolve 但<em>會將 status 的值從 ok 變為 false</em>， reject 只有在網路發生錯誤或是任何會中斷網路請求時才會使用。 — MDN web docs</p>
+</blockquote>
+<p>除了上方的方式，也可以利用下方的 catch error，即是把錯誤丟給他</p>
+<pre><code class="jsx">const fetchedData = fetch(&#39;https://swapi.dev/api/planetsss/&#39;) // 網址錯誤
+  .then( response =&gt; {
+    // status: 404/500 promise 一樣會是 resolved (ok 值會從 true 變成 false)
+    console.log(response);
+    if (response.status !== 202) { // 這邊寫成 if (!response.ok) ** not ok ** 也可以
+      throw new Error(`Status: ${response.status}`);
+            return;
+    }
+    response.json().then ( data =&gt; {
+      for (let planet of data.results) {
+        console.log(planet.name);
+      }
+    })
+  })
+  .catch( err =&gt; {
+    // 只有在網路發生錯誤或是請求中斷才會是 promise rejected
+    console.log(&#39;Catch 錯誤: &#39;, err);
+  })</code></pre>
+<p>錯誤跑到下方顯示了。<br><img src="https://drive.google.com/uc?export=view&id=1dK5aSjMRe4_TdzL6xya9dKoKzZSTKVhC" alt="https://drive.google.com/uc?export=view&amp;id=1dK5aSjMRe4_TdzL6xya9dKoKzZSTKVhC"></p>
+<pre><code class="jsx">const fetchedData = fetch(&#39;https://swapi.dev/api/planets/&#39;)
+  .then( response =&gt; {
+    // status: 404/500 promise 一樣會是 resolved (ok 值會從 true 變成 false)
+    console.log(response);
+    if (!response.ok) {
+      throw new Error(`Status: ${response.status}`);
+      return;
+    }
+    return response.json(); // return promise
+  })
+
+  ////////////////////////////////
+  // 從上方 response.json() 往下移，less nested
+  .then ( data =&gt; {
+    console.log(data);
+    for (let planet of data.results) {
+      console.log(planet.name);
+    }
+  })
+  ////////////////////////////////
+
+    .catch( err =&gt; {
+    // 只有在網路發生錯誤或是請求中斷才會是 promise rejected
+    console.log(&#39;Catch 錯誤: &#39;, err);
+  })</code></pre>
+<h2 id="Chaining-Fetch-Requests"><a href="#Chaining-Fetch-Requests" class="headerlink" title="Chaining Fetch Requests"></a>Chaining Fetch Requests</h2><pre><code class="jsx">const fetchedData = fetch(&#39;https://swapi.dev/api/planets/&#39;)
+  .then( response =&gt; {
+    // status: 404/500 promise 一樣會是 resolved (ok 值會從 true 變成 false)
+    console.log(&#39;星球&#39;, response);
+    if (!response.ok) {
+      throw new Error(`Status: ${response.status}`);
+      return;
+    }
+    return response.json(); // return promise
+  })
+  .then ( data =&gt; {
+    //////////////////////////////
+    //  request FILM
+    const filmAPI = data.results[0].films[0];
+    fetch(filmAPI)
+      .then( response =&gt; {
+        console.log(&#39;影片&#39;, response);
+        if (!response.ok) {
+          throw new Error(`Status: ${response.status}`);
+          return;
+        }
+        return response.json(); // return promise
+      })
+      .then ( filmData =&gt; {
+        console.log(&#39;filmData&#39;, filmData);
+      })
+      .catch( err =&gt; {
+        console.log(&#39;Catch 錯誤: &#39;, err);
+      })
+  })
+  ////////////////////////////////
+  .catch( err =&gt; {
+    // 只有在網路發生錯誤或是請求中斷才會是 promise rejected
+    console.log(&#39;Catch 錯誤: &#39;, err);
+  })</code></pre>
+<pre><code class="jsx">const fetchedData = fetch(&#39;https://swapi.dev/api/planets/&#39;)
+  .then( response =&gt; {
+    // status: 404/500 promise 一樣會是 resolved (ok 值會從 true 變成 false)
+    console.log(response);
+    if (!response.ok) {
+      throw new Error(`Status: ${response.status}`);
+      return;
+    }
+    return response.json(); // return promise
+  })
+
+  ////////////////////////////////
+  // 請求 film data
+  .then ( data =&gt; {
+    const filmAPI = data.results[0].films[0];
+    return fetch(filmAPI); // return promise
+  })
+  //** 這邊跟上方的 response 是做一樣的事 **//
+  .then( response =&gt; {
+    console.log(response);
+    if (!response.ok) {
+      throw new Error(`Status: ${response.status}`);
+      return;
+    }
+    return response.json(); // return promise
+  })
+  .then( filmData =&gt; {
+    console.log(filmData);
+  })
+  //**                                **//
+  ////////////////////////////////
+
+  .catch( err =&gt; {
+    // 只有在網路發生錯誤或是請求中斷才會是 promise rejected
+    console.log(&#39;Catch 錯誤: &#39;, err);
+  })</code></pre>
+<p>這樣子看起來比較平整話，而且有部分重複的語法。</p>
+<h1 id="AXIOS"><a href="#AXIOS" class="headerlink" title="AXIOS"></a>AXIOS</h1><ul>
+<li>支援 promises</li>
+<li>在瀏覽器中創建 XMLHttpRequests</li>
+<li>支援IE</li>
+</ul>
+<h2 id="Post-Request"><a href="#Post-Request" class="headerlink" title="Post Request"></a>Post Request</h2><pre><code class="jsx">axios.post(&#39;/user&#39;, {
+    firstName: &#39;Fred&#39;,
+    lastName: &#39;Flintstone&#39;
+  })
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });</code></pre>
+<p><strong>HexSchool 註冊帳號範例：</strong></p>
+<pre><code class="jsx">const api = &#39;https://hexschool-tutorial.herokuapp.com/api/signup&#39;;
+axios.post(api, {
+  email:&#39;abcdefddd@gmail.com&#39;,
+  password: &#39;1234&#39;
+})
+.then(function (response) {
+  console.log(response);
+})
+.catch(function (error) {
+  console.log(error);
+});</code></pre>
+<p>Reference:</p>
+<p>The Modern JavaScript Bootcamp<br><a href="https://developer.mozilla.org/zh-TW/docs/Web/API/Fetch_API/Using_Fetch" target="_blank" rel="noopener">Using Fetch — MDN web docs</a><br><a href="https://github.com/axios/axios" target="_blank" rel="noopener">AXIOS</a></p>
+
+        
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="article-footer">
+    <div class="article-more-info">
+      <div class="article-date">
+  <time datetime="2020-08-15T16:45:41.000Z" itemprop="datePublished">2020-08-16</time>
+</div>
+      
+        <div class="article-category">
+          <a class="article-category-link" href="/notes/categories/JavaScript/">JavaScript</a>
+        </div>
+      
+      
+        <div class="article-tag">
+          <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li></ul>
+        </div>
+      
+    </div>
+  </footer>
+
+
+</article>
+
+    
+  
+    
+      <article
   id="post-JS-Day-44-window-location"
   class="article article-type-post"
 >
@@ -1305,203 +1700,6 @@ getLength(&#39;abc一二三&#39;); // =&gt; 9</code></pre>
 
     
   
-    
-      <article
-  id="post-JS-Array-Methods-修改原始陣列的方法"
-  class="article article-type-post"
->
-
-  <div class="article-inner">
-    
-
-    <div class="article-body">
-      <header class="article-title">
-        <a href="/notes/2020/07/22/JS-Array-Methods-%E4%BF%AE%E6%94%B9%E5%8E%9F%E5%A7%8B%E9%99%A3%E5%88%97%E7%9A%84%E6%96%B9%E6%B3%95/">JS Day 28:  Array Methods - 修改原始陣列的方法</a>
-      </header>
-      <div class="article-entry post-inner-html">
-        
-          <ul>
-<li>In-place modification (修改原始陣列)<ul>
-<li><input checked="" disabled="" type="checkbox"> copyWithin()</li>
-<li><input checked="" disabled="" type="checkbox"> fill()</li>
-<li><input checked="" disabled="" type="checkbox"> pop()</li>
-<li><input checked="" disabled="" type="checkbox"> push()</li>
-<li><input checked="" disabled="" type="checkbox"> reverse()</li>
-<li><input checked="" disabled="" type="checkbox"> shift()</li>
-<li><input checked="" disabled="" type="checkbox"> unshift()</li>
-<li><input checked="" disabled="" type="checkbox"> sort()</li>
-<li><input checked="" disabled="" type="checkbox"> splice()</li>
-</ul>
-</li>
-</ul>
-<h1 id="sort-排序"><a href="#sort-排序" class="headerlink" title="sort()  排序"></a>sort()  排序</h1><blockquote>
-<p><code>sort()</code> 方法會原地（in place）對一個陣列的所有元素進行排序，並回傳此陣列。排序不一定是穩定的（stable）。預設的排序順序是根據字串的 Unicode 編碼位置（code points）而定。 —  MDN web docs</p>
-</blockquote>
-<p>驗證：</p>
-<pre><code class="jsx">const array = [&#39;你&#39;,&#39;我&#39;,&#39;他&#39;];
-array.sort(); 
-// =&gt; Array(3) [ &quot;他&quot;, &quot;你&quot;, &quot;我&quot; ]</code></pre>
-<p>找出各個元素的 code points</p>
-<pre><code class="jsx">array.map(item =&gt; item.codePointAt());
-// =&gt; Array(3) [ 20182, 20320, 25105 ]</code></pre>
-<p>其實 <code>[ &quot;他&quot;, &quot;你&quot;, &quot;我&quot; ]</code> 就是按照 各個元素的 code points <code>[ 20182, 20320, 25105 ]</code>來排序的。</p>
-<p>基本上不大需要這樣的排序方式，所以會傳入一個 comparison function 比較函式來進行排序</p>
-<pre><code class="jsx">arr.sort( compareFunc(a,b) {
-    return a - b; // ascending order
-});</code></pre>
-<p>如果比較函式回傳小於 0 (returns less than zero): a 排在 b 前面</p>
-<p>如果比較函式回傳 0 (returns zero): a 與 b 位置保持不變</p>
-<p>如果比較函式回傳大於 0 (returns greater than zero): b 排在 a 前面</p>
-<pre><code class="jsx">const nums = [9, 2, 88, 1000, 348];
-nums.sort( (a, b) =&gt; a - b);
-// 結果 =&gt; Array(5) [ 2, 9, 88, 348, 1000 ]
-</code></pre>
-<p>執行順序：</p>
-<ol>
-<li><p>a - b</p>
-<p> 9 - 2 = 7 (大於 0, b 排在 a 前面)<br> nums = [2, 9, 88, 1000, 348];</p>
-</li>
-<li><p>a - b<br> 9 - 88 = -79 (小於 0, a 排在 b 前面)<br> nums = [2, 9, 88, 1000, 348];</p>
-</li>
-<li><p>a - b<br> 88 - 1000 = -912 (小於 0, a 排在 b 前面)<br> nums = [2, 9, 88, 1000, 348];</p>
-</li>
-<li><p>a - b<br> 1000 - 348 = 652 (大於 0, b 排在 a 前面)<br> nums = [2, 9, 88, 348, 1000];</p>
-</li>
-</ol>
-<p>排序：</p>
-<pre><code class="jsx">const ascendingOrder  = arr.sort( () =&gt; a - b); // 升序
-const descendingOrder = arr.sort( () =&gt; b - a); // 降序</code></pre>
-<p>練習 （<strong>Sorting object array</strong>）：</p>
-<p><a href="https://codepen.io/william_k/pen/gOPdgyB?editors=1111" target="_blank" rel="noopener">JavaScript30 - 04 Array Cardio Day 1</a></p>
-<p><a href="https://codepen.io/william_k/pen/ZEQMxLd" target="_blank" rel="noopener">JS 28</a> </p>
-<p>References:</p>
-<p><a href="https://medium.com/@realdennis/javascript-%E5%BE%9Earray%E7%9A%84sort%E6%96%B9%E6%B3%95-%E8%81%8A%E5%88%B0%E5%90%84%E5%AE%B6%E7%80%8F%E8%A6%BD%E5%99%A8%E7%9A%84%E5%AF%A6%E4%BD%9C%E7%AE%97%E6%B3%95-c23a335b1b80" target="_blank" rel="noopener">[JavaScript] 從 Array 的 sort 方法，聊到各瀏覽器的實作，沒想到 Chrome 和FireFox 的排序如此不同</a></p>
-<h1 id="splice-刪除-加入"><a href="#splice-刪除-加入" class="headerlink" title="splice()  刪除/加入"></a>splice()  刪除/加入</h1><blockquote>
-<p><code>splice()</code> 方法可以藉由刪除既有元素並／或加入新元素來改變一個陣列的內容。 — MDN web docs</p>
-</blockquote>
-<p><code>array.splice( 起始索引, 欲刪除元素數量,  欲增加的元素)</code></p>
-<p>範例：</p>
-<p>// 增加 1 個元素，刪除 0 個元素</p>
-<pre><code class="jsx">let fruits = [&#39;酪梨&#39;,&#39;桃子&#39;,&#39;香蕉&#39;,&#39;葡萄&#39;,&#39;西瓜&#39;];
-fruits.splice(3, 0, &#39;番茄&#39;); 
-// output =&gt; [ &quot;酪梨&quot;, &quot;桃子&quot;, &quot;香蕉&quot;, &quot;番茄&quot;, &quot;葡萄&quot;, &quot;西瓜&quot; ]
-
-   0      1     2     3     4
-[&#39;酪梨&#39;,&#39;桃子&#39;,&#39;香蕉&#39;,&#39;葡萄&#39;,&#39;西瓜&#39;] 
-// 在第 3 個位置加入 &#39;番茄&#39;
-
-   0      1     2     + 3 +     4      5
-[&#39;酪梨&#39;,&#39;桃子&#39;,&#39;香蕉&#39;, &#39;[番茄]&#39;, &#39;葡萄&#39;,&#39;西瓜&#39;] 
-</code></pre>
-<p>// 增加 0 個元素，刪除 2 個元素</p>
-<pre><code class="jsx"> let fruits = [&#39;酪梨&#39;,&#39;桃子&#39;,&#39;香蕉&#39;,&#39;葡萄&#39;,&#39;西瓜&#39;];
-fruits.splice(2, 2);  // 從索引 2 開始，刪除兩個元素 [ &quot;香蕉&quot;, &quot;葡萄&quot; ]
-// output =&gt; [&#39;酪梨&#39;,&#39;桃子&#39;,&#39;西瓜&#39;]</code></pre>
-<p>// 增加 4 個元素，刪除 4 個元素</p>
-<pre><code class="jsx">let fruits = [&#39;酪梨&#39;,&#39;桃子&#39;,&#39;香蕉&#39;,&#39;葡萄&#39;,&#39;西瓜&#39;];
-fruits.splice(1, 4, &#39;九層塔&#39;, &#39;花椰菜&#39;, &#39;紅蘿蔔&#39;, &#39;高麗菜&#39;);
-// 從索引 1 算起，刪除四個元素 [ &quot;桃子&quot;, &quot;香蕉&quot;, &quot;葡萄&quot;, &quot;西瓜&quot; ]
-// output =&gt; [ &quot;酪梨&quot;, &quot;九層塔&quot;, &quot;花椰菜&quot;, &quot;紅蘿蔔&quot;, &quot;高麗菜&quot; ]</code></pre>
-<p>練習：</p>
-<p><a href="https://codepen.io/william_k/pen/mdVGKqV" target="_blank" rel="noopener">JS 28</a> (Terry Yu) - 把 id 206 的物件移動到陣列索引 0（第一個）</p>
-<pre><code class="jsx">const terryElement = data.find(p =&gt; p.id == 206); // return 物件
-const terryIndex = data.findIndex(p =&gt; p.id == 206); // return 索引
-data.splice(terryIndex, 1); // 從索引x刪除一個元素
-data.splice(0, 0, terryElement); // 從索引 0 加入 terryElement 並刪除 0 個元素</code></pre>
-<p>unshift(), shift(), push(), pop() 這四個算是比較好理解的，但是名稱取得很容易讓人搞混(除了 push)。下方的連結都在講解 stack and queue 可以更深入了解這四個方法。</p>
-<p><a href="https://www.youtube.com/watch?v=z_s7D96re_A" target="_blank" rel="noopener">JavaScript Arrays as Queue and Stack</a><br><a href="https://medium.com/swlh/stacks-and-queues-simplified-ef0f838fc534" target="_blank" rel="noopener">Stacks and Queues, Simplified</a><br><a href="https://ithelp.ithome.com.tw/articles/10205260" target="_blank" rel="noopener">堆疊(Stack) &amp; 佇列(Queue)</a><br><a href="https://medium.com/@realdennis/%E4%BD%A0%E5%85%B6%E5%AF%A6%E4%B8%8D%E7%94%A8%E5%9C%A8-javascript-%E5%AF%A6%E4%BD%9C%E4%B8%80%E5%80%8B-queue-b4e788e23bc7" target="_blank" rel="noopener">你其實不用在 JavaScript 實作一個 Queue</a></p>
-<blockquote>
-<p><code>unshift()</code> 方法會添加一個或多個元素至陣列的開頭，並且回傳陣列的新長度。 — MDN web docs</p>
-</blockquote>
-<pre><code class="jsx">// unshift()
-let arr = [1, 3, 5, 7, 9]
-arr.unshift(&#39;你&#39;, &#39;我&#39;, &#39;他&#39;);  // 新增 3 個元素到陣列前</code></pre>
-<p>unshift 被刻意設計為具通用性；此方法可以藉由 called 或 applied 應用於類似陣列的物件上。若欲應用此方法的物件不包含代表一系列啟始為零之數字屬性序列長度的 length 屬性，可能是不具任何意義的行為。 — MDN web docs</p>
-<p>MDN 這部分的描述不太明白，之後會再補上。</p>
-<h1 id="shift-移除第一個元素"><a href="#shift-移除第一個元素" class="headerlink" title="shift()  移除第一個元素"></a>shift()  移除第一個元素</h1><blockquote>
-<p>shift() 方法會移除並回傳陣列的第一個元素。此方法會改變陣列的長度。 — MDN web docs</p>
-</blockquote>
-<pre><code class="jsx">// shift()
-let fruits = [&#39;香蕉&#39;, &#39;酪梨&#39;, &#39;鳳梨&#39;, &#39;葡萄&#39;];
-fruits.shift(); // 移除第一個元素 ”香蕉“
-
-fruits.shift(2); // 參數 2 沒有作用，只有第一個元素會被移除
-console.log(fruits); // =&gt; [&quot;鳳梨&quot;, &quot;葡萄&quot;]</code></pre>
-<h1 id="Push-在末端加入元素"><a href="#Push-在末端加入元素" class="headerlink" title="Push()  在末端加入元素"></a>Push()  在末端加入元素</h1><blockquote>
-<p>push() 方法會添加一個或多個元素至陣列的末端，並且回傳陣列的新長度。 — MDN web docs</p>
-</blockquote>
-<pre><code class="jsx">// push()
-let colors = [&#39;red&#39;, &#39;pink&#39;, &#39;orange&#39;];
-
-colors.push(); // 沒有作用，陣列長度維持一樣
-console.log(colors.length);
-colors.push(&#39;yellow&#39;); // 新增 &#39;yellow&#39; 在末端
-console.log(colors.length);
-colors.push([&#39;black&#39;,&#39;white&#39;]); // 傳入一個陣列在末端
-console.log(colors);</code></pre>
-<h1 id="Pop-在末端移除元素"><a href="#Pop-在末端移除元素" class="headerlink" title="Pop()  在末端移除元素"></a>Pop()  在末端移除元素</h1><blockquote>
-<p>pop() 方法會移除並回傳陣列的最後一個元素。此方法會改變陣列的長度。 — MDN web doc</p>
-</blockquote>
-<pre><code class="jsx">// pop()
-let fruits2 = [&#39;香蕉&#39;, &#39;酪梨&#39;, &#39;鳳梨&#39;, &#39;葡萄&#39;];
-fruits2.pop(); // 移除最後一個元素 &#39;葡萄&#39;
-
-fruits2.pop(2); // 參數 2 沒有作用，但最後一個元素會被移除
-console.log(fruits2); // =&gt; [&quot;香蕉&quot;, &quot;酪梨&quot;]</code></pre>
-<p>CodePen.io: <a href="https://codepen.io/william_k/pen/qBbgWqV" target="_blank" rel="noopener">unshift(), shift(), push(), pop()</a></p>
-<h1 id="copyWithin-陣列內複製元素"><a href="#copyWithin-陣列內複製元素" class="headerlink" title="copyWithin()  陣列內複製元素"></a>copyWithin()  陣列內複製元素</h1><blockquote>
-<p><code>copyWithin()</code> 方法會對陣列的一部分進行<em>淺拷貝(shallow copies)</em>至同一陣列的另一位置並回傳此陣列，而不修改其大小。 — MDN web doc</p>
-</blockquote>
-<p>將一個陣列裡的某一個元素複製到同陣列的某一索引並覆蓋掉。</p>
-<pre><code class="jsx">// copyWithin(終點索引, 被複製的索引, 如沒有輸入會複製到最後);
-let foods = [&#39;🍞&#39;, &#39;🍔&#39;, &#39;🍟&#39;, &#39;🍕&#39;, &#39;🍙&#39;, &#39;🍳&#39;, &#39;🍦&#39;];
-foods.copyWithin(1, 5); 
-// 從索引 5 到最後一個元素 🍳, 🍦
-// 覆蓋掉索引 1 &amp; 2 🍔, 🍟
-// [&#39;🍞&#39;, &#39;🍳&#39;, &#39;🍦&#39;, &#39;🍕&#39;, &#39;🍙&#39;, &#39;🍳&#39;, &#39;🍦&#39;];
-
-let foods2 = [&#39;🍞&#39;, &#39;🍔&#39;, &#39;🍟&#39;, &#39;🍕&#39;, &#39;🍙&#39;, &#39;🍳&#39;, &#39;🍦&#39;];
-foods.copyWithin(0, 4, 5); // 複製索引 4 到 5 個元素 🍙,🍳 到索引 0</code></pre>
-<h1 id="fill-在陣列裡指定的位置覆蓋上靜態值"><a href="#fill-在陣列裡指定的位置覆蓋上靜態值" class="headerlink" title="fill()  在陣列裡指定的位置覆蓋上靜態值"></a>fill()  在陣列裡指定的位置覆蓋上靜態值</h1><pre><code class="jsx">// fill()
-let phil = [1, 2, 3, 4];
-phil.fill(&#39;i&#39;, 1, 3) // 從索引1到索引2 (不包含第3)
-// =&gt; [1, &#39;i&#39;, &#39;i&#39;, 4]</code></pre>
-<h1 id="reverse-把陣列順序顛倒"><a href="#reverse-把陣列順序顛倒" class="headerlink" title="reverse()  把陣列順序顛倒"></a>reverse()  把陣列順序顛倒</h1><pre><code class="jsx">// reverse()
-let num = [&#39;一&#39;, &#39;二&#39;, &#39;三&#39;];
-num.reverse(); // =&gt; [&#39;三&#39;, &#39;二&#39;, &#39;一&#39;];</code></pre>
-<p>References: </p>
-<p><a href="https://www.udemy.com/course/javascript-beginners-complete-tutorial/" target="_blank" rel="noopener">The Modern JavaScript Bootcamp (2020)</a></p>
-<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort" target="_blank" rel="noopener">MDN web docs</a></p>
-
-        
-      </div>
-    </div>
-
-  </div>
-
-  <footer class="article-footer">
-    <div class="article-more-info">
-      <div class="article-date">
-  <time datetime="2020-07-21T17:57:39.000Z" itemprop="datePublished">2020-07-22</time>
-</div>
-      
-        <div class="article-category">
-          <a class="article-category-link" href="/notes/categories/JavaScript/">JavaScript</a>
-        </div>
-      
-      
-        <div class="article-tag">
-          <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li></ul>
-        </div>
-      
-    </div>
-  </footer>
-
-
-</article>
-
-    
-  
 
   
     <nav class="pagination">
@@ -1533,7 +1731,7 @@ num.reverse(); // =&gt; [&#39;三&#39;, &#39;二&#39;, &#39;一&#39;];</code></p
   <div class="widget-wrap widget-tags">
     <div class="widget-title"><span>Tags</span></div>
     <div class="widget-inner">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
     </div>
   </div>
 
@@ -1544,6 +1742,10 @@ num.reverse(); // =&gt; [&#39;三&#39;, &#39;二&#39;, &#39;一&#39;];</code></p
     <div class="widget-title"><span>Recent Posts</span></div>
     <div class="widget-inner">
       <ul>
+        
+          <li>
+            <a href="/notes/2020/08/16/JS-Day-47-AJAX-Request-XMLHttpRequest-Fetch-AXIOS/">JS Day 47: AJAX Request - XMLHttpRequest, Fetch, AXIOS</a>
+          </li>
         
           <li>
             <a href="/notes/2020/08/14/JS-Day-44-window-location/">JS Day 44: window.location</a>
@@ -1559,10 +1761,6 @@ num.reverse(); // =&gt; [&#39;三&#39;, &#39;二&#39;, &#39;一&#39;];</code></p
         
           <li>
             <a href="/notes/2020/08/02/JS-Day-39-Arrow-Function-this/">JS Day 39: Arrow Function &amp; this</a>
-          </li>
-        
-          <li>
-            <a href="/notes/2020/07/31/JS-Day-37-var-let-and-const-part-2-hoisting/">JS Day 37: Var, Let and Const, part 2 - Hoisting</a>
           </li>
         
       </ul>
