@@ -94,6 +94,104 @@
   
     
       <article
+  id="post-Selenium-WebDriver-with-Ruby-on-Headless-Chrome-Firefox-無頭爬蟲模式"
+  class="article article-type-post"
+>
+
+  <div class="article-inner">
+    
+
+    <div class="article-body">
+      <header class="article-title">
+        <a href="/notes/2020/07/28/Selenium-WebDriver-with-Ruby-on-Headless-Chrome-Firefox-%E7%84%A1%E9%A0%AD%E7%88%AC%E8%9F%B2%E6%A8%A1%E5%BC%8F/">Selenium WebDriver with Ruby on Headless Chrome/Firefox 無頭爬蟲模式</a>
+      </header>
+      <div class="article-entry post-inner-html">
+        
+          <p>使用 geckodriver 來連接 headless Firefox 與 Selenium 或是使用 chromedriver 來連接 Chrome 與 Selenium</p>
+<p>安裝 Geckodriver / Chromedriver</p>
+<pre><code class="bash">$ brew install geckodriver // Firefox
+$ brew cask install chromedriver // Chrome</code></pre>
+<p>安裝 Selenium Gem</p>
+<pre><code class="bash">$ gem install selenium-webdriver</code></pre>
+<p>引用 Selenium WebDriver 模組</p>
+<pre><code class="ruby">require &#39;selenium-webdriver&#39;</code></pre>
+<p>指定欲使用的瀏覽器</p>
+<p>Firefox</p>
+<pre><code class="ruby">options = Selenium::WebDriver::Firefox::Options.new(args: [&#39;-headless&#39;])
+driver = Selenium::WebDriver.for :firefox, options: options</code></pre>
+<p>Chrome</p>
+<pre><code class="ruby">options = Selenium::WebDriver::Chrome::Options.new(args: [&#39;headless&#39;])
+driver = Selenium::WebDriver.for :chrome, options: options</code></pre>
+<p>使用 selenium 操控無頭瀏覽器</p>
+<pre><code class="ruby"># 連結到台灣電子地圖服務網
+driver.get(&#39;http://www.map.com.tw&#39;)
+
+# 點擊搜尋欄位
+# &lt;input type=&quot;text&quot; style=&quot;margin-left:7px;&quot; id=&quot;searchWord&quot; value=&quot;例如:新北市中和區中正路716號&quot; ondblclick=&quot;this.value=&#39;&#39;&quot;&gt;
+driver.find_element(id: &#39;searchWord&#39;).click
+</code></pre>
+<pre><code class="ruby"># 由於 input 的值設定為&#39;例如:新北市中和區中正路716號&#39;，所以必須先清除掉
+driver.find_element(id: &#39;searchWord&#39;).clear
+
+# 讓瀏覽器代替輸入&#39;高雄市苓雅區和平一路147號&#39;並送出表單
+driver.find_element(id: &#39;searchWord&#39;).send_keys &#39;高雄市苓雅區和平一路147號&#39;, :return
+
+# 這邊要等待兩秒, 否則 .winfoIframe 還沒有產生會發生找不到 element
+# 當初在這邊卡超久的，幸好有看到花哥分享了 Python 爬蟲有寫到等待，才發現可以這樣用
+sleep 2
+
+# store iframe web element
+# 另一種方法 iframe = driver.find_element(:css, &quot;.windowInfo &gt; iframe&quot;)
+iframe = driver.find_element(class: &#39;winfoIframe&#39;)
+
+# 切換到 iframe
+driver.switch_to.frame(iframe)
+
+# 點擊 &#39;座標&#39; 圖示進行跳頁
+driver.find_elements(class: &#39;fun&#39;)[1].click
+
+# 使用 xpath 取得頁面上的經緯度
+coordinates = driver.find_element(xpath: &quot;/html/body/form/div[5]/table/tbody/tr[2]/td&quot;).text.split(&#39; &#39;)
+
+# 經緯度
+latitude = coordinates[0].split(&#39;：&#39;)[1]
+longitude = coordinates[1].split(&#39;：&#39;)[1]
+
+puts latitude
+puts longitude</code></pre>
+<p>Reference:<br><a href="https://medium.com/%E8%8A%B1%E5%93%A5%E7%9A%84%E5%A5%87%E5%B9%BB%E6%97%85%E7%A8%8B/geocoding-%E6%89%B9%E9%87%8F%E8%99%95%E7%90%86%E5%9C%B0%E5%9D%80%E8%BD%89%E6%8F%9B%E7%B6%93%E7%B7%AF%E5%BA%A6-721ab2564c88" target="_blank" rel="noopener">Geocoding - 批量處理地址轉換經緯度</a><br><a href="https://www.selenium.dev/documentation/en/getting_started_with_webdriver/locating_elements/" target="_blank" rel="noopener">Selenium</a></p>
+
+        
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="article-footer">
+    <div class="article-more-info">
+      <div class="article-date">
+  <time datetime="2020-07-27T16:56:06.000Z" itemprop="datePublished">2020-07-28</time>
+</div>
+      
+        <div class="article-category">
+          <a class="article-category-link" href="/notes/categories/Ruby/">Ruby</a>
+        </div>
+      
+      
+        <div class="article-tag">
+          <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li></ul>
+        </div>
+      
+    </div>
+  </footer>
+
+
+</article>
+
+    
+  
+    
+      <article
   id="post-JS-中英文字串長度判斷"
   class="article article-type-post"
 >
@@ -611,7 +709,7 @@ Object.entries(chartObj);
   <div class="widget-wrap widget-cate">
     <div class="widget-title"><span>Categories</span></div>
     <div class="widget-inner">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/notes/categories/JavaScript/">JavaScript</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Ruby/">Ruby</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/notes/categories/DevTool/">DevTool</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/JavaScript/">JavaScript</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Ruby/">Ruby</a></li></ul>
     </div>
   </div>
 
@@ -621,7 +719,7 @@ Object.entries(chartObj);
   <div class="widget-wrap widget-tags">
     <div class="widget-title"><span>Tags</span></div>
     <div class="widget-inner">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Token/" rel="tag">Token</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Experiments/" rel="tag">Experiments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Token/" rel="tag">Token</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
     </div>
   </div>
 
@@ -632,6 +730,10 @@ Object.entries(chartObj);
     <div class="widget-title"><span>Recent Posts</span></div>
     <div class="widget-inner">
       <ul>
+        
+          <li>
+            <a href="/notes/2020/08/18/Chrome-Dev-Tool-CSS-Overview/">Chrome Dev Tool: CSS Overview</a>
+          </li>
         
           <li>
             <a href="/notes/2020/08/17/JS-Day-49-%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-axios-%E5%82%B3%E9%81%9E-token/">JS Day 49: 如何使用 axios 傳遞 token</a>
@@ -647,10 +749,6 @@ Object.entries(chartObj);
         
           <li>
             <a href="/notes/2020/08/08/JS-Day-42-Date-%E6%96%B9%E6%B3%95%EF%BC%86%E6%97%A5%E6%9C%9F%E6%A0%BC%E5%BC%8F/">JS Day 42: Date() 方法＆日期格式</a>
-          </li>
-        
-          <li>
-            <a href="/notes/2020/08/06/JS-Day-41-Date-%E5%9E%8B%E5%88%A5/">JS Day 41: Date() 型別</a>
           </li>
         
       </ul>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     
-    <title>JS Day 44: window.location | William&#39;s Notes</title>
+    <title>Chrome Dev Tool: CSS Overview | William&#39;s Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     
@@ -91,7 +91,7 @@
       <section class="inner">
         <section class="inner-main">
           <div class="post">
-    <article id="post-ckdyu5v42000f603vbiupgkgt" class="article article-type-post" itemscope
+    <article id="post-ckdyu5v3j0000603va3au88rn" class="article article-type-post" itemscope
     itemprop="blogPost">
 
     <div class="article-inner">
@@ -103,7 +103,7 @@
             
   
     <h1 class="article-title" itemprop="name">
-      JS Day 44: window.location
+      Chrome Dev Tool: CSS Overview
     </h1>
   
 
@@ -113,18 +113,18 @@
         <div class="article-more-info article-more-info-post hairline">
 
             <div class="article-date">
-  <time datetime="2020-08-13T16:04:39.000Z" itemprop="datePublished">2020-08-14</time>
+  <time datetime="2020-08-17T17:42:31.000Z" itemprop="datePublished">2020-08-18</time>
 </div>
 
             
             <div class="article-category">
-                <a class="article-category-link" href="/notes/categories/JavaScript/">JavaScript</a>
+                <a class="article-category-link" href="/notes/categories/DevTool/">DevTool</a>
             </div>
             
 
             
             <div class="article-tag">
-                <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li></ul>
+                <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li></ul>
             </div>
             
 
@@ -136,43 +136,26 @@
         </div>
 
         <div class="article-entry post-inner-html hairline" itemprop="articleBody">
-            <h1 id="取得目前的網址與參數"><a href="#取得目前的網址與參數" class="headerlink" title="取得目前的網址與參數"></a>取得目前的網址與參數</h1><h2 id="語法"><a href="#語法" class="headerlink" title="語法"></a>語法</h2><pre><code class="jsx">let locationObj = window.location;
-
-console.log(locationObj);</code></pre>
-<h2 id="屬性"><a href="#屬性" class="headerlink" title="屬性"></a>屬性</h2><p>範例網址：<a href="http://127.0.0.1:5506/44/index.html?q=%27username%27&amp;status=true#title" target="_blank" rel="noopener">http://127.0.0.1:5506/44/index.html?q=%27username%27&amp;status=true#title</a></p>
-<p><img src="https://drive.google.com/uc?export=view&id=1IPhpvsOWkeGiwpO7bv9VjQpSAk-ySEU6" alt="https://drive.google.com/uc?export=view&amp;id=1IPhpvsOWkeGiwpO7bv9VjQpSAk-ySEU6"></p>
-<h2 id="跳頁"><a href="#跳頁" class="headerlink" title="跳頁"></a>跳頁</h2><h3 id="回到上一頁"><a href="#回到上一頁" class="headerlink" title="回到上一頁"></a>回到上一頁</h3><pre><code class="jsx">window.history.go(-1);
-history.go(-1); // 省略 window, 一樣可以動作
-
-window.history.back(); // 另一個方法</code></pre>
-<h3 id="回到下一頁"><a href="#回到下一頁" class="headerlink" title="回到下一頁"></a>回到下一頁</h3><pre><code class="jsx">window.history.go(1);
-
-window.history.forward();</code></pre>
-<h3 id="回到第-N-頁-window-history-go-arg"><a href="#回到第-N-頁-window-history-go-arg" class="headerlink" title="回到第 N 頁: window.history.go(arg)"></a>回到第 N 頁: window.history.go(arg)</h3><p>範例：</p>
-<ul>
-<li><a href="http://www.google.com" target="_blank" rel="noopener">www.google.com</a></li>
-<li><a href="http://www.yahoo.com" target="_blank" rel="noopener">www.yahoo.com</a></li>
-<li><a href="http://www.tesla.com" target="_blank" rel="noopener">www.tesla.com</a> (當前網頁)</li>
-<li><a href="http://www.lego.com" target="_blank" rel="noopener">www.lego.com</a></li>
-<li><a href="http://www.abc.com" target="_blank" rel="noopener">www.abc.com</a></li>
-</ul>
-<pre><code class="jsx">window.history.go(-2); // 參數是正數就往上 2 頁 (forward), www.google.com
-window.history.go(1);  // 參數是負數就往下 1 頁 (back), www.lego.com
-window.history.go(0);  // 參數是 0 則重新載入現在頁面, refresh www.testla.com</code></pre>
-<h3 id="重新整理當前頁面"><a href="#重新整理當前頁面" class="headerlink" title="重新整理當前頁面"></a>重新整理當前頁面</h3><p>除了上面提到的 <code>window.history.go(0)</code> 還有 <code>reload()</code> 方法可以用:</p>
-<pre><code class="jsx">window.location.reload();
-
-window.location.reload(true); 
-// window.location.reload(forcedReload) 裡面的 forceReload 是 boolean</code></pre>
-<h3 id="頁面跳轉"><a href="#頁面跳轉" class="headerlink" title="頁面跳轉"></a>頁面跳轉</h3><pre><code class="jsx">// window 皆可省略
-window.location = &quot;http://www.lego.com&quot;; // location property
-window.location.href = &quot;http://www.lego.com&quot;; // href property
-window.location.assign(&#39;http://www.lego.com&#39;); // assign method
-window.location.replace(&#39;http://www.lego.com&#39;); // replace method</code></pre>
-<blockquote>
-<p>replace 是置換掉現在的document，不會留下被置換掉的頁面紀錄，所以當你按下”上一頁”時回到的其實是你”上上個”看到的頁面 (reference-1)</p>
-</blockquote>
-<p>Reference:<br><a href="http://cat-son.blogspot.com/2012/11/javascript-windowlocation.html#sthash.UeM0Vl5j.ncVtroJF.dpbs" target="_blank" rel="noopener">JavaScript 筆記 - window.location 類別</a><br><a href="https://ithelp.ithome.com.tw/articles/10190061" target="_blank" rel="noopener">JavaScript 刷新頁面的幾種方法</a><br><a href="https://developer.mozilla.org/zh-TW/docs/Web/API/Window/location" target="_blank" rel="noopener">window.location</a></p>
+            <p>在 Chrome 瀏覽器有個實驗性質的功能，很棒。有時候在瀏覽網站時發現有些設計很棒，想要偷師一下，CSS Overview 裡有幾個的功能真的要推一下。</p>
+<ol>
+<li>首先需要打開 DevTools<br><img src="https://drive.google.com/uc?export=view&id=1LRSNioMxCQViHrgbdsbtuOrw4YN95jX4" alt=""></li>
+</ol>
+<p><code>Mac</code>: command + option + i<br><code>Win</code>: control + shift + i</p>
+<ol start="2">
+<li>進入 Settings<br><img src="https://drive.google.com/uc?export=view&id=1LbidcsVBbioduXCcZwrpLRsVTHzFKXdl" alt=""><br>在 DevTools 最上方右側有個齒輪 icon 可以進入 settings。<br><code>Mac</code>: function + F1<br><code>Win</code>: F1<br>接著把左邊欄位第三行 <code>Experiments</code> 裡面 第四個 CSS Overview 打勾</li>
+</ol>
+<p>重新打開瀏覽器。</p>
+<ol start="3">
+<li><p>打開 DevTools 裡面的 CSS Overview: Capture overview<br><img src="https://drive.google.com/uc?export=view&id=1L9w2m6gSYCnT2du-p1UMNUxeaz5k2u8m" alt=""><br>按下按鈕瀏覽器就會開始分析了。</p>
+</li>
+<li><p>分析報告<br><img src="https://drive.google.com/uc?export=view&id=1zzOWfDFjidenzOe-QXoRxHDNV0W2kviP" alt=""><br>除了摘要一些網頁裡共使用了幾個 HTML 元素，下了幾個 style 定義，用了幾個 css selector 之外還有顏色解析。</p>
+</li>
+</ol>
+<p><img src="https://drive.google.com/uc?export=view&id=1HZPOfJmytW2iXmXadn1FFGa62w_tJ1Xl" alt=""><br>這個部分我很喜歡，清楚看到用了多少種背景顏色、文字顏色，甚至連 border 顏色都有。</p>
+<p><img src="https://drive.google.com/uc?export=view&id=1tdpJ-GnOZCughtwuKVUXY3klmJuBYrvI" alt=""><br>媽呀，用了哪種字型、字體大小，出現幾次都有紀錄。</p>
+<p><img src="https://drive.google.com/uc?export=view&id=1Vm-DqCQsAwP8Cv9lXnhPQEXoTkyuLUJb" alt=""><br>這個網站裡面有已定義卻未使用的 CSS 高達 14 個。這功能對於優化一個網站很棒！<br>下方還有 media queries。目前我觀察了幾個大型網站，media queries 都好長一串，看到眼花。</p>
+<p>—</p>
+<p>Chrome 這個實驗功能對於初學者我剛要練習切版真的太有幫助了。偶而遇到想要臨攀練習的網站，可以透過 CSS Overview 更理解有些元素怎麼規劃會比較恰當。</p>
 
         </div>
 
@@ -197,19 +180,10 @@ window.location.replace(&#39;http://www.lego.com&#39;); // replace method</code>
     
 <nav class="article-nav">
   
-    <a href="/notes/2020/08/16/JS-Day-47-AJAX-Request-XMLHttpRequest-Fetch-AXIOS/" id="article-nav-newer" class="article-nav-link-wrap">
-      <div class="article-nav-caption">下一篇</div>
-      <div class="article-nav-title">
-        
-          JS Day 47: AJAX Request - XMLHttpRequest, Fetch, AXIOS
-        
-      </div>
-    </a>
   
-  
-    <a href="/notes/2020/08/08/JS-Day-42-Date-%E6%96%B9%E6%B3%95%EF%BC%86%E6%97%A5%E6%9C%9F%E6%A0%BC%E5%BC%8F/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/notes/2020/08/17/JS-Day-49-%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-axios-%E5%82%B3%E9%81%9E-token/" id="article-nav-older" class="article-nav-link-wrap">
       <div class="article-nav-caption">上一篇</div>
-      <div class="article-nav-title">JS Day 42: Date() 方法＆日期格式</div>
+      <div class="article-nav-title">JS Day 49: 如何使用 axios 傳遞 token</div>
     </a>
   
 </nav>
@@ -218,15 +192,15 @@ window.location.replace(&#39;http://www.lego.com&#39;); // replace method</code>
     <section class="share">
         <div class="share-title">分享</div>
         <a class="share-item" target="_blank"
-            href="https://twitter.com/share?text=JS Day 44: window.location - William's Notes&url=https://williamafil.github.io/notes/2020/08/14/JS-Day-44-window-location/">
+            href="https://twitter.com/share?text=Chrome Dev Tool: CSS Overview - William's Notes&url=https://williamafil.github.io/notes/2020/08/18/Chrome-Dev-Tool-CSS-Overview/">
             <box-icon type='logo' name='twitter'></box-icon>
         </a>
         <a class="share-item" target="_blank"
-            href="https://www.facebook.com/sharer.php?title=JS Day 44: window.location - William's Notes&u=https://williamafil.github.io/notes/2020/08/14/JS-Day-44-window-location/">
+            href="https://www.facebook.com/sharer.php?title=Chrome Dev Tool: CSS Overview - William's Notes&u=https://williamafil.github.io/notes/2020/08/18/Chrome-Dev-Tool-CSS-Overview/">
             <box-icon name='facebook-square' type='logo' ></box-icon>
         </a>
         <!-- <a class="share-item" target="_blank"
-            href="https://service.weibo.com/share/share.php?title=JS Day 44: window.location - William's Notes&url=https://williamafil.github.io/notes/2020/08/14/JS-Day-44-window-location/&pic=">
+            href="https://service.weibo.com/share/share.php?title=Chrome Dev Tool: CSS Overview - William's Notes&url=https://williamafil.github.io/notes/2020/08/18/Chrome-Dev-Tool-CSS-Overview/&pic=">
             <div class="n-icon n-icon-weibo"></div>
         </a> -->
     </section>
