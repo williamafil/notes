@@ -94,6 +94,521 @@
   
     
       <article
+  id="post-JS-簡易-Date-Picker"
+  class="article article-type-post"
+>
+
+  <div class="article-inner">
+    
+
+    <div class="article-body">
+      <header class="article-title">
+        <a href="/notes/2020/08/26/JS-%E7%B0%A1%E6%98%93-Date-Picker/">JS: 簡易 Date Picker</a>
+      </header>
+      <div class="article-entry post-inner-html">
+        
+          <p>如何使用 JavaScript 實作一個 date picker。參考教學: <a href="https://www.youtube.com/watch?v=wY2dao1hJms" target="_blank" rel="noopener">Custom Date Picker in JavaScript &amp; CSS</a>。</p>
+<p>這邊做一下筆記如何完成以及哪邊該注意的。</p>
+<h1 id="起始結構"><a href="#起始結構" class="headerlink" title="起始結構"></a>起始結構</h1><pre><code>- index.html
+- reset.css
+- style.css
+- app.js
+- simple-date-picker
+        - simple-date-picker.css
+        -    simple-date-picker.js</code></pre><p>index.html</p>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;Simple Date Picker&lt;/title&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;reset.css&quot;&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;style.css&quot;&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;./simple-date-picker/simple-date-picker.css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;container&quot;&gt;
+    &lt;div id=&quot;date-picker&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;script src=&quot;./simple-date-picker/simple-date-picker.js&quot;&gt;&lt;/script&gt;
+  &lt;script src=&quot;app.js&quot;&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>style.css</p>
+<pre><code class="css">.container {
+  width: 100vw;
+  height: 100vh;
+  background: rgb(249,242,206);
+  background: linear-gradient(156deg, rgba(249,242,206,1) 2%, rgba(184,230,246,1) 96%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#date-picker {
+  width: 350px;
+}</code></pre>
+<p>simple-date-picker.css</p>
+<pre><code class="css">@import url(&#39;https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&amp;display=swap&#39;);
+
+.simple-date-picker {
+  font-family: &#39;Roboto&#39;, sans-serif;
+  position: relative;
+  width: 350px;
+  height: 70px;
+  background-color: mintcream;
+  margin: 10px auto;
+  box-shadow: 0px 2px 6px rgba(0,0,0,.2);
+  cursor: pointer;
+  user-select: none;
+}
+
+.simple-date-picker:hover {
+  background-color: #e9f9ff;
+}
+
+.simple-date-picker .selected-date {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #313131;
+  font-size: 30px;
+}
+
+.simple-date-picker .dates {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+}
+
+// active 展開
+.simple-date-picker .dates.active {
+  display: block;
+}</code></pre>
+<p>simple-date-picker.js</p>
+<pre><code class="jsx">const datePicker = ({root}) =&gt; {
+  root.innerHTML = `
+    &lt;div class=&quot;simple-date-picker&quot;&gt;
+      &lt;div class=&quot;selected-date&quot;&gt;08-25-2020&lt;/div&gt;
+      &lt;div class=&quot;dates&quot;&gt;
+        &lt;div class=&quot;month&quot;&gt;
+          &lt;div class=&quot;btns prev-month&quot;&gt;&lt;&lt;&lt;/div&gt;
+          &lt;div class=&quot;month-label&quot;&gt;八月&lt;/div&gt;
+          &lt;div class=&quot;btns next-month&quot;&gt;&gt;&gt;&lt;/div&gt;          
+        &lt;/div&gt;
+          &lt;div class=&quot;days&quot;&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  `;
+
+    const datepickerElement = root.querySelector(&#39;.simple-date-picker&#39;);
+  const selectedDateElement = root.querySelector(&#39;.simple-date-picker .selected-date&#39;);
+  const datesElement = root.querySelector(&#39;.simple-date-picker .dates&#39;);
+
+  datepickerElement.addEventListener(&#39;click&#39;, toggleDatepicker);
+
+  function toggleDatepicker(e){
+    console.log(&#39;展開 datepicker&#39;)
+  }
+}</code></pre>
+<p>這邊的先用一個函式打包，方便以後可以在其他地方使用，也可以一次使用多個，不會互相打架。</p>
+<p>app.js</p>
+<pre><code class="jsx">datePicker({
+  root: document.querySelector(&#39;#date-picker&#39;),
+});</code></pre>
+<p>在 app.js 裡呼叫，生成一個 date picker，順便指定要載入的元素 #date-picker。</p>
+<p><img src="https://drive.google.com/uc?export=view&id=193ZLxlmNi9ZoFlEt2QiH1XVFHeKSC0a5" alt=""></p>
+<h1 id="展開-關閉日期選擇器"><a href="#展開-關閉日期選擇器" class="headerlink" title="展開/關閉日期選擇器"></a>展開/關閉日期選擇器</h1><h2 id="toggle-開關"><a href="#toggle-開關" class="headerlink" title="toggle 開關"></a>toggle 開關</h2><p>現在日期選擇器可以展開，但是如果滑鼠點擊『月份選擇』區塊時，它會關閉。這時候需要檢查滑鼠所點擊的位置有沒有在 <code>.dates</code> 區塊。</p>
+<p>在 simple-date-picker.js 裡面新增一個 helper function。</p>
+<pre><code class="jsx">...(略)
+
+datepickerElement.addEventListener(&#39;click&#39;, toggleDatepicker);
+
+function toggleDatepicker(e){
+  console.log(e.path);
+  if (!checkEventPathForClass(e.path, &#39;dates&#39;)) {
+    datesElement.classList.toggle(&#39;active&#39;);
+  }
+}
+
+function checkEventPathForClass (path, selector) {
+  for (let i = 0; i &lt; path.length; i++) {
+    if (path[i].classList &amp;&amp; path[i].classList.contains(selector)) {
+      console.log(&#39;path[i].classList&#39;, path[i].classList)
+      console.log(&#39;contains selector? &#39;, path[i].classList.contains(selector))
+      return true;
+    }
+  }
+  return false;
+}</code></pre>
+<p><img src="https://drive.google.com/uc?export=view&id=1hnF_VebqCbOajI4oJU5R1lYQN2-0Zio3" alt=""></p>
+<p>當 date picker 展開時，滑鼠點擊下方『月份選擇』區塊時，e.path 是有包含 selector <code>dates</code>，所以會 return <code>true</code>。</p>
+<pre><code class="jsx">if (!checkEventPathForClass(e.path, &#39;dates&#39;)) {
+  datesElement.classList.toggle(&#39;active&#39;);
+}</code></pre>
+<p>而我們要 checkEventPathForClass 非 true 時，才關閉日期選擇器。</p>
+<h2 id="點擊以外元素＆關閉"><a href="#點擊以外元素＆關閉" class="headerlink" title="點擊以外元素＆關閉"></a>點擊以外元素＆關閉</h2><p>如果要點擊 #date-picker (root) 以外的地方就關閉日期選擇棄，也可以用類似方法達到。</p>
+<pre><code class="jsx">document.addEventListener(&#39;click&#39;, function(e){
+  if (!root.contains(e.target)){
+    datesElement.classList.remove(&#39;active&#39;);
+  }
+});</code></pre>
+<p><img src="https://drive.google.com/uc?export=view&id=1ajB_sLyPx4Q4sNSK3G4_YiICflAU-fv6" alt=""></p>
+<p>判斷 <code>root</code> element (date picker 所有元素）有沒有包含滑鼠點擊的元素（<code>e.target</code>）。頭兩次的 e.target 都沒有包含所以選擇器不會關閉，到了第三個才會 remove class <code>active</code>。</p>
+<h1 id="月份-amp-日期選擇器"><a href="#月份-amp-日期選擇器" class="headerlink" title="月份 &amp; 日期選擇器"></a>月份 &amp; 日期選擇器</h1><h2 id="CSS-Style"><a href="#CSS-Style" class="headerlink" title="CSS Style"></a>CSS Style</h2><pre><code class="css">/* 月份選擇 */
+.simple-date-picker .dates .month {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 3px solid #eee;
+  padding: 5px;
+}
+
+/* 月份選擇 左右按鈕 */
+.simple-date-picker .dates .month .btns {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #313131;
+  font-size: 20px;
+  border-radius: 50%;
+}
+
+.simple-date-picker .dates .month .btns:hover {
+  background-color: whitesmoke;
+  color: #999;
+}
+
+.simple-date-picker .dates .month .btns:active {
+  background-color: azure;
+  color: #bbb;
+}</code></pre>
+<p>在月份選擇區塊加入樣式。</p>
+<pre><code class="css">/* 日期選擇器 */
+.simple-date-picker .dates .days {
+  height: 240px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border-radius: 5px;
+}
+
+.simple-date-picker .dates .days .day {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #313131;
+  font-size: 15px;
+  font-weight: 300;
+  border-radius: 50%;
+  border: 1px solid #eee;
+  background-color: #eee;
+  margin: 5px;
+}
+
+.simple-date-picker .dates .days .day:hover {
+  font-weight: 700;
+  background-color: #fff;
+  border: 1px solid #eee;
+}
+
+.simple-date-picker .dates .days .day:active,
+.simple-date-picker .dates .days .day.selected  {
+  font-weight: 700;
+  background-color: lightsalmon;
+  border: 1px solid lightsalmon;
+  color: #fff;
+}</code></pre>
+<p>在日期區塊加入樣式。</p>
+<pre><code class="jsx">const datePicker = ({root}) =&gt; {
+  root.innerHTML = `
+    &lt;div class=&quot;simple-date-picker&quot;&gt;
+      &lt;div class=&quot;selected-date&quot;&gt;08-25-2020&lt;/div&gt;
+      &lt;div class=&quot;dates&quot;&gt;
+        &lt;div class=&quot;month&quot;&gt;
+          &lt;div class=&quot;btns prev-month&quot;&gt;&lt;&lt;&lt;/div&gt;
+          &lt;div class=&quot;month-label&quot;&gt;八月&lt;/div&gt;
+          &lt;div class=&quot;btns next-month&quot;&gt;&gt;&gt;&lt;/div&gt;          
+        &lt;/div&gt;
+        &lt;div class=&quot;days&quot;&gt;
+
+                    &lt;!-- 這部分先加入日期，測試一下樣式 --&gt;
+          &lt;div class=&quot;day&quot;&gt;1&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;2&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;3&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;4&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;5&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;6&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;7&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;8&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;9&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;10&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;11&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;12&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;13&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;14&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;15&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;16&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;17&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;18&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;19&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;20&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;21&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;22&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;23&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;24&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;25&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;26&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;27&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;28&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;29&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;30&lt;/div&gt;
+          &lt;div class=&quot;day&quot;&gt;31&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+    &lt;/div&gt;
+  `;
+
+.... 略</code></pre>
+<p><img src="https://drive.google.com/uc?export=view&id=1yepx9qJA0Qg1rrARGdfr-dOxdwkxejek" alt=""></p>
+<h2 id="Date-Picker-預設日期"><a href="#Date-Picker-預設日期" class="headerlink" title="Date Picker 預設日期"></a>Date Picker 預設日期</h2><pre><code class="jsx">const datePicker = ({root}) =&gt; {
+  root.innerHTML = `
+    &lt;div class=&quot;simple-date-picker&quot;&gt;
+            &lt;!-- 填入的日期先清空，要讓 JS 自動填入當下的日期 --&gt;
+      &lt;div class=&quot;selected-date&quot;&gt;&lt;/div&gt;
+      &lt;div class=&quot;dates&quot;&gt;
+        &lt;div class=&quot;month&quot;&gt;
+          &lt;div class=&quot;btns prev-month&quot;&gt;&lt;&lt;&lt;/div&gt;
+          &lt;div class=&quot;month-label&quot;&gt;&lt;/div&gt;
+          &lt;div class=&quot;btns next-month&quot;&gt;&gt;&gt;&lt;/div&gt;          
+        &lt;/div&gt;
+        &lt;div class=&quot;days&quot;&gt;&lt;/div&gt;
+      &lt;/div&gt;
+
+    &lt;/div&gt;
+  `;
+
+... 略
+
+selectedDateElement.textContent = formatDate(date);
+
+function formatDate(d) {
+  let day = d.getDate();
+  let month = d.getMonth();
+  let year = d.getFullYear();
+
+    if (day &lt; 10) {
+    day = `0${day}`;
+  }
+
+  if (month &lt; 10){
+    month = `0${month+1}`
+  }
+  return `${year}年 ${month}月 ${day}日`;
+}</code></pre>
+<p><img src="https://drive.google.com/uc?export=view&id=1kLgGd0GrTW_bcWBowSS-GT3H0TaMISLE" alt=""></p>
+<h2 id="展開時顯示月份年份"><a href="#展開時顯示月份年份" class="headerlink" title="展開時顯示月份年份"></a>展開時顯示月份年份</h2><pre><code class="jsx">const monthElement = root.querySelector(&#39;.simple-date-picker .dates .month .month-label&#39;);
+const prevBtn = root.querySelector(&#39;.simple-date-picker .dates .month .prev-month&#39;);
+const nextBtn = root.querySelector(&#39;.simple-date-picker .dates .month .next-month&#39;);
+const daysElement = root.querySelector(&#39;.simple-date-picker .dates .days&#39;);
+
+const months = [&#39;January&#39;, &#39;February&#39;, &#39;March&#39;, &#39;April&#39;, &#39;May&#39;, &#39;June&#39;, &#39;July&#39;, &#39;August&#39;, &#39;September&#39;, &#39;October&#39;, &#39;November&#39;, &#39;December&#39;];
+
+// 當下日期
+let date = new Date();
+let day = date.getDate();
+let month = date.getMonth();
+let year = date.getFullYear();
+
+// 選擇的日期
+let selectedDate = date;
+let selectedDay = day;
+let selectedMonth = month;
+let selectedYear = year;
+
+monthElement.textContent = `${ month+1 }月  ${year}年`;  // 展開時顯示的月份＆年份</code></pre>
+<h2 id="月份往前-後移動＆更新畫面"><a href="#月份往前-後移動＆更新畫面" class="headerlink" title="月份往前/後移動＆更新畫面"></a>月份往前/後移動＆更新畫面</h2><pre><code class="jsx">prevBtn.addEventListener(&#39;click&#39;, goPrevMonth); // 往前一個月事件監聽
+nextBtn.addEventListener(&#39;click&#39;, goNextMonth); // 往後一個月事件監聽
+
+// 當月份往前到 -1 時，要換成 11 (十二月)，年也要跟著減1
+function goPrevMonth() {
+  month--;
+  if (month &lt; 0) {
+    month = 11;
+    year--;
+  }
+  monthElement.textContent = `${ month+1 }月  ${year}年`;  // 展開時顯示的月份＆年份
+}
+
+// 當月份走到12時 (即十三月)，要換成 0 (一月)，年也要跟著加1
+function goNextMonth() {
+  month++;
+  if (month &gt; 11) {
+    month = 0;
+    year++;
+  }
+  monthElement.textContent = `${ month+1 }月  ${year}年`;  // 展開時顯示的月份＆年份
+}</code></pre>
+<h2 id="加入對應日期"><a href="#加入對應日期" class="headerlink" title="加入對應日期"></a>加入對應日期</h2><pre><code class="jsx">populateDates(month, year);
+
+function goPrevMonth() {
+    ... 略
+  populateDates(month, year);
+}
+
+function goNextMonth() {
+  ... 略
+  populateDates(month, year);
+}
+
+function populateDates(mth, yr) {
+  daysElement.innerHTML = &#39;&#39;;
+  let amountDays = getTotalDays(mth, yr); // 取得月份共幾天
+
+  for (let i = 0; i &lt; amountDays; i++) {
+    const dayElement = document.createElement(&#39;div&#39;);
+    dayElement.classList.add(&#39;day&#39;);
+    dayElement.textContent = i + 1;
+
+   daysElement.appendChild(dayElement);
+  }
+}
+
+function getTotalDays(month, year) {
+  return new Date(year, month+1, 0).getDate();
+}</code></pre>
+<p>當要加入對應的日期數量需要先知道被選擇的月份有幾天，所以下面的 getTotalDays() 函式會回傳月份日數，再用這個去跑回圈。</p>
+<p><img src="https://drive.google.com/uc?export=view&id=13xVHnwfy5_pO9QkIohcHYUYStwgjv6rN" alt=""></p>
+<h2 id="日期事件監聽"><a href="#日期事件監聽" class="headerlink" title="日期事件監聽"></a>日期事件監聽</h2><p>當進入 populateDates() 回圈時，需要幫 dayElement 元素個別加入事件監聽，這樣才知道到底選擇了哪一天。</p>
+<pre><code class="jsx">function populateDates(mth, yr) {
+  daysElement.innerHTML = &#39;&#39;;
+  let amountDays = getTotalDays(mth, yr); // 取得月份共幾天
+
+  for (let i = 0; i &lt; amountDays; i++) {
+    const dayElement = document.createElement(&#39;div&#39;);
+    dayElement.classList.add(&#39;day&#39;);
+    dayElement.textContent = i + 1;
+
+    ＋＋ // 遇到當下日期/被選擇的日期，加上 css style
+    ＋＋ if (selectedDay == (i + 1) &amp;&amp; selectedYear == year &amp;&amp; selectedMonth == month) {
+    ＋＋   dayElement.classList.add(&#39;selected&#39;);
+    ＋＋ }
+
+    ＋＋ dayElement.addEventListener(&#39;click&#39;, function() {
+    ＋＋   selectedDate = new Date(year + &#39;-&#39; + (month+1) + &#39;-&#39; + (i+1));
+    ＋＋   selectedDay = (i + 1);
+    ＋＋   selectedMonth = month;
+    ＋＋   selectedYear = year;
+
+      ＋＋ selectedDateElement.textContent = formatDate(selectedDate);
+      ＋＋ selectedDateElement.dataset.value = dataSetFormat(selectedDate); // 在元素上加入 dataset，之後要取得日期比較容易。
+
+      ＋＋ populateDates(selectedMonth, selectedYear); // 當選擇了某一天，日期區塊需要重新更新。
+    ＋＋ });
+
+   daysElement.appendChild(dayElement);
+  }
+}
+
+function dataSetFormat(d) {
+  const year = d.getFullYear();
+  const month = d.getMonth()+1;
+  const day = d.getDate();
+  return [year, month, day].join(&quot;-&quot;);
+}</code></pre>
+<p><img src="https://drive.google.com/uc?export=view&id=1kbDyCtpzCbUKVs_GbwiMvQvCSMKkK2m2" alt=""></p>
+<p>之後要取得選擇的日期可以直接從 data-value 取得。</p>
+<h2 id="加入週"><a href="#加入週" class="headerlink" title="加入週"></a>加入週</h2><pre><code class="css">/* WEEK */
+.simple-date-picker .dates .weekday {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border-radius: 5px;
+  padding: 8px;
+}
+
+.simple-date-picker .dates .weekday .week {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #313131;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 15px 0 0 0;
+}
+
+.simple-date-picker .dates .days .space {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+  height: 36px;
+}</code></pre>
+<pre><code class="jsx">
+function populateDates(mth, yr) {
+  daysElement.innerHTML = &#39;&#39;;
+
+  let amountDays = getTotalDays(mth, yr); // 取得月份共幾天
+
+＋＋ let firstDay = getStartedWeekDay(mth, yr);
+＋＋   let spacer = ``;
+
+＋＋   for (let i = 0; i &lt; firstDay; i++) {
+＋＋     spacer += `&lt;div class=&quot;space&quot;&gt;&lt;/div&gt;`;
+＋＋   }
+
+＋＋   daysElement.innerHTML = spacer;
+
+... 略
+}
+
+function getStartedWeekDay(month, year) {
+  return new Date(year, month, 1).getDay();
+}</code></pre>
+<p>使用 getStartedWeekDay() 取得月份起始日是週幾。 <code>getDay()</code> 會回傳本地時間星期中的日子（0-6，從星期日開始)。之後在 daysElement 加入幾個空格，把月份的 1 號撐開至對應的星期日子。</p>
+<p><img src="https://drive.google.com/uc?export=view&id=1Y13smXkGm4jbBiZSL8iR1U7lpeABQNNM" alt=""></p>
+<hr>
+<p><a href="https://williamafil.github.io/JS/SimpleDatePicker/">Sample</a><br><a href="https://github.com/williamafil/williamafil.github.io/tree/master/JS/SimpleDatePicker" target="_blank" rel="noopener">Code</a></p>
+<p>Reference:<br><a href="https://www.youtube.com/watch?v=wY2dao1hJms" target="_blank" rel="noopener">Custom Date Picker in JavaScript &amp; CSS</a></p>
+
+        
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="article-footer">
+    <div class="article-more-info">
+      <div class="article-date">
+  <time datetime="2020-08-25T17:54:13.000Z" itemprop="datePublished">2020-08-26</time>
+</div>
+      
+        <div class="article-category">
+          <a class="article-category-link" href="/notes/categories/JavaScript/">JavaScript</a>
+        </div>
+      
+      
+        <div class="article-tag">
+          <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/DatePicker/" rel="tag">DatePicker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li></ul>
+        </div>
+      
+    </div>
+  </footer>
+
+
+</article>
+
+    
+  
+    
+      <article
   id="post-Chrome-Dev-Tool-CSS-Overview"
   class="article article-type-post"
 >
@@ -1613,134 +2128,6 @@ const c;  // SyntaxError: missing = in const declaration</code></pre>
 
     
   
-    
-      <article
-  id="post-JS-ES6-函式參數的解構賦予值"
-  class="article article-type-post"
->
-
-  <div class="article-inner">
-    
-
-    <div class="article-body">
-      <header class="article-title">
-        <a href="/notes/2020/07/30/JS-ES6-%E5%87%BD%E5%BC%8F%E5%8F%83%E6%95%B8%E7%9A%84%E8%A7%A3%E6%A7%8B%E8%B3%A6%E4%BA%88%E5%80%BC/">JS Day 36: ES6 函式參數的解構賦予值</a>
-      </header>
-      <div class="article-entry post-inner-html">
-        
-          <h1 id="Function-Argument-Default-函式參數預設值"><a href="#Function-Argument-Default-函式參數預設值" class="headerlink" title="Function Argument Default 函式參數預設值"></a>Function Argument Default 函式參數預設值</h1><p>在 ES6 之前傳進來的參數必須要透過判斷才可以確定有沒有存在，無法直接設定預設值。現在可以直接在參數後面定義 <code>function checkBMI(bmi = 0) { ... }</code>。</p>
-<p>範例：</p>
-<pre><code class="jsx">function funcName(foo = &#39;x&#39;, bar = &#39;y&#39;) {
-    console.log(foo, bar);
-};
-
-funcName(&#39;喔&#39;)
-// =&gt; 喔 y
-
-funcName(&#39;喔&#39;, undefined)
-// =&gt; 喔 y
-
-funcName(&#39;喔&#39;, &#39;椰&#39;)
-// =&gt; 喔 椰</code></pre>
-<pre><code class="jsx">// 如果沒有傳入參數，bmi 為 0
-function checkBMI(bmi = 0) {
-  if (bmi.value === 0) {
-    // ... 略過
-  }
-};</code></pre>
-<h1 id="Object-Destructuring-Assignment-解構賦值"><a href="#Object-Destructuring-Assignment-解構賦值" class="headerlink" title="Object Destructuring Assignment 解構賦值"></a>Object Destructuring Assignment 解構賦值</h1><pre><code class="jsx">const data = [
-  {
-    name: &#39;小傑&#39;,
-    height: 175,
-    weight: 70,
-    properties: {
-      bmi: 22.9,
-      state: &#39;理想&#39;
-    }
-  },
-  {
-    name: &#39;Daniel&#39;,
-    height: 200,
-    weight: 68,
-    properties: {
-      bmi: 17,
-      state: &#39;體重過輕&#39;
-    }
-  },
-];
-
-// for...of 迭代陣列
-// person ＝ 每筆物件
-for (const person of data) {
-  renderData(person);
-  render(person);
-};
-
-// 方法一
-function render(person) {
-    // 如果層次太多，會變得落落長一串
-  console.log(&#39;物件： &#39; + person.name, person.properties.bmi, person.properties.state);
-};
-
-// 方法二
-// 跟解構變數賦予值方式ㄧ樣
-function renderData(
-  {
-    name, 
-    height, 
-    weight, 
-    properties: { 
-      bmi: bmiValue,
-      state: stateText
-    }
-  }) {
-  console.log(&#39;物件解構： &#39; + name, bmiValue, stateText); // 變得簡潔
-};</code></pre>
-<p>解構變數賦予值</p>
-<pre><code class="jsx">const data = {
-  name: &#39;小傑&#39;,
-  height: 175,
-  weight: 70,
-  properties: {
-    bmi: 22.9,
-    state: &#39;理想&#39;
-  }
-};
-
-let { name, height, weight, properties: {bmi: bmiValue, state: stateText} } = data;
-console.log(name, bmiValue, stateText);
-</code></pre>
-<p>Reference:<br><a href="https://es6.ruanyifeng.com/#docs/function" target="_blank" rel="noopener">ECMAScript 6 入門</a><br><a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment" target="_blank" rel="noopener">解構賦值</a></p>
-
-        
-      </div>
-    </div>
-
-  </div>
-
-  <footer class="article-footer">
-    <div class="article-more-info">
-      <div class="article-date">
-  <time datetime="2020-07-29T17:39:11.000Z" itemprop="datePublished">2020-07-30</time>
-</div>
-      
-        <div class="article-category">
-          <a class="article-category-link" href="/notes/categories/JavaScript/">JavaScript</a>
-        </div>
-      
-      
-        <div class="article-tag">
-          <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li></ul>
-        </div>
-      
-    </div>
-  </footer>
-
-
-</article>
-
-    
-  
 
   
     <nav class="pagination">
@@ -1772,7 +2159,7 @@ console.log(name, bmiValue, stateText);
   <div class="widget-wrap widget-tags">
     <div class="widget-title"><span>Tags</span></div>
     <div class="widget-inner">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Experiments/" rel="tag">Experiments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Token/" rel="tag">Token</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DatePicker/" rel="tag">DatePicker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Experiments/" rel="tag">Experiments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Token/" rel="tag">Token</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
     </div>
   </div>
 
@@ -1783,6 +2170,10 @@ console.log(name, bmiValue, stateText);
     <div class="widget-title"><span>Recent Posts</span></div>
     <div class="widget-inner">
       <ul>
+        
+          <li>
+            <a href="/notes/2020/08/26/JS-%E7%B0%A1%E6%98%93-Date-Picker/">JS: 簡易 Date Picker</a>
+          </li>
         
           <li>
             <a href="/notes/2020/08/18/Chrome-Dev-Tool-CSS-Overview/">Chrome Dev Tool: CSS Overview</a>
@@ -1798,10 +2189,6 @@ console.log(name, bmiValue, stateText);
         
           <li>
             <a href="/notes/2020/08/14/JS-Day-44-window-location/">JS Day 44: window.location</a>
-          </li>
-        
-          <li>
-            <a href="/notes/2020/08/08/JS-Day-42-Date-%E6%96%B9%E6%B3%95%EF%BC%86%E6%97%A5%E6%9C%9F%E6%A0%BC%E5%BC%8F/">JS Day 42: Date() 方法＆日期格式</a>
           </li>
         
       </ul>
