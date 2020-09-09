@@ -94,6 +94,196 @@
   
     
       <article
+  id="post-JS-Day-37-var-let-and-const"
+  class="article article-type-post"
+>
+
+  <div class="article-inner">
+    
+
+    <div class="article-body">
+      <header class="article-title">
+        <a href="/notes/2020/07/30/JS-Day-37-var-let-and-const/">JS Day 37: Var, Let and Const</a>
+      </header>
+      <div class="article-entry post-inner-html">
+        
+          <ul>
+<li>var：宣告變數</li>
+<li>let ：宣告只作用在當前區塊的變數</li>
+<li>const：宣告常數</li>
+</ul>
+<h1 id="var-amp-let"><a href="#var-amp-let" class="headerlink" title="var &amp; let"></a>var &amp; let</h1><pre><code class="jsx">{
+  var a = &#39;A&#39;;
+  let b = &#39;B&#39;;
+    const c = &#39;C&#39;;
+}
+console.log(&#39;var a: &#39; + a);
+console.log(&#39;let b: &#39; + b);
+console.log(&#39;let c: &#39; + c);
+
+// output
+// &quot;var a: A&quot;
+// ReferenceError: b is not defined
+// ReferenceError: c is not defined</code></pre>
+<p>用 <code>var</code> 來宣告一個全域變數，<code>let</code> &amp; <code>const</code> 的作用域僅 <strong><em>scope</em></strong> 限於 <code>{ ... }</code> 區塊。</p>
+<h2 id="作用域-Scope"><a href="#作用域-Scope" class="headerlink" title="作用域 (Scope)"></a>作用域 (Scope)</h2><ul>
+<li>var: function  <code>{ }</code></li>
+<li>let: block</li>
+</ul>
+<pre><code class="jsx">// var
+function varTest() {
+  var x = 1;
+  {
+    var x = 2; // 覆蓋掉上方的 1
+    console.log(x);  // 2
+  }
+  console.log(x);  // 2
+}
+
+// let
+function letTest() {
+  let x = 1;
+  {
+    let x = 2;  // 跟上方的 let x = 1; 不相干
+    console.log(x);  // 2
+  }
+  console.log(x);  // 1
+}</code></pre>
+<p><img src="https://drive.google.com/uc?export=view&id=1lVBObZhXOIp6B8atoFpXzhghVyKPmHSu" alt=""></p>
+<blockquote>
+<p>var 作用範圍是「整個」function。</p>
+</blockquote>
+<h3 id="for-loop-作用域"><a href="#for-loop-作用域" class="headerlink" title="for loop 作用域"></a>for loop 作用域</h3><pre><code class="jsx">for (let i = 0; i &lt; 5; i++) {
+    console.log(i);
+};
+
+console.log(i);
+
+// output
+// 1
+// 2
+// 3
+// 4
+// ReferenceError: i is not defined</code></pre>
+<p><code>let i</code> 在 for loop 裡頭才有計次效用，在 <code>{ ... }</code> 外呼叫會得到 ReferenceError 錯誤， <code>i</code> 並沒有被宣告。</p>
+<pre><code class="jsx">for (var i = 0; i &lt; 5; i++) {
+  // var 全域
+    console.log(i);
+};
+
+console.log(i);
+
+// output
+// --- LOOP 開始
+// 0
+// 1
+// 2
+// 3
+// 4
+// --- LOOP 結束
+// 5   { ... } 外面呼叫 i 得到的結果</code></pre>
+<p>一樣意思, 使用 <code>var</code> 的話 setTimeout 取到的 <code>i</code> 是 <code>window.i</code> 的 <strong>i = 10</strong></p>
+<pre><code class="javascript">for (var i = 0; i &lt; 10; i++) {  
+  // var 全域
+  console.log(&#39;for loop 的 i: &#39; + i);
+
+  setTimeout( function() {
+    console.log(&#39;第&#39; + i + &#39;次&#39;);
+  }, 1000);
+}
+console.log(&#39;i 是 &#39; + i);</code></pre>
+<p>上下兩者的執行結果是一樣的</p>
+<pre><code class="javascript">for (var i = 0; i &lt; 10; i++) {  
+  // var 全域
+  console.log(&#39;for loop 的 i: &#39; + i);
+}
+console.log(&#39;i 是 &#39; + i);
+
+setTimeout( function() {
+  console.log(&#39;第&#39; + i + &#39;次&#39;);
+}, 1000);</code></pre>
+<p><img src="https://drive.google.com/uc?export=view&id=1YLbSpS-fuQ05S8wIOTaG9Z0d9mPO9STb" alt=""></p>
+<p>把 <code>var</code> 改成 <code>let</code></p>
+<pre><code class="javascript">for (let i = 0; i &lt; 10; i++) {  
+  // let 作用域是 block
+  console.log(&#39;for loop 的 i: &#39; + i);
+
+  setTimeout( function() {
+    console.log(&#39;第&#39; + i + &#39;次&#39;);
+  }, 1000);
+}
+console.log(&#39;i 是 &#39; + i);</code></pre>
+<p>setTimeout 取到的 <code>i</code> 值是 block 裡頭的 <strong>i = 9</strong>, function scope 外則是 not defined。</p>
+<p><img src="https://drive.google.com/uc?export=view&id=1mNVObZe4-DWY-09vm11YHvpd44Yorx4V" alt=""></p>
+<h3 id="switch-作用域"><a href="#switch-作用域" class="headerlink" title="switch 作用域"></a>switch 作用域</h3><pre><code class="jsx">switch (x) {
+  case 0:
+    let foo;
+    break;
+
+  case 1:
+    let foo; // SyntaxError for redeclaration.
+    break;
+}</code></pre>
+<p><img src="https://drive.google.com/uc?export=view&id=1g866zUYQVXwpK2oGqWNiqoj05cNFp8hy" alt=""></p>
+<p>switch 的作用域為整個 switch (綠色框框)，裡面重複宣告 <code>let foo</code> 會出現 Syntax Error: redeclaration of let foo。</p>
+<h2 id="重複宣告"><a href="#重複宣告" class="headerlink" title="重複宣告"></a>重複宣告</h2><pre><code class="jsx">var a = 0;
+var a = 1;
+var a = 2;
+console.log(a); // 2</code></pre>
+<p><code>var</code> 可以重複宣告。</p>
+<pre><code class="jsx">let a = 0;
+let a = 1;
+console.log(a); // SyntaxError: redeclaration of let a</code></pre>
+<p>在 switch 作用域 有提到，let 無法重複宣告。</p>
+<pre><code class="jsx">// 那這樣子呢？
+var a = 0;
+let a = 1;
+console.log(a); // SyntaxError: redeclaration of var a</code></pre>
+<p><code>a</code> 已經被宣告過了， <code>let</code> 不允許再次宣告。</p>
+<h1 id="const"><a href="#const" class="headerlink" title="const"></a>const</h1><p>確定不會重新宣告一個 <strong><em>變數</em></strong> 時，使用 const。</p>
+<pre><code class="jsx">const a = 10;
+const name = &#39;Bob&#39;;
+
+// 重新賦予值
+a = 20; // TypeError: invalid assignment to const &#39;a&#39;
+name = &#39;Will&#39;;  // TypeError: invalid assignment to const &#39;name&#39;</code></pre>
+<h2 id="一定要賦予值"><a href="#一定要賦予值" class="headerlink" title="一定要賦予值"></a>一定要賦予值</h2><p>const 要宣告一個常數，之後不能夠再修改了，所以在一開始一定要賦予值給它。</p>
+<pre><code class="jsx">var a;
+let b;
+const c;  // SyntaxError: missing = in const declaration</code></pre>
+<p>Reference:<br><a href="https://es6.ruanyifeng.com/#docs/let" target="_blank" rel="noopener">ECMAScript 6 入門: let 和 const 命令</a><br><a href="https://ithelp.ithome.com.tw/articles/10191549" target="_blank" rel="noopener">重新認識 JavaScript: Day 10 函式 Functions 的基本概念</a><br><a href="https://blog.techbridge.cc/2018/11/10/javascript-hoisting/" target="_blank" rel="noopener">我知道你懂 hoisting，可是你了解到多深？</a></p>
+
+        
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="article-footer">
+    <div class="article-more-info">
+      <div class="article-date">
+  <time datetime="2020-07-30T12:02:10.000Z" itemprop="datePublished">2020-07-30</time>
+</div>
+      
+        <div class="article-category">
+          <a class="article-category-link" href="/notes/categories/JavaScript/">JavaScript</a>
+        </div>
+      
+      
+        <div class="article-tag">
+          <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li></ul>
+        </div>
+      
+    </div>
+  </footer>
+
+
+</article>
+
+    
+  
+    
+      <article
   id="post-JS-ES6-函式參數的解構賦予值"
   class="article article-type-post"
 >
@@ -837,7 +1027,7 @@ Object.entries(chartObj);
   <div class="widget-wrap widget-cate">
     <div class="widget-title"><span>Categories</span></div>
     <div class="widget-inner">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/notes/categories/DevTool/">DevTool</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/JavaScript/">JavaScript</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Ruby/">Ruby</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/notes/categories/DevTool/">DevTool</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/HTML-CSS/">HTML, CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/JavaScript/">JavaScript</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Ruby/">Ruby</a></li></ul>
     </div>
   </div>
 
@@ -847,7 +1037,7 @@ Object.entries(chartObj);
   <div class="widget-wrap widget-tags">
     <div class="widget-title"><span>Tags</span></div>
     <div class="widget-inner">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DatePicker/" rel="tag">DatePicker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Experiments/" rel="tag">Experiments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Token/" rel="tag">Token</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSS/" rel="tag">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DatePicker/" rel="tag">DatePicker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Experiments/" rel="tag">Experiments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Form/" rel="tag">Form</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HTML/" rel="tag">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Table/" rel="tag">Table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Token/" rel="tag">Token</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
     </div>
   </div>
 
@@ -858,6 +1048,10 @@ Object.entries(chartObj);
     <div class="widget-title"><span>Recent Posts</span></div>
     <div class="widget-inner">
       <ul>
+        
+          <li>
+            <a href="/notes/2020/09/09/%E5%9C%A8-Table-%E8%A3%A1%E9%9D%A2%E4%BD%BF%E7%94%A8-Form/">在 Table 裡面使用 Form</a>
+          </li>
         
           <li>
             <a href="/notes/2020/08/26/JS-%E7%B0%A1%E6%98%93-Date-Picker/">JS: 簡易 Date Picker</a>
@@ -875,10 +1069,6 @@ Object.entries(chartObj);
             <a href="/notes/2020/08/16/JS-Day-47-AJAX-Request-XMLHttpRequest-Fetch-AXIOS/">JS Day 47: AJAX Request - XMLHttpRequest, Fetch, AXIOS</a>
           </li>
         
-          <li>
-            <a href="/notes/2020/08/14/JS-Day-44-window-location/">JS Day 44: window.location</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -888,7 +1078,7 @@ Object.entries(chartObj);
   <div class="widget-wrap widget-archive">
     <div class="widget-title"><span>Archive</span></div>
     <div class="widget-inner">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/notes/archives/2020/08/">2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/notes/archives/2020/09/">2020</a></li></ul>
     </div>
   </div>
 
