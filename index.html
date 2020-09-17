@@ -94,6 +94,105 @@
   
     
       <article
+  id="post-Firebase-Actions"
+  class="article article-type-post"
+>
+
+  <div class="article-inner">
+    
+
+    <div class="article-body">
+      <header class="article-title">
+        <a href="/notes/2020/09/17/Firebase-Actions/">Firebase Actions</a>
+      </header>
+      <div class="article-entry post-inner-html">
+        
+          <h1 id="Connect-to-database"><a href="#Connect-to-database" class="headerlink" title="Connect to database"></a>Connect to database</h1><pre><code class="jsx">const database = firebase.database();</code></pre>
+<h1 id="Bind-Data"><a href="#Bind-Data" class="headerlink" title="Bind Data"></a>Bind Data</h1><p>get data and push them to messages array</p>
+<pre><code class="jsx">database.ref(&#39;messages&#39;).on(&#39;child_added&#39;, snapshot =&gt; {
+  this.messages.push(snapshot.val())
+})
+
+// Include ID
+// value = snapshot.val() | key = snapshot.key
+database.ref(&#39;messages&#39;).on(&#39;child_added&#39;, snapshot =&gt; {
+  this.messages.push({...snapshot.val(), id: snapshot.key})
+  console.log(this.messages)
+})</code></pre>
+<h1 id="Firebase-Actions"><a href="#Firebase-Actions" class="headerlink" title="Firebase Actions"></a>Firebase Actions</h1><h2 id="write-data-into-database"><a href="#write-data-into-database" class="headerlink" title="write data into database"></a>write data into database</h2><pre><code class="jsx">database.ref(&#39;messages&#39;).push({text: this.messageText, nickname: this.nickname})
+
+// data gets created if the path is not existed
+// &#39;/&#39; 代表一個節點
+database.ref(&#39;nodeOne/nodeTwo/nodeThree&#39;).set(&#39;third&#39;)
+database.ref(&#39;nodeOne&#39;).child(&#39;nodeTwo&#39;).child(&#39;nodethree&#39;).set(&#39;3rd&#39;)
+
+// ps: case sensitive</code></pre>
+<pre><code>messages
+|--    -L8HkVXx_jUWUXDIVDlR
+    |--    nickname: Will
+    |-- text: HelloWorld
+
+nodeOne
+|--    nodeTwo
+    |--    nodeThree: third
+    |-- nodethree: 3rd
+</code></pre><h2 id="delete-data"><a href="#delete-data" class="headerlink" title="delete data"></a>delete data</h2><pre><code class="jsx">database.ref(&#39;messages&#39;).child(&#39;ID&#39;).remove()
+
+// delete message and re-render the DOM
+database.ref(&#39;messages&#39;).on(&#39;child_removed&#39;, snapshot =&gt; {
+  const indexOfDeletedMsg = this.messages.findIndex( message =&gt; message.id === snapshot.key)
+  this.messages.splice(indexOfDeletedMsg, 1)
+})</code></pre>
+<p>remove from DOM will cause other online users not seeing messages been removed, only if they refresh the page</p>
+<h2 id="update"><a href="#update" class="headerlink" title="update"></a>update</h2><pre><code class="jsx">// set text value
+// database.ref(&#39;messages&#39;).child(&#39;ID&#39;).child(&#39;text&#39;).set(&#39;updated value&#39;)
+
+database.ref(&#39;messages&#39;).child(&#39;-MHP86XkIhmaSzN9Fodt&#39;).update({text: &#39;updated message&#39;})
+
+// fetch data form the updated ms
+database.ref(&#39;messages&#39;).on(&#39;child_changed&#39;, snapshot =&gt; {
+  const updateMessage = this.messages.find(message =&gt; message.id === snapshot.key)
+  updateMessage.text = snapshot.val().text
+})
+</code></pre>
+<p>update multiple records</p>
+<pre><code class="jsx">messages[&#39;-Fei3Eee7a/name&#39;] = &#39;Will&#39;
+messages[&#39;-L8kSxxE/name&#39;] = &#39;Will&#39;
+messages[&#39;-L8kSxxE/text&#39;] = &#39;new message&#39;
+
+database.ref().update(messages)</code></pre>
+
+        
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="article-footer">
+    <div class="article-more-info">
+      <div class="article-date">
+  <time datetime="2020-09-17T05:59:20.000Z" itemprop="datePublished">2020-09-17</time>
+</div>
+      
+        <div class="article-category">
+          <a class="article-category-link" href="/notes/categories/Database/">Database</a>
+        </div>
+      
+      
+        <div class="article-tag">
+          <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Firebase/" rel="tag">Firebase</a></li></ul>
+        </div>
+      
+    </div>
+  </footer>
+
+
+</article>
+
+    
+  
+    
+      <article
   id="post-學習資源"
   class="article article-type-post"
 >
@@ -107,26 +206,26 @@
       </header>
       <div class="article-entry post-inner-html">
         
-          <h1 id="學習資源"><a href="#學習資源" class="headerlink" title="學習資源"></a>學習資源</h1><h2 id="Markdown"><a href="#Markdown" class="headerlink" title="Markdown"></a>Markdown</h2><ul>
-<li><a href="https://markdown.tw/" target="_blank" rel="noopener">Markdown 文件</a></li>
-</ul>
-<h2 id="Back-end"><a href="#Back-end" class="headerlink" title="Back-end"></a>Back-end</h2><h3 id="Ruby-on-Rails"><a href="#Ruby-on-Rails" class="headerlink" title="Ruby on Rails"></a>Ruby on Rails</h3><ul>
+          <h1 id="學習資源"><a href="#學習資源" class="headerlink" title="學習資源"></a>學習資源</h1><h2 id="Back-end"><a href="#Back-end" class="headerlink" title="Back-end"></a><em>Back-end</em></h2><h4 id="Ruby-on-Rails"><a href="#Ruby-on-Rails" class="headerlink" title="Ruby on Rails"></a>Ruby on Rails</h4><ul>
 <li><a href="https://www.rubyguides.com/" target="_blank" rel="noopener">Ruby Guides</a></li>
 <li><a href="https://gorails.com/" target="_blank" rel="noopener">GO RAILS</a></li>
 <li><a href="https://www.driftingruby.com/" target="_blank" rel="noopener">Drifting Ruby</a></li>
 <li><a href="http://railscasts.com/" target="_blank" rel="noopener">RAILSCASTS</a> (停止更新)</li>
 </ul>
-<h2 id="Front-end"><a href="#Front-end" class="headerlink" title="Front-end##"></a>Front-end##</h2><ul>
+<h2 id="Front-end"><a href="#Front-end" class="headerlink" title="Front-end"></a><em>Front-end</em></h2><ul>
 <li><a href="https://www.freecodecamp.org/" target="_blank" rel="noopener">Free Code Camp</a><blockquote>
 <p>HTML, CSS, JavaScript Algorithms, Python, etc.</p>
 </blockquote>
 </li>
 </ul>
-<h3 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a>JavaScript</h3><ul>
+<h4 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a>JavaScript</h4><ul>
 <li><a href="https://ithelp.ithome.com.tw/users/20065504/ironman/1259?page=1" target="_blank" rel="noopener">重新認識 JavaScript</a> (<a href="https://www.tenlong.com.tw/products/9789864344130" target="_blank" rel="noopener">實體書：0 陷阱！0 誤解！8 天重新認識 JavaScript！</a>)</li>
 <li><a href="https://wangdoc.com/javascript/" target="_blank" rel="noopener">JavaScript 教程</a> (簡體)</li>
 <li><a href="https://es6.ruanyifeng.com/" target="_blank" rel="noopener">ES6 入门教程</a> (簡體)</li>
 <li><a href="https://htmldom.dev/" target="_blank" rel="noopener">how to manage HTML DOM</a></li>
+</ul>
+<h2 id="Markdown"><a href="#Markdown" class="headerlink" title="Markdown"></a>Markdown</h2><ul>
+<li><a href="https://markdown.tw/" target="_blank" rel="noopener">Markdown 文件</a></li>
 </ul>
 
         
@@ -1715,224 +1814,6 @@ new Date(&#39;2020-08-06T20:55:33&#39;);
 
     
   
-    
-      <article
-  id="post-JS-Day-39-Arrow-Function-this"
-  class="article article-type-post"
->
-
-  <div class="article-inner">
-    
-
-    <div class="article-body">
-      <header class="article-title">
-        <a href="/notes/2020/08/02/JS-Day-39-Arrow-Function-this/">JS Day 39: Arrow Function &amp; this</a>
-      </header>
-      <div class="article-entry post-inner-html">
-        
-          <h1 id="箭頭函式-Arrow-Function"><a href="#箭頭函式-Arrow-Function" class="headerlink" title="箭頭函式 Arrow Function"></a>箭頭函式 Arrow Function</h1><h2 id="如何寫箭頭函式"><a href="#如何寫箭頭函式" class="headerlink" title="如何寫箭頭函式"></a>如何寫箭頭函式</h2><p>Function 範例：</p>
-<pre><code class="jsx">function getProductName() {
-    console.log(&#39;MacBook Pro&#39;);
-};
-getProductName(); // MacBook Pro</code></pre>
-<p>用 箭頭函式 Arrow Function 改寫：</p>
-<pre><code class="jsx">let getProductName = () =&gt; {
-    console.log(&#39;MacBook Pro&#39;);    
-};
-getProductName(); // MacBook Pro</code></pre>
-<p>如果只有一個參數傳遞進來，<code>( )</code> 號可以省略。<em>沒有任何參數時，<code>( )</code> 是不可以省略的。</em></p>
-<pre><code class="jsx">let sayHello = name =&gt; {
-    console.log(`Hello ${name}`);
-};
-sayHello(&#39;George&#39;); // Hello George</code></pre>
-<p>大於一個參數傳遞進來 <code>( )</code> 需要保留</p>
-<pre><code class="jsx">let multiply = (num1, num2) =&gt; {
-    return num1*num2;
-};
-console.log( multiply(2,3) ); // 6</code></pre>
-<p>上面這個例子可以再精簡。</p>
-<p>如果函式本身不做太複雜的運算，單純要 return 一個值的話， <code>{ }</code> 與 <code>return</code> 都可以省略。</p>
-<pre><code class="jsx">let multiply = (num1, num2) =&gt; return num1*num2; // 只剩一行
-console.log( multiply(2,3) ); // 6</code></pre>
-<h2 id="箭頭函式使用例子"><a href="#箭頭函式使用例子" class="headerlink" title="箭頭函式使用例子"></a>箭頭函式使用例子</h2><p>範例1 - addEventListener: </p>
-<pre><code class="jsx">button.addEventListener(&#39;click&#39;, function() {
-    alert(&#39;Do Not Click&#39;);
-});</code></pre>
-<p>範例1 改寫一：</p>
-<pre><code class="jsx">button.addEventListener(&#39;click&#39;, () =&gt; {
-    alert(&#39;Do Not Click&#39;);
-});</code></pre>
-<p>範例1 改寫二：</p>
-<pre><code class="jsx">let showAlert = () =&gt; {
-    alert(&#39;Do Not Click&#39;);
-};
-
-button.addEventListener(&#39;click&#39;, showAlert);</code></pre>
-<p>範例2 - map:</p>
-<pre><code class="jsx">const products = [
-    {brand: &#39;Apple&#39;, name: &#39;iPhone 11 Pro&#39;, price: 800},
-    {brand: &#39;Samsung&#39;, name: &#39;Galaxy S8&#39;, price: 788},
-    {brand: &#39;Google&#39;, name: &#39;Pixel 4&#39;, price: 588}
-];
-
-let prices = products.map(function(item) {
-    return item.price;
-});
-
-console.log(prices);</code></pre>
-<p>範例2 改寫:</p>
-<pre><code class="jsx">const products = [
-    {brand: &#39;Apple&#39;, name: &#39;iPhone 11 Pro&#39;, price: 800},
-    {brand: &#39;Samsung&#39;, name: &#39;Galaxy S8&#39;, price: 788},
-    {brand: &#39;Google&#39;, name: &#39;Pixel 4&#39;, price: 588}
-];
-
-let prices = products.map( item =&gt; item.price);
-
-console.log(prices);</code></pre>
-<h2 id="What-is-‘this’"><a href="#What-is-‘this’" class="headerlink" title="What is ‘this’?"></a>What is ‘this’?</h2><pre><code class="jsx">console.log(this); // this 指向 Window</code></pre>
-<p><img src="https://drive.google.com/uc?export=view&id=1M7be_drDFYZ31wkS9NkdHSbG_V8sFHTL" alt=""></p>
-<pre><code class="jsx">var a = &#39;A&#39;;
-console.log(a); // A
-console.log(this.a); // A
-console.log(window.a); // A
-console.log( this.a === window.a ); // true</code></pre>
-<p>目前 this 會變成 window。</p>
-<pre><code class="jsx">function greeting() {
-    console.log(this);
-};
-greeting(); // window
-
-////
-
-var name = &#39;Gary&#39;;
-function greeting(name) {
-  console.log(this.name);
-};
-greeting(&#39;hello&#39;); // Gary</code></pre>
-<p>當下 this 還是 window 而不是 greeting() 這個函式。</p>
-<blockquote>
-<p><code>this</code> 代表的是 function 執行時所屬的物件，而不是 function 本身。 — Kuro</p>
-</blockquote>
-<pre><code class="jsx">let getUsername = function() {
-  console.log(this); // 印出 this
-  return this.name;
-};
-
-const user1 = {
-  id: 1,
-  name: &#39;William&#39;,
-  getUsername
-};
-
-const user2 = {
-  id: 2,
-  name: &#39;Alan&#39;,
-  getUsername
-};
-
-console.log( user1.getUsername() ); // William
-console.log( user2.getUsername() ); // Alan</code></pre>
-<p><img src="https://drive.google.com/uc?export=view&id=1aPP-t1q7eK9Av5ZfJJ4CXPDU0jRAaexZ" alt=""></p>
-<p>另一個範例：</p>
-<pre><code class="jsx">var obj = {
-  func: function greeting(){
-    return console.log(this);
-  }
-};
-
-obj.func(); // Object { func: greeting() }</code></pre>
-<blockquote>
-<p>一但脫離了物件，<code>this</code> 的值就沒什麼意義，在沒意義的情況底下就會有個預設值，而預設值也很好記，嚴格模式就是<code>undefined</code>，非嚴格模式底下就是<code>全域物件</code>。 — Huli</p>
-</blockquote>
-<pre><code class="jsx">console.log(this); // 非嚴格模式下就是全域物件 - window
-var func = function (){
-  &quot;use strict&quot; // 嚴格模式
-  console.log(this); // undefined
-};
-func();</code></pre>
-<h2 id="箭頭函式下的-this"><a href="#箭頭函式下的-this" class="headerlink" title="箭頭函式下的 this"></a>箭頭函式下的 this</h2><p>將上面的範例改成 arrow function</p>
-<pre><code class="jsx">let getUsername = () =&gt; {
-    console.log(this); 
-  return this.name;
-};
-
-const user1 = {
-  id: 1,
-  name: &#39;William&#39;,
-  getUsername
-};
-
-const user2 = {
-  id: 2,
-  name: &#39;Alan&#39;,
-  getUsername
-};
-console.log( user1.getUsername() ); // &#39;&#39; (empty string)
-console.log( user2.getUsername() ); // &#39;&#39; (empty string)</code></pre>
-<p>this 指向全域物件 window<br><img src="https://drive.google.com/uc?export=view&id=1ySPURsNM59YglIJNeImPFBUR1dRseF6W" alt=""></p>
-<p>在箭頭函式下，this 會被強制綁定到其定義時所在的物件，上面的範例則是 window。</p>
-<h1 id="Arrow-Function-in-Vue-js"><a href="#Arrow-Function-in-Vue-js" class="headerlink" title="Arrow Function in Vue.js"></a>Arrow Function in Vue.js</h1><pre><code class="javascript">  var app = new Vue({
-    el: &#39;#app&#39;,
-    data: {
-      text: &#39;&#39;,
-      newText: &#39;&#39;
-    },
-    methods: {
-      reverseText: () =&gt; {
-        console.log(this);
-        console.log(app);
-        this.newText = this.text.split(&#39;&#39;).reverse().join(&#39;&#39;);
-      }
-    },
-  });</code></pre>
-<p>在 Vue.js 裡的 arrow function，<code>this</code> 也是指向 <code>window</code>。</p>
-<pre><code class="javascript">  var app = new Vue({
-    el: &#39;#app&#39;,
-    data: {
-      text: &#39;&#39;,
-      newText: &#39;&#39;
-    },
-    methods: {
-      reverseText: function() {
-        console.log(this);
-        console.log(app);
-        this.newText = this.text.split(&#39;&#39;).reverse().join(&#39;&#39;);
-      }
-    }
-  });</code></pre>
-<p>一般 function 的 <code>this</code> 是指向 Vue instance, 在這個範例也就是 <code>app</code>.</p>
-<p>Reference:<br><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions" target="_blank" rel="noopener">Arrow Function - MDN web docs</a><br><a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Operators/this" target="_blank" rel="noopener">This - MDN web docs</a><br><a href="https://pjchender.blogspot.com/2017/01/es6-arrow-function.html" target="_blank" rel="noopener">[筆記] JavaScript ES6 中的箭頭函數（arrow function）及對 this 的影響 - PJCHENder</a><br><a href="https://pjchender.blogspot.com/2016/03/javascriptthisbug.html" target="_blank" rel="noopener">[筆記] 談談 JavaScript 中的 “this” 和它的問提 - PJCHENder</a><br><a href="https://es6.ruanyifeng.com/?search=arrow&x=0&y=0#docs/function#%E7%AE%AD%E5%A4%B4%E5%87%BD%E6%95%B0" target="_blank" rel="noopener">ECMAScript 6 入門</a><br><a href="https://blog.techbridge.cc/2019/02/23/javascript-this/" target="_blank" rel="noopener">淺談 JavaScript 頭號難題 this：絕對不完整，但保證好懂 - TechBridge</a><br><a href="https://wcc723.github.io/javascript/2017/12/12/javascript-this/" target="_blank" rel="noopener">鐵人賽：JavaScript 的 this 到底是誰？ - 卡斯伯</a><br><a href="https://kuro.tw/posts/2017/10/12/What-is-THIS-in-JavaScript-上/" target="_blank" rel="noopener">What’s THIS in JavaScript? [上] [中] [下] - Kuro’s Blog</a></p>
-
-        
-      </div>
-    </div>
-
-  </div>
-
-  <footer class="article-footer">
-    <div class="article-more-info">
-      <div class="article-date">
-  <time datetime="2020-08-02T08:30:16.000Z" itemprop="datePublished">2020-08-02</time>
-</div>
-      
-        <div class="article-category">
-          <a class="article-category-link" href="/notes/categories/JavaScript/">JavaScript</a>
-        </div>
-      
-      
-        <div class="article-tag">
-          <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li></ul>
-        </div>
-      
-    </div>
-  </footer>
-
-
-</article>
-
-    
-  
 
   
     <nav class="pagination">
@@ -1954,7 +1835,7 @@ console.log( user2.getUsername() ); // &#39;&#39; (empty string)</code></pre>
   <div class="widget-wrap widget-cate">
     <div class="widget-title"><span>Categories</span></div>
     <div class="widget-inner">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/notes/categories/DevTool/">DevTool</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/HTML-CSS/">HTML, CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/JavaScript/">JavaScript</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Resources/">Resources</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Ruby/">Ruby</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Database/">Database</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/DevTool/">DevTool</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/HTML-CSS/">HTML, CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/JavaScript/">JavaScript</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Resources/">Resources</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Ruby/">Ruby</a></li></ul>
     </div>
   </div>
 
@@ -1964,7 +1845,7 @@ console.log( user2.getUsername() ); // &#39;&#39; (empty string)</code></pre>
   <div class="widget-wrap widget-tags">
     <div class="widget-title"><span>Tags</span></div>
     <div class="widget-inner">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSS/" rel="tag">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DatePicker/" rel="tag">DatePicker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Experiments/" rel="tag">Experiments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Form/" rel="tag">Form</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HTML/" rel="tag">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Rails/" rel="tag">Rails</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Table/" rel="tag">Table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Token/" rel="tag">Token</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSS/" rel="tag">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DatePicker/" rel="tag">DatePicker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Experiments/" rel="tag">Experiments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Firebase/" rel="tag">Firebase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Form/" rel="tag">Form</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HTML/" rel="tag">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Rails/" rel="tag">Rails</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Table/" rel="tag">Table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Token/" rel="tag">Token</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
     </div>
   </div>
 
@@ -1975,6 +1856,10 @@ console.log( user2.getUsername() ); // &#39;&#39; (empty string)</code></pre>
     <div class="widget-title"><span>Recent Posts</span></div>
     <div class="widget-inner">
       <ul>
+        
+          <li>
+            <a href="/notes/2020/09/17/Firebase-Actions/">Firebase Actions</a>
+          </li>
         
           <li>
             <a href="/notes/2020/09/12/%E5%AD%B8%E7%BF%92%E8%B3%87%E6%BA%90/">學習資源</a>
@@ -1990,10 +1875,6 @@ console.log( user2.getUsername() ); // &#39;&#39; (empty string)</code></pre>
         
           <li>
             <a href="/notes/2020/08/18/Chrome-Dev-Tool-CSS-Overview/">Chrome Dev Tool: CSS Overview</a>
-          </li>
-        
-          <li>
-            <a href="/notes/2020/08/17/JS-Day-49-%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-axios-%E5%82%B3%E9%81%9E-token/">JS Day 49: 如何使用 axios 傳遞 token</a>
           </li>
         
       </ul>
