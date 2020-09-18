@@ -157,10 +157,12 @@ module.exports = merge(prodEnv, {
 # local env files
 .env.local
 .env.*.local</code></pre>
-<p>環境文件使用 <code>key=value</code> 組成</p>
+<pre><code class="bash">NODE_ENV: &#39;&quot;development&quot;&#39;,
+API_PATH: &#39;&quot;https://www.example.com/api/&quot;&#39;</code></pre>
+<p>之前的寫法跟現在不太一樣。<br>目前環境文件使用 <code>key=value</code> 組成，斷行不需要用<code>,</code> 也不用 quotation (用單引號跟雙引號去包起來)</p>
 <pre><code class="bash">NODE_ENV=development
-VUE_APP_TITLE=&#39;我是環境文件&#39;
-VUE_API_PATH=&#39;&quot;https://www.abcdefg.com/api/&quot;&#39;</code></pre>
+VUE_APP_TITLE=我是環境文件
+VUE_API_PATH=https://www.abcdefg.com/api/</code></pre>
 <p>** 如果要在程式裡使用到環境變數，變數命名需要以 <code>VUE_APP</code> 開頭</p>
 <h1 id="使用環境變數"><a href="#使用環境變數" class="headerlink" title="使用環境變數"></a>使用環境變數</h1><pre><code class="jsx">console.log(process.env.VUE_APP_TITLE) // =&gt; 我是環境文件</code></pre>
 
