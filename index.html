@@ -94,6 +94,106 @@
   
     
       <article
+  id="post-Vue-CLI-環境變數-模式"
+  class="article article-type-post"
+>
+
+  <div class="article-inner">
+    
+
+    <div class="article-body">
+      <header class="article-title">
+        <a href="/notes/2020/09/18/Vue-CLI-%E7%92%B0%E5%A2%83%E8%AE%8A%E6%95%B8-%E6%A8%A1%E5%BC%8F/">Vue CLI - 環境變數&amp;模式</a>
+      </header>
+      <div class="article-entry post-inner-html">
+        
+          <p>今天用 Vue CLI 建置了一個 project，發現放置環境變數的 config 目錄不見了，也找不到 .env 之類的檔案。參考了官方文件，順便做一下筆記。</p>
+<blockquote>
+<p><strong>Modes and Environment Variables</strong><br><a href="https://cli.vuejs.org/guide/mode-and-env.html" target="_blank" rel="noopener">https://cli.vuejs.org/guide/mode-and-env.html</a></p>
+</blockquote>
+<h1 id="Mode-模式"><a href="#Mode-模式" class="headerlink" title="Mode 模式"></a>Mode 模式</h1><p>Vue CLI 有三種模式：development, test, production</p>
+<p>舊版 package.json</p>
+<pre><code class="bash"># 這是之前舊版 Vue CLI 產生的 package.json
+&quot;scripts&quot;: {
+  &quot;dev&quot;: &quot;webpack-dev-server --inline --progress --config build/webpack.dev.conf.js&quot;,
+  &quot;start&quot;: &quot;npm run dev&quot;,
+  &quot;build&quot;: &quot;node build/build.js&quot;
+},</code></pre>
+<p>舊版環境文件</p>
+<pre><code class="bash"># dev.env.js
+
+&#39;use strict&#39;
+const merge = require(&#39;webpack-merge&#39;)
+const prodEnv = require(&#39;./prod.env&#39;)
+
+module.exports = merge(prodEnv, {
+  NODE_ENV: &#39;&quot;development&quot;&#39;,
+  APIPATH: &#39;&quot;https://vue-course-api.hexschool.io&quot;&#39;,
+  CUSTOMPATH: &#39;&quot;ur_will_kome&quot;&#39;
+  // NODE_ENV: &#39;&quot;development&quot;&#39;,
+  // API_PATH: &#39;&quot;https://vue-course-api.hexschool.io&quot;&#39;,
+  // CUSTOM_PATH: &#39;&quot;ur_will_kome&quot;&#39;
+})</code></pre>
+<p>現行版本的 package.json</p>
+<pre><code class="bash">&quot;scripts&quot;: {
+  &quot;serve&quot;: &quot;vue-cli-service serve&quot;, # 預設使用 development
+  &quot;build&quot;: &quot;vue-cli-service build&quot;, # 在 build 時會使用 production 環境文件 (.env, .env.production, .env.production.local 等）
+},</code></pre>
+<p>Vue CLI 有三種模式：development, test, production，不同模式下會使用不同的環境文件。</p>
+<p><a href="https://cli.vuejs.org/guide/mode-and-env.html#modes" target="_blank" rel="noopener"># Modes</a></p>
+<blockquote>
+<p><em>development</em> is used by <code>vue-cli-service serve</code><br><em>test</em> is used by <code>vue-cli-service test:unit</code><br><em>production</em> is used by <code>vue-cli-service build</code> and <code>vue-cli-service test:e2e</code></p>
+</blockquote>
+<h1 id="環境變數"><a href="#環境變數" class="headerlink" title="環境變數"></a>環境變數</h1><p><a href="https://cli.vuejs.org/guide/mode-and-env.html#environment-variables" target="_blank" rel="noopener"># Environment Variables</a></p>
+<p>只要在根目錄下加入環境文件即可。命名方式如下：</p>
+<pre><code class="bash"># 環境文件
+.env.env            # loaded in all cases
+.env.local          # loaded in all cases, ignored by git
+.env.[mode]         # only loaded in specified mode
+.env.[mode].local   # only loaded in specified mode, ignored by git</code></pre>
+<p>如果後方有加上 .local 則不會上傳到 git，在 local 端的環境文件都會被忽略。</p>
+<pre><code class="bash">## .gitignore
+
+# local env files
+.env.local
+.env.*.local</code></pre>
+<p>環境文件使用 <code>key=value</code> 組成</p>
+<pre><code class="bash">NODE_ENV=development
+VUE_APP_TITLE=&#39;我是環境文件&#39;
+API_PATH: &#39;&quot;https://www.abcdefg.com/api/&quot;&#39;</code></pre>
+<h1 id="使用環境變數"><a href="#使用環境變數" class="headerlink" title="使用環境變數"></a>使用環境變數</h1><pre><code class="jsx">console.log(process.env.VUE_APP_TITLE) // =&gt; 我是環境文件</code></pre>
+
+        
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="article-footer">
+    <div class="article-more-info">
+      <div class="article-date">
+  <time datetime="2020-09-18T03:49:54.000Z" itemprop="datePublished">2020-09-18</time>
+</div>
+      
+        <div class="article-category">
+          <a class="article-category-link" href="/notes/categories/Vue-js/">Vue.js</a>
+        </div>
+      
+      
+        <div class="article-tag">
+          <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/VueCLI/" rel="tag">VueCLI</a></li></ul>
+        </div>
+      
+    </div>
+  </footer>
+
+
+</article>
+
+    
+  
+    
+      <article
   id="post-Firebase-Actions"
   class="article article-type-post"
 >
@@ -213,16 +313,18 @@ database.ref().update(messages)</code></pre>
 <li><a href="http://railscasts.com/" target="_blank" rel="noopener">RAILSCASTS</a> (停止更新)</li>
 </ul>
 <h2 id="Front-end"><a href="#Front-end" class="headerlink" title="Front-end"></a><em>Front-end</em></h2><ul>
-<li><a href="https://www.freecodecamp.org/" target="_blank" rel="noopener">Free Code Camp</a><blockquote>
-<p>HTML, CSS, JavaScript Algorithms, Python, etc.</p>
-</blockquote>
-</li>
+<li><a href="https://www.freecodecamp.org/" target="_blank" rel="noopener">Free Code Camp</a> (HTML, CSS, JavaScript Algorithms, Python, etc.)</li>
+<li><a href="https://frontendmasters.com/" target="_blank" rel="noopener">Frontend Masters</a> (JavaScript, Vue, React, Angular, CSS, D3, etc.)</li>
 </ul>
 <h4 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a>JavaScript</h4><ul>
 <li><a href="https://ithelp.ithome.com.tw/users/20065504/ironman/1259?page=1" target="_blank" rel="noopener">重新認識 JavaScript</a> (<a href="https://www.tenlong.com.tw/products/9789864344130" target="_blank" rel="noopener">實體書：0 陷阱！0 誤解！8 天重新認識 JavaScript！</a>)</li>
 <li><a href="https://wangdoc.com/javascript/" target="_blank" rel="noopener">JavaScript 教程</a> (簡體)</li>
 <li><a href="https://es6.ruanyifeng.com/" target="_blank" rel="noopener">ES6 入门教程</a> (簡體)</li>
 <li><a href="https://htmldom.dev/" target="_blank" rel="noopener">how to manage HTML DOM</a></li>
+</ul>
+<h4 id="Vue-js"><a href="#Vue-js" class="headerlink" title="Vue.js"></a>Vue.js</h4><ul>
+<li><a href="https://www.vuemastery.com/" target="_blank" rel="noopener">Vue Mastery</a></li>
+<li><a href="https://vueschool.io/" target="_blank" rel="noopener">Vue School</a> (英文口音有點重)</li>
 </ul>
 <h2 id="Markdown"><a href="#Markdown" class="headerlink" title="Markdown"></a>Markdown</h2><ul>
 <li><a href="https://markdown.tw/" target="_blank" rel="noopener">Markdown 文件</a></li>
@@ -1654,166 +1756,6 @@ let bbb = new Date().dateFormat(&#39;yyyy/MM/dd&#39;); // 2020/08/08</code></pre
 
     
   
-    
-      <article
-  id="post-JS-Day-41-Date-型別"
-  class="article article-type-post"
->
-
-  <div class="article-inner">
-    
-
-    <div class="article-body">
-      <header class="article-title">
-        <a href="/notes/2020/08/06/JS-Day-41-Date-%E5%9E%8B%E5%88%A5/">JS Day 41: Date() 型別</a>
-      </header>
-      <div class="article-entry post-inner-html">
-        
-          <h1 id="Date-物件"><a href="#Date-物件" class="headerlink" title="Date 物件"></a>Date 物件</h1><h2 id="建立-Date-物件的-4-種方法"><a href="#建立-Date-物件的-4-種方法" class="headerlink" title="建立 Date 物件的 4 種方法"></a>建立 Date 物件的 4 種方法</h2><pre><code class="jsx">// 1.
-new Date();
-// 2.
-new Date(value);
-// 3.
-new Date(dateString);
-// 4.
-new Date(year, month[, day[, hour[, minutes[, seconds[, milliseconds]]]]]);</code></pre>
-<h3 id="1-new-Date"><a href="#1-new-Date" class="headerlink" title="1. new Date()"></a>1. new Date()</h3><pre><code class="jsx">var current = new Date();
-// Thu Aug 06 2020 20:02:42 GMT+0800 (Taipei Standard Time)
-
-var current = Date();
-// &quot;Thu Aug 06 2020 20:02:42 GMT+0800 (Taipei Standard Time)&quot;</code></pre>
-<p>回傳當下日期時間、時間。如果少了 <code>new</code> 則是會回傳一個當下時間的字串。 </p>
-<h3 id="2-new-Date-value"><a href="#2-new-Date-value" class="headerlink" title="2. new Date(value)"></a>2. new Date(value)</h3><pre><code class="jsx"># 取得現在時間（毫秒）
-const dateNow = Date.now(); // 1596715024359
-const getTime = new Date().getTime(); // 1596715024359
-const getValue = new Date().valueOf(); // 1596715024359
-
-new Date(dateNow); // Thu Aug 06 2020 19:57:04 GMT+0800 (Taipei Standard Time)
-new Date(getTime); // Thu Aug 06 2020 19:57:04 GMT+0800 (Taipei Standard Time)
-new Date(getValue);
-
-new Date(1596715024359);
-// Thu Aug 06 2020 19:57:04 GMT+0800 (Taipei Standard Time)
-// 只要傳入參數是 timestamp，new Date() 會轉換成我們可以字串，我們可閱讀的格式</code></pre>
-<p><code>Date.now()</code> 回傳對應於當下時間的數值 - 1970/01/01 00:00:00 (UTC) 到當下的毫秒數。</p>
-<p><code>new Date().getTime()</code> 取得格林威治標準時間 1970/01/01 00:00:00 (UTC) 到現在的時間(毫秒)。</p>
-<p><code>new Date().valueOf()</code> 取得 <code>Date</code> 的原始值。</p>
-<h3 id="3-new-Date-dataString"><a href="#3-new-Date-dataString" class="headerlink" title="3. new Date(dataString)"></a>3. new Date(dataString)</h3><pre><code class="jsx">var today = new Date(&#39;August 06, 2020 20:42:15&#39;);
-// Thu Aug 06 2020 20:42:15 GMT+0800 (Taipei Standard Time)
-var today = new Date(&#39;2020-08-06T20:42:15&#39;);
-// Thu Aug 06 2020 20:42:15 GMT+0800 (Taipei Standard Time)
-
-var today = new Date(2020, 08, 06);
-// Sun Sep 06 2020 00:00:00 GMT+0800 (Taipei Standard Time)
-// 雖然 dateString 是 2002, 08, 06 (星期四)，但回傳的卻是 星期日 九月六日 🤔
-// 啊，原來忘記用 quotation 包住。誤會一場。
-
-var today = new Date(&#39;2020, 08, 06&#39;);
-// Thu Aug 06 2020 00:00:00 GMT+0800 (Taipei Standard Time)</code></pre>
-<p>瀏覽器間解析日期字串的方式有所差異，MDN 不建議用此方法建立日期物件。</p>
-<pre><code class="jsx">new Date(&#39;2020-08-06&#39;);
-// Thu Aug 06 2020 08:00:00 GMT+0800 (Taipei Standard Time)</code></pre>
-<p>上方範例回傳<code>08:00:00</code> ，Chrome 瀏覽器會解讀成 格林威治標準時間(GMT) 的日期格式，而本地時間是 GMT+8 所以時間顯示會再加上 8 小時。</p>
-<p>下方範例回傳 <code>00:00:00</code> ，顯示為本地時間，上下兩者相差了 8 小時。如果瀏覽器位於不同時區打開，顯示的本地時間不一定相同。</p>
-<pre><code class="jsx">new Date(&#39;2020-8-06&#39;);
-// Thu Aug 06 2020 00:00:00 GMT+0800 (Taipei Standard Time)
-
-new Date(&#39;2020/08/06&#39;);
-// Thu Aug 06 2020 00:00:00 GMT+0800 (Taipei Standard Time)
-
-new Date(&#39;2020/8/06&#39;);
-// Thu Aug 06 2020 00:00:00 GMT+0800 (Taipei Standard Time)
-
-new Date(&#39;06 August, 2020&#39;);
-// Thu Aug 06 2020 00:00:00 GMT+0800 (Taipei Standard Time)</code></pre>
-<h3 id="4-new-Date-year-month-day-hour-minutes-seconds-milliseconds"><a href="#4-new-Date-year-month-day-hour-minutes-seconds-milliseconds" class="headerlink" title="4. new Date(year, month[, day[, hour[, minutes[, seconds[, milliseconds]]]]]);"></a>4. new Date(year, month[, day[, hour[, minutes[, seconds[, milliseconds]]]]]);</h3><p>這邊的參數傳入不是字串，不需要用 quotation ，但是傳入的數字有其規範。</p>
-<p><strong><code>year</code></strong></p>
-<p>表示年份的整數。當數值落在 0 到 99 之間，表示 1900 到 1999 之間的年份。參考<a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Date#Two_digit_years_map_to_1900_-_1999" target="_blank" rel="noopener">下面的範例</a>.</p>
-<p><strong><code>month</code></strong></p>
-<p>表示月份的整數。由 0 開始（一月）到 11 （十二月）。</p>
-<p><strong><code>day</code></strong></p>
-<p>選用。表示月份中第幾天的整數值。</p>
-<p><strong><code>hour</code></strong></p>
-<p>選用。表示小時數的整數值。</p>
-<p><strong><code>minute</code></strong></p>
-<p>選用。表示分鐘數的整數值。</p>
-<p><strong><code>second</code></strong></p>
-<p>選用。表示秒數的整數值。</p>
-<p><strong><code>millisecond</code></strong></p>
-<p>選用。表示毫秒數的整數值。</p>
-<p>– 擷取自 <a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" rel="noopener">MDN web doc</a></p>
-<pre><code class="jsx">var today = new Date(2020, 08, 06);
-// Sun Sep 06 2020 00:00:00 GMT+0800 (Taipei Standard Time)
-
-// month 的起始值是 0(一月)，08 則是九月，所以整個回傳的日期是 九月六日，二零二零年。</code></pre>
-<pre><code class="jsx">// new Date(year, month[, day[, hour[, minutes[, seconds[, milliseconds]]]]]);
-// 把上面這個方法看成下方這樣對我來說比較好理解
-// new Date(year, month, day, hour, minutes, seconds, milliseconds)
-
-new Date(98);
-// Thu Jan 01 1970 08:00:00 GMT+0800 (Taipei Standard Time)
-new Date(2020); 
-// Thu Jan 01 1970 08:00:02 GMT+0800 (Taipei Standard Time)</code></pre>
-<p>這部分有點不解！傳入一個參數回傳都是從 1970 開始。</p>
-<pre><code class="jsx">new Date(2020, 07); // month 是從 0 開始, 07 等於八月
-// Sat Aug 01 2020 00:00:00 GMT+0800 (Taipei Standard Time)
-// 參數只有年、月，所以日期會被設為 1
-
-new Date(2020, 07, 06);
-// Thu Aug 06 2020 00:00:00 GMT+0800 (Taipei Standard Time)</code></pre>
-<p>規則：</p>
-<ul>
-<li>如果沒有傳入任務參數到建構子，會依系統設定建立出代表當下時間的 Date 物件。</li>
-<li>如果傳入至少兩個參數，缺少日期的話會設為 1，其它參數則會被設定為 0。</li>
-</ul>
-<h1 id="日期字串格式規範"><a href="#日期字串格式規範" class="headerlink" title="日期字串格式規範"></a>日期字串格式規範</h1><p><a href="http://www.ecma-international.org/ecma-262/5.1/" target="_blank" rel="noopener">ECMA-262 Edition 5.1</a> 對 Date Time String Format 做出個規範：</p>
-<pre><code class="jsx">// ISO 8601 Extended Format
-YYYY-MM-DDTHH:mm:ss.SSSZ</code></pre>
-<pre><code class="jsx">// 即使只有年份也可以
-new Date(&#39;2020&#39;);
-// Wed Jan 01 2020 08:00:00 GMT+0800 (Taipei Standard Time)
-new Date(&#39;2020-08&#39;);
-// Sat Aug 01 2020 08:00:00 GMT+0800 (Taipei Standard Time)
-new Date(&#39;2020-08-06&#39;);
-// Thu Aug 06 2020 08:00:00 GMT+0800 (Taipei Standard Time)</code></pre>
-<p>如果要傳入時間(時：分)，日期(DD) 的部分則不能省略，秒(ss) 則可以省略。。</p>
-<p><strong><em>YYYY-MM-DD<code>T</code>HH:mm:ss.SSSZ</em></strong> 日期跟時間中間會用英文字母 <code>T</code> 來做分隔。</p>
-<p><strong><em>YYYY-MM-DDTHH:mm:ss.SSS<code>Z</code></em></strong> 最後面的 <code>Z</code> 代表時區，它可以被省略。</p>
-<pre><code class="jsx">new Date(&#39;2020-08-06T20:55&#39;);
-// Thu Aug 06 2020 20:55:00 GMT+0800 (Taipei Standard Time)
-new Date(&#39;2020-08-06T20:55:33&#39;);
-// Thu Aug 06 2020 20:55:33 GMT+0800 (Taipei Standard Time)</code></pre>
-<p>Reference:<br><a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" rel="noopener">Date - MDN web docs</a><br><a href="https://blog.miniasp.com/post/2016/09/25/JavaScript-Date-usage-in-details" target="_blank" rel="noopener">前端工程研究：關於 JavaScript 中 Date 型別的常見地雷與建議作法 — The Will Will Web</a></p>
-
-        
-      </div>
-    </div>
-
-  </div>
-
-  <footer class="article-footer">
-    <div class="article-more-info">
-      <div class="article-date">
-  <time datetime="2020-08-06T15:36:30.000Z" itemprop="datePublished">2020-08-06</time>
-</div>
-      
-        <div class="article-category">
-          <a class="article-category-link" href="/notes/categories/JavaScript/">JavaScript</a>
-        </div>
-      
-      
-        <div class="article-tag">
-          <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li></ul>
-        </div>
-      
-    </div>
-  </footer>
-
-
-</article>
-
-    
-  
 
   
     <nav class="pagination">
@@ -1835,7 +1777,7 @@ new Date(&#39;2020-08-06T20:55:33&#39;);
   <div class="widget-wrap widget-cate">
     <div class="widget-title"><span>Categories</span></div>
     <div class="widget-inner">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Database/">Database</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/DevTool/">DevTool</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/HTML-CSS/">HTML, CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/JavaScript/">JavaScript</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Resources/">Resources</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Ruby/">Ruby</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Database/">Database</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/DevTool/">DevTool</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/HTML-CSS/">HTML, CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/JavaScript/">JavaScript</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Resources/">Resources</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Ruby/">Ruby</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Vue-js/">Vue.js</a></li></ul>
     </div>
   </div>
 
@@ -1845,7 +1787,7 @@ new Date(&#39;2020-08-06T20:55:33&#39;);
   <div class="widget-wrap widget-tags">
     <div class="widget-title"><span>Tags</span></div>
     <div class="widget-inner">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSS/" rel="tag">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DatePicker/" rel="tag">DatePicker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Experiments/" rel="tag">Experiments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Firebase/" rel="tag">Firebase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Form/" rel="tag">Form</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HTML/" rel="tag">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Rails/" rel="tag">Rails</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Table/" rel="tag">Table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Token/" rel="tag">Token</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSS/" rel="tag">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DatePicker/" rel="tag">DatePicker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Experiments/" rel="tag">Experiments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Firebase/" rel="tag">Firebase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Form/" rel="tag">Form</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HTML/" rel="tag">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Rails/" rel="tag">Rails</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Table/" rel="tag">Table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Token/" rel="tag">Token</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/VueCLI/" rel="tag">VueCLI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
     </div>
   </div>
 
@@ -1856,6 +1798,10 @@ new Date(&#39;2020-08-06T20:55:33&#39;);
     <div class="widget-title"><span>Recent Posts</span></div>
     <div class="widget-inner">
       <ul>
+        
+          <li>
+            <a href="/notes/2020/09/18/Vue-CLI-%E7%92%B0%E5%A2%83%E8%AE%8A%E6%95%B8-%E6%A8%A1%E5%BC%8F/">Vue CLI - 環境變數&amp;模式</a>
+          </li>
         
           <li>
             <a href="/notes/2020/09/17/Firebase-Actions/">Firebase Actions</a>
@@ -1871,10 +1817,6 @@ new Date(&#39;2020-08-06T20:55:33&#39;);
         
           <li>
             <a href="/notes/2020/08/26/JS-%E7%B0%A1%E6%98%93-Date-Picker/">JS: 簡易 Date Picker</a>
-          </li>
-        
-          <li>
-            <a href="/notes/2020/08/18/Chrome-Dev-Tool-CSS-Overview/">Chrome Dev Tool: CSS Overview</a>
           </li>
         
       </ul>
