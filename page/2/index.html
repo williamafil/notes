@@ -94,6 +94,147 @@
   
     
       <article
+  id="post-JS-Day-42-Date-方法＆日期格式"
+  class="article article-type-post"
+>
+
+  <div class="article-inner">
+    
+
+    <div class="article-body">
+      <header class="article-title">
+        <a href="/notes/2020/08/08/JS-Day-42-Date-%E6%96%B9%E6%B3%95%EF%BC%86%E6%97%A5%E6%9C%9F%E6%A0%BC%E5%BC%8F/">JS Day 42: Date() 方法＆日期格式</a>
+      </header>
+      <div class="article-entry post-inner-html">
+        
+          <h1 id="Getter"><a href="#Getter" class="headerlink" title="Getter"></a>Getter</h1><p>取得時間格式</p>
+<pre><code class="jsx">const  today = new Date(); // Date Sat Aug 08 2020 00:28:32 GMT+0800 (Taipei Standard Time)
+
+// 回傳年份
+today.getFullYear(); // 2020
+
+// 回傳月份 (0-11) ** 從 0 開始
+today.getMonth(); // 7
+
+// 回傳日期（1-31)
+today.getDate(); // 8
+
+// 回傳小時（0-23）
+today.getHours(); // 0
+
+// 回傳分鐘（0-59）
+today.getMinutes(); // 28
+
+// 回傳日期（0-6）** 從 0 開始
+today.getDay(); // 6</code></pre>
+<h1 id="Setter"><a href="#Setter" class="headerlink" title="Setter"></a>Setter</h1><p>設定時間格式</p>
+<pre><code class="jsx">// 設定月份中的日期
+today.setDate();
+
+const bday = new Date(&#39;August 08, 2020 11:26:15&#39;);
+event.setDate(05); // 設定程 5 號
+// =&gt; 1596597975000
+console.log(event); // Date Wed Aug 05 2020 11:26:15 GMT+0800 (Taipei Standard Time)
+
+// 設定完整年份
+today.setFullYear();
+
+// 設定月份
+today.setMonth();
+
+// 設定小時
+today.setHours();
+
+// 設定分鐘
+today.setMinutes();
+
+// 設定秒數
+today.setSeconds();</code></pre>
+<h1 id="時間格式"><a href="#時間格式" class="headerlink" title="時間格式"></a>時間格式</h1><p>設定時間格式 例：2020/08/05</p>
+<pre><code class="jsx">const setDate = new Date(2020, 07, 05);
+let df = (date) =&gt; {
+
+  const year = date.getFullYear();
+  const month = date.getMonth()+1;
+  const day = date.getDate();
+
+  return [year, month, day].join(&quot;/&quot;);
+};
+
+console.log(df(setDate));</code></pre>
+<p>不過這樣寫不夠靈活。如果遇到格式是 2020-8-5 或是 2020-08-05 整式函式都要重寫。</p>
+<pre><code class="jsx">Date.prototype.dateFormat = function(format){
+  var obj = {
+        // 這邊的 this 會指向 Date()
+    &quot;y+&quot;: this.getFullYear(),                //年
+    &quot;M+&quot;: this.getMonth()+1,                 //月份
+    &quot;d+&quot;: this.getDate(),                    //日
+    &quot;h+&quot;: this.getHours(),                   //小時
+    &quot;m+&quot;: this.getMinutes(),                 //分
+    &quot;s+&quot;: this.getSeconds(),                 //秒
+    &quot;S&quot; : this.getMilliseconds()             //毫秒
+  };
+    // 物件的 key 代表 regular expression 的規則
+  // ＋號：匹配前一字元 1 至多次，等同於 {1,}。
+    // 例如：/a+/ 匹配「candy」中的 a，以及所有「caaaaaaandy」中的 a。
+
+  for (let key in obj) {
+    // create a regular expression
+        const regex = new RegExp(`(${key})`); // 這邊的 key 需要用括號包住( )，參考 capturing parentheses
+                                                // 括號會記住此次的匹配，之後用以用 RegExp.$1..$n 呼叫
+
+    if (regex.test(format)) {
+      if (regex == &#39;/(M+)/&#39; || regex == &#39;/(d+)/&#39;) {
+        format = format.replace(
+                    regex, (RegExp.$1.length &lt; 2 ? obj[key] : (&quot;00&quot; + obj[key]).substring(1,obj[key].length))
+                    // RegExp.$1 會回傳 M 跟 d 的長度
+                    // 如果是 MM 就會組合成 00+月 = 008 再去刪掉最前方的0 也就是 obj[key].length
+                );
+      } else {
+        format = format.replace(regex, obj[key]);
+      }
+    }
+  }
+  console.log(format);
+  return format;
+}
+
+let ccc = new Date().dateFormat(&#39;yyyy/MM/d&#39;); // 2020/08/8
+let aaa = new Date().dateFormat(&#39;yyyy-M-dd&#39;); // 2020-8-08
+let bbb = new Date().dateFormat(&#39;yyyy/MM/dd&#39;); // 2020/08/08</code></pre>
+<p>Reference:<br><a href="https://www.runoob.com/js/js-obj-date.html" target="_blank" rel="noopener">JavaScript Date (日期) 對象</a><br><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/test" target="_blank" rel="noopener">RegExp.prototype.test() – MDN web docs</a><br><a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Guide/Regular_Expressions#special-plus" target="_blank" rel="noopener">Regular Expression: ＋ (plus sign) — MDN web docs</a><br><a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Guide/Regular_Expressions#special-capturing-parentheses" target="_blank" rel="noopener">Regular Expression: Capturing Parentheses — MDN web docs</a></p>
+
+        
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="article-footer">
+    <div class="article-more-info">
+      <div class="article-date">
+  <time datetime="2020-08-08T05:15:12.000Z" itemprop="datePublished">2020-08-08</time>
+</div>
+      
+        <div class="article-category">
+          <a class="article-category-link" href="/notes/categories/JavaScript/">JavaScript</a>
+        </div>
+      
+      
+        <div class="article-tag">
+          <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li></ul>
+        </div>
+      
+    </div>
+  </footer>
+
+
+</article>
+
+    
+  
+    
+      <article
   id="post-JS-Day-41-Date-型別"
   class="article article-type-post"
 >
@@ -1508,57 +1649,11 @@ Object.entries(chartObj);
 
     
   
-    
-      <article
-  id="post-hello-world"
-  class="article article-type-post"
->
-
-  <div class="article-inner">
-    
-
-    <div class="article-body">
-      <header class="article-title">
-        <a href="/notes/2020/07/18/hello-world/">Hello World</a>
-      </header>
-      <div class="article-entry post-inner-html">
-        
-          <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;</code></pre>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server</code></pre>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate</code></pre>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy</code></pre>
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-        
-      </div>
-    </div>
-
-  </div>
-
-  <footer class="article-footer">
-    <div class="article-more-info">
-      <div class="article-date">
-  <time datetime="2020-07-18T13:02:00.740Z" itemprop="datePublished">2020-07-18</time>
-</div>
-      
-      
-    </div>
-  </footer>
-
-
-</article>
-
-    
-  
 
   
     <nav class="pagination">
       
-      <a class="extend prev" rel="prev" href="/notes/">上一篇</a><a class="page-number" href="/notes/">1</a><span class="page-number current">2</span>
+      <a class="extend prev" rel="prev" href="/notes/">上一篇</a><a class="page-number" href="/notes/">1</a><span class="page-number current">2</span><a class="page-number" href="/notes/page/3/">3</a><a class="extend next" rel="next" href="/notes/page/3/">下一页</a>
     </nav>
   
 </div>
@@ -1585,7 +1680,7 @@ Object.entries(chartObj);
   <div class="widget-wrap widget-tags">
     <div class="widget-title"><span>Tags</span></div>
     <div class="widget-inner">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSS/" rel="tag">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DatePicker/" rel="tag">DatePicker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Experiments/" rel="tag">Experiments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Firebase/" rel="tag">Firebase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Form/" rel="tag">Form</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HTML/" rel="tag">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Rails/" rel="tag">Rails</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Table/" rel="tag">Table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Token/" rel="tag">Token</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/VueCLI/" rel="tag">VueCLI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSS/" rel="tag">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DatePicker/" rel="tag">DatePicker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Experiments/" rel="tag">Experiments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Firebase/" rel="tag">Firebase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Form/" rel="tag">Form</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HTML/" rel="tag">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Iterm2/" rel="tag">Iterm2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Powerlevel10K/" rel="tag">Powerlevel10K</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Rails/" rel="tag">Rails</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Table/" rel="tag">Table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Token/" rel="tag">Token</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/VueCLI/" rel="tag">VueCLI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/oh-my-zsh/" rel="tag">oh-my-zsh</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
     </div>
   </div>
 
@@ -1596,6 +1691,10 @@ Object.entries(chartObj);
     <div class="widget-title"><span>Recent Posts</span></div>
     <div class="widget-inner">
       <ul>
+        
+          <li>
+            <a href="/notes/2020/10/09/Iterm2-zsh-oh-my-zsh/">Iterm2 + zsh + oh-my-zsh</a>
+          </li>
         
           <li>
             <a href="/notes/2020/09/18/Vue-CLI-%E7%92%B0%E5%A2%83%E8%AE%8A%E6%95%B8-%E6%A8%A1%E5%BC%8F/">Vue CLI - 環境變數&amp;模式</a>
@@ -1613,10 +1712,6 @@ Object.entries(chartObj);
             <a href="/notes/2020/09/09/%E5%9C%A8-Table-%E8%A3%A1%E9%9D%A2%E4%BD%BF%E7%94%A8-Form/">在 Table 裡面使用 Form</a>
           </li>
         
-          <li>
-            <a href="/notes/2020/08/26/JS-%E7%B0%A1%E6%98%93-Date-Picker/">JS: 簡易 Date Picker</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -1626,7 +1721,7 @@ Object.entries(chartObj);
   <div class="widget-wrap widget-archive">
     <div class="widget-title"><span>Archive</span></div>
     <div class="widget-inner">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/notes/archives/2020/09/">2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/notes/archives/2020/10/">2020</a></li></ul>
     </div>
   </div>
 
