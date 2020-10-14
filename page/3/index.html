@@ -94,6 +94,197 @@
   
     
       <article
+  id="post-JS-Day-30-C3-js-Chart"
+  class="article article-type-post"
+>
+
+  <div class="article-inner">
+    
+
+    <div class="article-body">
+      <header class="article-title">
+        <a href="/notes/2020/07/19/JS-Day-30-C3-js-Chart/">JS Day 30: C3.js Chart</a>
+      </header>
+      <div class="article-entry post-inner-html">
+        
+          <h2 id="目標"><a href="#目標" class="headerlink" title="目標"></a>目標</h2><p>運用 axios 把 JSON 資料載入，再使用 C3.js graph 把數據呈現出來</p>
+<h2 id="練習"><a href="#練習" class="headerlink" title="練習"></a>練習</h2><p><a href="https://codepen.io/william_k/pen/LYGXLeV" target="_blank" rel="noopener">https://codepen.io/william_k/pen/LYGXLeV</a></p>
+<h2 id="載入-C3-js-amp-CSS-Style"><a href="#載入-C3-js-amp-CSS-Style" class="headerlink" title="載入 C3.js &amp; CSS Style"></a>載入 C3.js &amp; CSS Style</h2><pre><code class="html">&lt;!-- CSS Style Link --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.18/c3.min.css&quot; integrity=&quot;sha512-cznfNokevSG7QPA5dZepud8taylLdvgr0lDqw/FEZIhluFsSwyvS81CMnRdrNSKwbsmc43LtRd2/WMQV+Z85AQ==&quot; crossorigin=&quot;anonymous&quot; /&gt;
+
+&lt;!-- JavaScript Link --&gt;
+&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/d3/5.16.0/d3.min.js&quot; integrity=&quot;sha512-FHsFVKQ/T1KWJDGSbrUhTJyS1ph3eRrxI228ND0EGaEp6v4a/vGwPWd3Dtd/+9cI7ccofZvl/wulICEurHN1pg==&quot; crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.18/c3.min.js&quot; integrity=&quot;sha512-bW79RVtvrrTS2QzmDsJeh62Nt4b/RjYlYvi2iEmkXPhzzbXMx69JT/zHgiGcL1Tk5nkLMTF6xkEUuynTkdC9PQ==&quot; crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
+</code></pre>
+<h2 id="元素綁定"><a href="#元素綁定" class="headerlink" title="元素綁定"></a>元素綁定</h2><p>在 C3.JS 官網裡的 Getting Started 說明的很清楚，要生成一個圖表需要提供一個元素給圖表綁定。</p>
+<pre><code class="html">&lt;div id=&quot;chart&quot;&gt;&lt;/div&gt;</code></pre>
+<h2 id="產生圖表"><a href="#產生圖表" class="headerlink" title="產生圖表"></a>產生圖表</h2><p>＃chart_donut.js</p>
+<pre><code class="jsx">var chart = c3.generate({
+    data: {
+                // columns 是要存放排列好的陣列
+                // 需要把 axios 取得的 response.data 變成這樣
+        columns: [[&#39;data1&#39;, 30],[&#39;data2&#39;, 120],],
+        type : &#39;donut&#39;,
+        onclick: function (d, i) { console.log(&quot;onclick&quot;, d, i); },
+        onmouseover: function (d, i) { console.log(&quot;onmouseover&quot;, d, i); },
+        onmouseout: function (d, i) { console.log(&quot;onmouseout&quot;, d, i); }
+    },
+    donut: {
+        title: &quot;Iris Petal Width&quot;
+    }
+});</code></pre>
+<p><a href="https://c3js.org/samples/chart_donut.html" target="_blank" rel="noopener">https://c3js.org/samples/chart_donut.html</a></p>
+<p>C3.js 官網裡面每一個範例下方都有內建編輯器，非常好用。可以直接把我們的資料丟進去，馬上可以看到成果 👍。</p>
+<p><img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/437d298a-0d2a-4959-9017-2397e4222227/Screen_Shot_2020-07-18_at_11.04.51_PM.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAT73L2G45O3KS52Y5%2F20200719%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20200719T031908Z&X-Amz-Expires=86400&X-Amz-Signature=fe8e215acc8a27e515581a0939d22c3da61bc6169c8303e1fbacc5f8be2236ce&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Screen_Shot_2020-07-18_at_11.04.51_PM.png%22" alt="JS%20Day%2030%20C3%20js%20Chart%20596ae2ec69c04c08b18a60b77394d6dd/Screen_Shot_2020-07-18_at_11.04.51_PM.png"></p>
+<h2 id="原始資料"><a href="#原始資料" class="headerlink" title="原始資料"></a>原始資料</h2><p>從 JSON 取出來的資料原始面貌如下：</p>
+<pre><code class="jsx">// Array (213)
+[
+    {id: &quot;4&quot;, name: &quot;hsin-yu&quot;, process: &quot;45%&quot;, checkpoint: {…}},
+    {id: &quot;9&quot;, name: &quot;Sesame&quot;, process: &quot;45%&quot;, checkpoint: {…}},
+    .... 略
+    {id: &quot;227&quot;, name: &quot;skypassion5000&quot;, process: &quot;0%&quot;, checkpoint: {…}}
+]</code></pre>
+<pre><code class="jsx">// 要變成下面這個結構需要去計算每一個％出現的次數。
+let chartData = [[&#39;0%&#39;, 5], [&#39;5%&#39;, 3], [&#39;10%&#39;, 15], [&#39;15%&#39;, 11]];</code></pre>
+<p>方法其實有很多種，forEach(), map(), reduce() 都可以做到。這邊選擇使用 <code>reduce()</code>，比較簡單。</p>
+<blockquote>
+<p>reduce() 方法將一個累加器及陣列中每項元素（由左至右）傳入回呼函式，將陣列化為單一值。 — MDN web docs</p>
+</blockquote>
+<p><img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/95581b89-aac5-4b4e-a0ec-ea6f562fae9a/Screen_Shot_2020-07-18_at_11.18.06_PM.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAT73L2G45O3KS52Y5%2F20200719%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20200719T032022Z&X-Amz-Expires=86400&X-Amz-Signature=0fc97f40a84d33899a48224a6a6ee367a975e2ef658ecc9dee92222de03b9ab2&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Screen_Shot_2020-07-18_at_11.18.06_PM.png%22" alt="JS%20Day%2030%20C3%20js%20Chart%20596ae2ec69c04c08b18a60b77394d6dd/Screen_Shot_2020-07-18_at_11.18.06_PM.png"></p>
+<pre><code class="jsx">// reduce() - 計算相同元素數量並以物件鍵值顯示
+let chartObj = {};
+
+function progressCollection() {
+  chartObj = data.reduce( (obj, item) =&gt; {
+    if (!obj[item.process]){  // 如果 value (例：&#39;15%&#39;) 不存在
+      obj[item.process] = 0;  // 新增 {&#39;15%&#39;:0}
+    }
+    obj[item.process]++;  // 把找到的+1  {&#39;15%&#39;:1}
+    return obj;
+  }, {});  // 起始值是一個空物件 {} arg= obj
+}
+
+// chartObj output
+{
+    0%: 59, 1.65%: 1,
+    5%: 12,
+    8.3%: 1,
+    10%: 9,
+    11.65%: 1,
+    15%: 19,
+    16.65%: 1,
+    20%: 21,
+    21.65%: 1,
+    23.25%: 1,
+    25%: 10,
+    28.3%: 1,
+    30%: 11,
+    35%: 4,
+    39.95%: 1,
+    40%: 18,
+    41.65%: 1,
+    43.3%: 1,
+    45%: 40
+}</code></pre>
+<p>距離目標還差一小步，把物件轉成陣列，幸好 JS 原生 API 就有提供轉換</p>
+<pre><code class="jsx">// MDN example
+const obj = { foo: &#39;bar&#39;, baz: 42 };
+console.log(Object.entries(obj)); 
+// [ [&#39;foo&#39;, &#39;bar&#39;], [&#39;baz&#39;, 42] ]
+
+
+// 方法二
+Object.keys(chartObj).map((key) =&gt; [key, chartObj[key]]);</code></pre>
+<pre><code class="jsx">// 這樣就可以把 chartObj 物件轉換成陣列了
+Object.entries(chartObj);
+
+// output
+[
+  [&quot;45%&quot;, 40],
+  [&quot;43.3%&quot;, 1],
+  [&quot;41.65%&quot;, 1],
+  [&quot;40%&quot;, 18],
+  [&quot;39.95%&quot;, 1],
+  [&quot;35%&quot;, 4],
+  [&quot;30%&quot;, 11],
+  [&quot;28.3%&quot;, 1],
+  [&quot;25%&quot;, 10],
+  [&quot;23.25%&quot;, 1],
+  [&quot;21.65%&quot;, 1],
+  [&quot;20%&quot;, 21],
+  [&quot;16.65%&quot;, 1],
+  [&quot;15%&quot;, 19],
+  [&quot;11.65%&quot;, 1],
+  [&quot;10%&quot;, 9],
+  [&quot;8.3%&quot;, 1],
+  [&quot;5%&quot;, 12],
+  [&quot;1.65%&quot;, 1],
+  [&quot;0%&quot;, 59]
+ ]</code></pre>
+<h2 id="互動性"><a href="#互動性" class="headerlink" title="互動性"></a>互動性</h2><pre><code class="jsx">setTimeout(function () {
+  var chart = c3.generate({
+    data: {
+      columns: pieColumns,
+      type: &#39;donut&#39;,
+      onclick: function (d, i) {
+
+        const selected = document.querySelectorAll(&#39;#table_body &gt; tr &gt; th&#39;)
+
+        selected.forEach( (item, index) =&gt; {
+          item.parentElement.className = &#39;&#39;;
+          if (item.innerText === d.id){
+            item.parentElement.classList.add(&#39;table-dark&#39;);
+          }
+        })
+      },
+      // onmouseover: function (d, i) { console.log(&quot;onmouseover&quot;, d, i); },
+      // onmouseout: function (d, i) { console.log(&quot;onmouseout&quot;, d, i); }
+    },
+    donut: {
+      title: &quot;JS學徒試煉&quot;
+    }
+  });
+}, 1000);</code></pre>
+<p>C3 donut chart 本身內建了一些事件，可以透過它來增強互動性。</p>
+<p>當使用者點擊 donus chart 某個部份，下方 table row 也會選擇那幾個row</p>
+<p>References:</p>
+<ul>
+<li><a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce" target="_blank" rel="noopener">Array.prototype.reduce()</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries" target="_blank" rel="noopener">Object.entries()</a></li>
+<li><a href="https://stackoverflow.com/questions/38824349/how-to-convert-an-object-to-an-array-of-key-value-pairs-in-javascript" target="_blank" rel="noopener">How to convert an object to an array of key value pairs in JavaScript</a></li>
+</ul>
+
+        
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="article-footer">
+    <div class="article-more-info">
+      <div class="article-date">
+  <time datetime="2020-07-18T16:05:30.000Z" itemprop="datePublished">2020-07-19</time>
+</div>
+      
+        <div class="article-category">
+          <a class="article-category-link" href="/notes/categories/JavaScript/">JavaScript</a>
+        </div>
+      
+      
+        <div class="article-tag">
+          <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li></ul>
+        </div>
+      
+    </div>
+  </footer>
+
+
+</article>
+
+    
+  
+    
+      <article
   id="post-hello-world"
   class="article article-type-post"
 >
@@ -159,7 +350,7 @@
   <div class="widget-wrap widget-cate">
     <div class="widget-title"><span>Categories</span></div>
     <div class="widget-inner">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Database/">Database</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/DevTool/">DevTool</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/HTML-CSS/">HTML, CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/JavaScript/">JavaScript</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Resources/">Resources</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Ruby/">Ruby</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Vue-js/">Vue.js</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Database/">Database</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/DevTool/">DevTool</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Flexbox/">Flexbox</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/HTML-CSS/">HTML, CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/JavaScript/">JavaScript</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Resources/">Resources</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Ruby/">Ruby</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Vue-js/">Vue.js</a></li></ul>
     </div>
   </div>
 
@@ -169,7 +360,7 @@
   <div class="widget-wrap widget-tags">
     <div class="widget-title"><span>Tags</span></div>
     <div class="widget-inner">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSS/" rel="tag">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DatePicker/" rel="tag">DatePicker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Experiments/" rel="tag">Experiments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Firebase/" rel="tag">Firebase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Form/" rel="tag">Form</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HTML/" rel="tag">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Iterm2/" rel="tag">Iterm2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Powerlevel10K/" rel="tag">Powerlevel10K</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Rails/" rel="tag">Rails</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Table/" rel="tag">Table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Token/" rel="tag">Token</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/VueCLI/" rel="tag">VueCLI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/oh-my-zsh/" rel="tag">oh-my-zsh</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSS/" rel="tag">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DatePicker/" rel="tag">DatePicker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Experiments/" rel="tag">Experiments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Firebase/" rel="tag">Firebase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Flexbox/" rel="tag">Flexbox</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Form/" rel="tag">Form</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HTML/" rel="tag">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HolyGrail/" rel="tag">HolyGrail</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Iterm2/" rel="tag">Iterm2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Layout/" rel="tag">Layout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Powerlevel10K/" rel="tag">Powerlevel10K</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Rails/" rel="tag">Rails</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/SCSS/" rel="tag">SCSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Table/" rel="tag">Table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Token/" rel="tag">Token</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/VueCLI/" rel="tag">VueCLI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/oh-my-zsh/" rel="tag">oh-my-zsh</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
     </div>
   </div>
 
@@ -180,6 +371,10 @@
     <div class="widget-title"><span>Recent Posts</span></div>
     <div class="widget-inner">
       <ul>
+        
+          <li>
+            <a href="/notes/2020/10/15/Holy-Grail-Layout-Using-Flexbox/">Holy Grail Layout Using Flexbox</a>
+          </li>
         
           <li>
             <a href="/notes/2020/10/09/Iterm2-zsh-oh-my-zsh/">Iterm2 + zsh + oh-my-zsh</a>
@@ -195,10 +390,6 @@
         
           <li>
             <a href="/notes/2020/09/12/%E5%AD%B8%E7%BF%92%E8%B3%87%E6%BA%90/">學習資源</a>
-          </li>
-        
-          <li>
-            <a href="/notes/2020/09/09/%E5%9C%A8-Table-%E8%A3%A1%E9%9D%A2%E4%BD%BF%E7%94%A8-Form/">在 Table 裡面使用 Form</a>
           </li>
         
       </ul>

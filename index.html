@@ -94,6 +94,262 @@
   
     
       <article
+  id="post-Holy-Grail-Layout-Using-Flexbox"
+  class="article article-type-post"
+>
+
+  <div class="article-inner">
+    
+
+    <div class="article-body">
+      <header class="article-title">
+        <a href="/notes/2020/10/15/Holy-Grail-Layout-Using-Flexbox/">Holy Grail Layout Using Flexbox</a>
+      </header>
+      <div class="article-entry post-inner-html">
+        
+          <p>以聖杯版型為例子學習 Flex Box</p>
+<h1 id="Holy-Grail-聖杯版型-desktop-first"><a href="#Holy-Grail-聖杯版型-desktop-first" class="headerlink" title="Holy Grail (聖杯版型) - desktop first"></a>Holy Grail (聖杯版型) - desktop first</h1><p><img src="https://drive.google.com/uc?export=view&id=1j9FsG97iolTTdOdqy5Oa2Yev7E8R38oH" alt="https://drive.google.com/uc?export=view&amp;id=1j9FsG97iolTTdOdqy5Oa2Yev7E8R38oH"></p>
+<h3 id="HTML-Structure"><a href="#HTML-Structure" class="headerlink" title="HTML Structure"></a>HTML Structure</h3><pre><code class="html">&lt;div class=&quot;holy_grail&quot;&gt;
+  &lt;header&gt;
+    &lt;h3&gt;Header&lt;/h3&gt;
+    &lt;p&gt;desktop first&lt;/p&gt;
+  &lt;/header&gt;
+
+  &lt;div class=&quot;container&quot;&gt;
+    &lt;main&gt;
+      &lt;h3&gt;Main&lt;/h3&gt;
+    &lt;/main&gt;
+    &lt;aside&gt;
+      &lt;h3&gt;Aside&lt;/h3&gt;
+    &lt;/aside&gt;
+    &lt;article&gt;
+      &lt;h3&gt;Article&lt;/h3&gt;
+    &lt;/article&gt;
+  &lt;/div&gt;
+
+  &lt;footer&gt;
+    &lt;h3&gt;Footer&lt;/h3&gt;
+  &lt;/footer&gt;
+&lt;/div&gt;</code></pre>
+<pre><code class="scss">@import &quot;reset.css&quot;;
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+.holy_grail {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: rgb(206, 240, 178);
+}
+
+header {
+  background-color: rgb(187, 187, 187);
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+
+  h3 {
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  height: 100%;
+  main {
+    background-color: rgb(255, 215, 215);
+    // flex-basis: 700px; // 軸長
+    flex-grow: 4;
+  }
+
+  aside {
+    flex-grow: 1;
+    order: -1;
+    background-color: rgb(165, 241, 203);
+  }
+
+  article {
+    flex-grow: 1;
+    background-color: rgb(173, 226, 240);
+  }
+}
+
+footer {
+  background-color: rgb(250, 233, 178);
+}</code></pre>
+<h3 id="加入-media-query"><a href="#加入-media-query" class="headerlink" title="加入 media query"></a>加入 media query</h3><p><img src="https://drive.google.com/uc?export=view&id=1VMDfBZFC5iuFuZ_2gF0PlFb7TNWYImuW" alt="https://drive.google.com/uc?export=view&amp;id=1VMDfBZFC5iuFuZ_2gF0PlFb7TNWYImuW"></p>
+<pre><code class="scss">// mobile breakpoint
+@media (max-width: 600px) {
+  .container {
+    flex-direction: column;
+  }
+}</code></pre>
+<p><a href="https://codepen.io/william_k/pen/rNLxLGo" target="_blank" rel="noopener">https://codepen.io/william_k/pen/rNLxLGo</a></p>
+<h1 id="Holy-Grail-聖杯版型-mobile-first"><a href="#Holy-Grail-聖杯版型-mobile-first" class="headerlink" title="Holy Grail (聖杯版型) - mobile first"></a>Holy Grail (聖杯版型) - mobile first</h1><h2 id="flex-屬性"><a href="#flex-屬性" class="headerlink" title="flex 屬性"></a>flex 屬性</h2><p><code>flex: 0 1 auto;</code></p>
+<p>flex: 默認值包含 flex-grow, flex-shrink, flex-basis</p>
+<p>flex-grow: 放大比例，default 為 0 (在剩餘空間不放大)</p>
+<p>flex-shrink: 縮小比例，default 為 1 (空間不足會適當縮小)</p>
+<p>flex-basis: 控制元素的主軸的長度 (width)</p>
+<pre><code class="css">flex: none; // flex : 0,0,auto;
+
+flex: auto; // flex:1,1,auto;
+
+flex: 1; // flex:1,1,0%;</code></pre>
+<p>html 沿用上方的 code</p>
+<pre><code class="html">&lt;div class=&quot;holy_grail&quot;&gt;
+  &lt;header&gt;
+    &lt;h3&gt;Header&lt;/h3&gt;
+    &lt;p&gt;mobile first&lt;/p&gt;
+  &lt;/header&gt;
+
+  &lt;div class=&quot;container&quot;&gt;
+    &lt;main&gt;
+      &lt;h3&gt;Main&lt;/h3&gt;
+    &lt;/main&gt;
+    &lt;aside&gt;
+      &lt;h3&gt;Aside&lt;/h3&gt;
+    &lt;/aside&gt;
+    &lt;article&gt;
+      &lt;h3&gt;Article&lt;/h3&gt;
+    &lt;/article&gt;
+  &lt;/div&gt;
+
+  &lt;footer&gt;
+    &lt;h3&gt;Footer&lt;/h3&gt;
+  &lt;/footer&gt;
+&lt;/div&gt;</code></pre>
+<pre><code class="scss">@import &quot;reset.css&quot;;
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+.holy_grail {
+  background-color: rgb(206, 240, 178);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  // flex: auto; flex: 1 1 auto;
+}
+
+header {
+  background-color: rgb(187, 187, 187);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  h3 {
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto; // 在 .container &amp; main 上需要把高度撐開
+
+  main {
+    background-color: rgb(255, 215, 215);
+    flex: 1 1 auto;
+  }
+
+  aside {
+    background-color: rgb(165, 241, 203);
+    order: -1; // order first
+  }
+
+  article {
+    background-color: rgb(173, 226, 240);
+  }
+}
+
+footer {
+  background-color: rgb(250, 233, 178);
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  .container {
+    display: flex;
+    flex-direction: row;
+    main {
+      flex-grow: 4;
+    }
+    aside {
+      flex-grow: 1;
+    }
+    article {
+      flex-grow: 1;
+    }
+  }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+}</code></pre>
+<p><a href="https://codepen.io/william_k/pen/bGeEeaY" target="_blank" rel="noopener">https://codepen.io/william_k/pen/bGeEeaY</a></p>
+<p>Reference:<br><a href="https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox' target="_blank" rel="noopener"">MDN: Flexbox</a></p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/flex" target="_blank" rel="noopener">MDN: flex 屬性</a></p>
+<p><a href="https://juejin.im/post/6850418112911638541" target="_blank" rel="noopener">flex:1 和 flex:auto 区别</a></p>
+
+        
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="article-footer">
+    <div class="article-more-info">
+      <div class="article-date">
+  <time datetime="2020-10-14T17:38:32.000Z" itemprop="datePublished">2020-10-15</time>
+</div>
+      
+        <div class="article-category">
+          <a class="article-category-link" href="/notes/categories/Flexbox/">Flexbox</a>
+        </div>
+      
+      
+        <div class="article-tag">
+          <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Flexbox/" rel="tag">Flexbox</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/HTML/" rel="tag">HTML</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/HolyGrail/" rel="tag">HolyGrail</a></li></ul>
+        </div>
+      
+    </div>
+  </footer>
+
+
+</article>
+
+    
+  
+    
+      <article
   id="post-Iterm2-zsh-oh-my-zsh"
   class="article article-type-post"
 >
@@ -1614,88 +1870,6 @@ axios.post(api, {
 
     
   
-    
-      <article
-  id="post-JS-Day-44-window-location"
-  class="article article-type-post"
->
-
-  <div class="article-inner">
-    
-
-    <div class="article-body">
-      <header class="article-title">
-        <a href="/notes/2020/08/14/JS-Day-44-window-location/">JS Day 44: window.location</a>
-      </header>
-      <div class="article-entry post-inner-html">
-        
-          <h1 id="取得目前的網址與參數"><a href="#取得目前的網址與參數" class="headerlink" title="取得目前的網址與參數"></a>取得目前的網址與參數</h1><h2 id="語法"><a href="#語法" class="headerlink" title="語法"></a>語法</h2><pre><code class="jsx">let locationObj = window.location;
-
-console.log(locationObj);</code></pre>
-<h2 id="屬性"><a href="#屬性" class="headerlink" title="屬性"></a>屬性</h2><p>範例網址：<a href="http://127.0.0.1:5506/44/index.html?q=%27username%27&amp;status=true#title" target="_blank" rel="noopener">http://127.0.0.1:5506/44/index.html?q=%27username%27&amp;status=true#title</a></p>
-<p><img src="https://drive.google.com/uc?export=view&id=1IPhpvsOWkeGiwpO7bv9VjQpSAk-ySEU6" alt="https://drive.google.com/uc?export=view&amp;id=1IPhpvsOWkeGiwpO7bv9VjQpSAk-ySEU6"></p>
-<h2 id="跳頁"><a href="#跳頁" class="headerlink" title="跳頁"></a>跳頁</h2><h3 id="回到上一頁"><a href="#回到上一頁" class="headerlink" title="回到上一頁"></a>回到上一頁</h3><pre><code class="jsx">window.history.go(-1);
-history.go(-1); // 省略 window, 一樣可以動作
-
-window.history.back(); // 另一個方法</code></pre>
-<h3 id="回到下一頁"><a href="#回到下一頁" class="headerlink" title="回到下一頁"></a>回到下一頁</h3><pre><code class="jsx">window.history.go(1);
-
-window.history.forward();</code></pre>
-<h3 id="回到第-N-頁-window-history-go-arg"><a href="#回到第-N-頁-window-history-go-arg" class="headerlink" title="回到第 N 頁: window.history.go(arg)"></a>回到第 N 頁: window.history.go(arg)</h3><p>範例：</p>
-<ul>
-<li><a href="http://www.google.com" target="_blank" rel="noopener">www.google.com</a></li>
-<li><a href="http://www.yahoo.com" target="_blank" rel="noopener">www.yahoo.com</a></li>
-<li><a href="http://www.tesla.com" target="_blank" rel="noopener">www.tesla.com</a> (當前網頁)</li>
-<li><a href="http://www.lego.com" target="_blank" rel="noopener">www.lego.com</a></li>
-<li><a href="http://www.abc.com" target="_blank" rel="noopener">www.abc.com</a></li>
-</ul>
-<pre><code class="jsx">window.history.go(-2); // 參數是正數就往上 2 頁 (forward), www.google.com
-window.history.go(1);  // 參數是負數就往下 1 頁 (back), www.lego.com
-window.history.go(0);  // 參數是 0 則重新載入現在頁面, refresh www.testla.com</code></pre>
-<h3 id="重新整理當前頁面"><a href="#重新整理當前頁面" class="headerlink" title="重新整理當前頁面"></a>重新整理當前頁面</h3><p>除了上面提到的 <code>window.history.go(0)</code> 還有 <code>reload()</code> 方法可以用:</p>
-<pre><code class="jsx">window.location.reload();
-
-window.location.reload(true); 
-// window.location.reload(forcedReload) 裡面的 forceReload 是 boolean</code></pre>
-<h3 id="頁面跳轉"><a href="#頁面跳轉" class="headerlink" title="頁面跳轉"></a>頁面跳轉</h3><pre><code class="jsx">// window 皆可省略
-window.location = &quot;http://www.lego.com&quot;; // location property
-window.location.href = &quot;http://www.lego.com&quot;; // href property
-window.location.assign(&#39;http://www.lego.com&#39;); // assign method
-window.location.replace(&#39;http://www.lego.com&#39;); // replace method</code></pre>
-<blockquote>
-<p>replace 是置換掉現在的document，不會留下被置換掉的頁面紀錄，所以當你按下”上一頁”時回到的其實是你”上上個”看到的頁面 (reference-1)</p>
-</blockquote>
-<p>Reference:<br><a href="http://cat-son.blogspot.com/2012/11/javascript-windowlocation.html#sthash.UeM0Vl5j.ncVtroJF.dpbs" target="_blank" rel="noopener">JavaScript 筆記 - window.location 類別</a><br><a href="https://ithelp.ithome.com.tw/articles/10190061" target="_blank" rel="noopener">JavaScript 刷新頁面的幾種方法</a><br><a href="https://developer.mozilla.org/zh-TW/docs/Web/API/Window/location" target="_blank" rel="noopener">window.location</a></p>
-
-        
-      </div>
-    </div>
-
-  </div>
-
-  <footer class="article-footer">
-    <div class="article-more-info">
-      <div class="article-date">
-  <time datetime="2020-08-13T16:04:39.000Z" itemprop="datePublished">2020-08-14</time>
-</div>
-      
-        <div class="article-category">
-          <a class="article-category-link" href="/notes/categories/JavaScript/">JavaScript</a>
-        </div>
-      
-      
-        <div class="article-tag">
-          <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li></ul>
-        </div>
-      
-    </div>
-  </footer>
-
-
-</article>
-
-    
-  
 
   
     <nav class="pagination">
@@ -1717,7 +1891,7 @@ window.location.replace(&#39;http://www.lego.com&#39;); // replace method</code>
   <div class="widget-wrap widget-cate">
     <div class="widget-title"><span>Categories</span></div>
     <div class="widget-inner">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Database/">Database</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/DevTool/">DevTool</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/HTML-CSS/">HTML, CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/JavaScript/">JavaScript</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Resources/">Resources</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Ruby/">Ruby</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Vue-js/">Vue.js</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Database/">Database</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/DevTool/">DevTool</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Flexbox/">Flexbox</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/HTML-CSS/">HTML, CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/JavaScript/">JavaScript</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Resources/">Resources</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Ruby/">Ruby</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Vue-js/">Vue.js</a></li></ul>
     </div>
   </div>
 
@@ -1727,7 +1901,7 @@ window.location.replace(&#39;http://www.lego.com&#39;); // replace method</code>
   <div class="widget-wrap widget-tags">
     <div class="widget-title"><span>Tags</span></div>
     <div class="widget-inner">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSS/" rel="tag">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DatePicker/" rel="tag">DatePicker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Experiments/" rel="tag">Experiments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Firebase/" rel="tag">Firebase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Form/" rel="tag">Form</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HTML/" rel="tag">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Iterm2/" rel="tag">Iterm2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Powerlevel10K/" rel="tag">Powerlevel10K</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Rails/" rel="tag">Rails</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Table/" rel="tag">Table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Token/" rel="tag">Token</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/VueCLI/" rel="tag">VueCLI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/oh-my-zsh/" rel="tag">oh-my-zsh</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSS/" rel="tag">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DatePicker/" rel="tag">DatePicker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Experiments/" rel="tag">Experiments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Firebase/" rel="tag">Firebase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Flexbox/" rel="tag">Flexbox</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Form/" rel="tag">Form</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HTML/" rel="tag">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HolyGrail/" rel="tag">HolyGrail</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Iterm2/" rel="tag">Iterm2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Layout/" rel="tag">Layout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Powerlevel10K/" rel="tag">Powerlevel10K</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Rails/" rel="tag">Rails</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/SCSS/" rel="tag">SCSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Table/" rel="tag">Table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Token/" rel="tag">Token</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/VueCLI/" rel="tag">VueCLI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/oh-my-zsh/" rel="tag">oh-my-zsh</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
     </div>
   </div>
 
@@ -1738,6 +1912,10 @@ window.location.replace(&#39;http://www.lego.com&#39;); // replace method</code>
     <div class="widget-title"><span>Recent Posts</span></div>
     <div class="widget-inner">
       <ul>
+        
+          <li>
+            <a href="/notes/2020/10/15/Holy-Grail-Layout-Using-Flexbox/">Holy Grail Layout Using Flexbox</a>
+          </li>
         
           <li>
             <a href="/notes/2020/10/09/Iterm2-zsh-oh-my-zsh/">Iterm2 + zsh + oh-my-zsh</a>
@@ -1753,10 +1931,6 @@ window.location.replace(&#39;http://www.lego.com&#39;); // replace method</code>
         
           <li>
             <a href="/notes/2020/09/12/%E5%AD%B8%E7%BF%92%E8%B3%87%E6%BA%90/">學習資源</a>
-          </li>
-        
-          <li>
-            <a href="/notes/2020/09/09/%E5%9C%A8-Table-%E8%A3%A1%E9%9D%A2%E4%BD%BF%E7%94%A8-Form/">在 Table 裡面使用 Form</a>
           </li>
         
       </ul>
