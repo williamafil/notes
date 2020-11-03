@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    
+    <title>自適應圖片＆背景 | William&#39;s Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/notes/dist/build.css?v=1.5.0.css">
+
+
+    <script>
+        window.aomori = {
+            
+        }
+    </script>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+
+  <div class="container">
+    <header class="header">
+        <div class="header-type">
+            
+            <div class="avatar avatar-sm">
+                <img src="/images/avatar.jpg" alt="Will Doe">
+            </div>
+            
+            <a href="https://williamafil.github.io/notes">William&#39;s Notes</a>
+            
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-inner">
+                
+                <a href="/notes/">Home</a>
+                
+                <a href="/notes/archives">Archives</a>
+                
+            </div>
+            <div class="header-menu-social">
+                
+    <a class="social" target="_blank" href="https://github.com/williamafil/notes/">
+        <box-icon type='logo' name='Github'></box-icon>
+    </a>
+
+    <a class="social" target="_blank" href="">
+        <box-icon type='logo' name=''></box-icon>
+    </a>
+
+            </div>
+        </div>
+
+        <div class="header-menu-mobile">
+            <div class="header-menu-mobile-inner" id="mobile-menu-open">
+                <i class="icon icon-menu"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="header-menu-mobile-menu">
+        <div class="header-menu-mobile-menu-bg"></div>
+        <div class="header-menu-mobile-menu-wrap">
+            <div class="header-menu-mobile-menu-inner">
+                <div class="header-menu-mobile-menu-close" id="mobile-menu-close">
+                    <i class="icon icon-cross"></i>
+                </div>
+                <div class="header-menu-mobile-menu-list">
+                    
+                    <a href="/notes/">Home</a>
+                    
+                    <a href="/notes/archives">Archives</a>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+  <div class="container">
+    <div class="main">
+      <section class="inner">
+        <section class="inner-main">
+          <div class="post">
+    <article id="post-ckh245g3k001o0b3vgr905mnb" class="article article-type-post" itemscope
+    itemprop="blogPost">
+
+    <div class="article-inner">
+
+        
+
+        
+        <header class="article-header">
+            
+  
+    <h1 class="article-title" itemprop="name">
+      自適應圖片＆背景
+    </h1>
+  
+
+        </header>
+        
+
+        <div class="article-more-info article-more-info-post hairline">
+
+            <div class="article-date">
+  <time datetime="2020-11-03T15:13:11.000Z" itemprop="datePublished">2020-11-03</time>
+</div>
+
+            
+            <div class="article-category">
+                <a class="article-category-link" href="/notes/categories/HTML-CSS/">HTML, CSS</a>
+            </div>
+            
+
+            
+            <div class="article-tag">
+                <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/CSS/" rel="tag">CSS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/HTML/" rel="tag">HTML</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/SCSS/" rel="tag">SCSS</a></li></ul>
+            </div>
+            
+
+            
+            <div class="article-busuanzi">
+                有 <span id="busuanzi_value_page_pv">N</span> 人看过
+            </div>
+            
+        </div>
+
+        <div class="article-entry post-inner-html hairline" itemprop="articleBody">
+            <h2 id="圖片"><a href="#圖片" class="headerlink" title="圖片"></a>圖片</h2><pre><code class="html">&lt;main class=&quot;container landing-banner&quot;&gt;
+    &lt;img src=&quot;img/slide.jpg&quot; alt=&quot;title page image&quot; /&gt;
+&lt;/main&gt;</code></pre>
+<pre><code class="scss">.landing-banner {
+  width: 100%;
+
+  img {
+    width: 100%;
+    max-height: 496px; // 設定圖片最大高度，將多餘部分讓 object-fit 材切掉
+    object-fit: cover; // 填滿並維持原比例，多餘的材掉
+  }
+}</code></pre>
+<p><a href="https://williamafil.github.io/CakeShop/examples/banner/banner1_img.html">範例</a></p>
+<p>Reference:</p>
+<p>MDN: <a href="https://developer.mozilla.org/zh-TW/docs/Web/CSS/object-fit" target="_blank" rel="noopener">object-fit</a></p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><pre><code class="html">&lt;main class=&quot;container landingbanner&quot;&gt;&lt;/main&gt;</code></pre>
+<pre><code class="scss">.landingbanner {
+  width: 100%;
+  height: 496px;
+
+  background-image: url(&quot;../img/slide.jpg&quot;);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-color: pink;
+}</code></pre>
+<p><a href="https://williamafil.github.io/CakeShop/examples/banner/banner2_background.html">範例</a></p>
+
+        </div>
+
+    </div>
+
+    
+
+    
+
+    
+
+    
+<div class="article-copyright hairline">
+  <p>
+    本作品采用 <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a> 进行许可。
+  </p>
+</div>
+
+
+    
+
+    
+<nav class="article-nav">
+  
+  
+    <a href="/notes/2020/10/15/Holy-Grail-Layout-Using-Flexbox/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-caption">上一篇</div>
+      <div class="article-nav-title">Holy Grail Layout Using Flexbox</div>
+    </a>
+  
+</nav>
+
+
+    <section class="share">
+        <div class="share-title">分享</div>
+        <a class="share-item" target="_blank"
+            href="https://twitter.com/share?text=自適應圖片＆背景 - William's Notes&url=https://williamafil.github.io/notes/2020/11/03/%E8%87%AA%E9%81%A9%E6%87%89%E5%9C%96%E7%89%87%EF%BC%86%E8%83%8C%E6%99%AF/">
+            <box-icon type='logo' name='twitter'></box-icon>
+        </a>
+        <a class="share-item" target="_blank"
+            href="https://www.facebook.com/sharer.php?title=自適應圖片＆背景 - William's Notes&u=https://williamafil.github.io/notes/2020/11/03/%E8%87%AA%E9%81%A9%E6%87%89%E5%9C%96%E7%89%87%EF%BC%86%E8%83%8C%E6%99%AF/">
+            <box-icon name='facebook-square' type='logo' ></box-icon>
+        </a>
+        <!-- <a class="share-item" target="_blank"
+            href="https://service.weibo.com/share/share.php?title=自適應圖片＆背景 - William's Notes&url=https://williamafil.github.io/notes/2020/11/03/%E8%87%AA%E9%81%A9%E6%87%89%E5%9C%96%E7%89%87%EF%BC%86%E8%83%8C%E6%99%AF/&pic=">
+            <div class="n-icon n-icon-weibo"></div>
+        </a> -->
+    </section>
+
+</article>
+
+
+
+
+
+
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+</div>
+        </section>
+      </section>
+      <aside class="sidebar">
+        <div class="widget">
+          
+
+  
+  <div class="widget-wrap">
+    <div class="widget-inner">
+      <div class="toc post-toc-html"></div>
+    </div>
+  </div>
+
+
+  
+  <div class="widget-wrap widget-cate">
+    <div class="widget-title"><span>Categories</span></div>
+    <div class="widget-inner">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Database/">Database</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/DevTool/">DevTool</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/HTML-CSS/">HTML, CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/JavaScript/">JavaScript</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Resources/">Resources</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Ruby/">Ruby</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Vue-js/">Vue.js</a></li></ul>
+    </div>
+  </div>
+
+
+
+  
+  <div class="widget-wrap widget-tags">
+    <div class="widget-title"><span>Tags</span></div>
+    <div class="widget-inner">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSS/" rel="tag">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DatePicker/" rel="tag">DatePicker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Experiments/" rel="tag">Experiments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Firebase/" rel="tag">Firebase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Flexbox/" rel="tag">Flexbox</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Form/" rel="tag">Form</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HTML/" rel="tag">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HolyGrail/" rel="tag">HolyGrail</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Iterm2/" rel="tag">Iterm2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Layout/" rel="tag">Layout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Powerlevel10K/" rel="tag">Powerlevel10K</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Rails/" rel="tag">Rails</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/SCSS/" rel="tag">SCSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Table/" rel="tag">Table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Token/" rel="tag">Token</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/VueCLI/" rel="tag">VueCLI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/background-image/" rel="tag">background-image</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/background-position/" rel="tag">background-position</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/background-repeat/" rel="tag">background-repeat</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/img/" rel="tag">img</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/object-fit/" rel="tag">object-fit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/oh-my-zsh/" rel="tag">oh-my-zsh</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
+    </div>
+  </div>
+
+
+
+  
+  <div class="widget-wrap widget-recent-posts">
+    <div class="widget-title"><span>Recent Posts</span></div>
+    <div class="widget-inner">
+      <ul>
+        
+          <li>
+            <a href="/notes/2020/11/03/%E8%87%AA%E9%81%A9%E6%87%89%E5%9C%96%E7%89%87%EF%BC%86%E8%83%8C%E6%99%AF/">自適應圖片＆背景</a>
+          </li>
+        
+          <li>
+            <a href="/notes/2020/10/15/Holy-Grail-Layout-Using-Flexbox/">Holy Grail Layout Using Flexbox</a>
+          </li>
+        
+          <li>
+            <a href="/notes/2020/10/09/Iterm2-zsh-oh-my-zsh/">Iterm2 + zsh + oh-my-zsh</a>
+          </li>
+        
+          <li>
+            <a href="/notes/2020/09/18/Vue-CLI-%E7%92%B0%E5%A2%83%E8%AE%8A%E6%95%B8-%E6%A8%A1%E5%BC%8F/">Vue CLI - 環境變數&amp;模式</a>
+          </li>
+        
+          <li>
+            <a href="/notes/2020/09/17/Firebase-Actions/">Firebase Actions</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+  
+  <div class="widget-wrap widget-archive">
+    <div class="widget-title"><span>Archive</span></div>
+    <div class="widget-inner">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/notes/archives/2020/11/">2020</a></li></ul>
+    </div>
+  </div>
+
+
+
+        </div>
+        <div id="backtop"><i class="icon icon-arrow-up"></i></div>
+      </aside>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-inner">
+        <div class="footer-info">
+            <span>&copy; 2013 - 2020 William&#39;s Notes</span>
+        </div>
+        <div class="footer-powered">
+            <a href="https://github.com/lh1me/hexo-theme-aomori" target="_blank">Aomori</a> Theme · Powered By Hexo
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script src="/notes/dist/build.js?1.5.0.js"></script>
+
+
+<script src="/notes/dist/custom.js?1.5.0.js"></script>
+
+
+
+
+
+<!-- Google Analytics-->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-173126595-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'UA-173126595-1');
+</script>
+
+
+
+
+</body>
+</html>

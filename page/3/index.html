@@ -94,6 +94,203 @@
   
     
       <article
+  id="post-JS-Array-Methods-修改原始陣列的方法"
+  class="article article-type-post"
+>
+
+  <div class="article-inner">
+    
+
+    <div class="article-body">
+      <header class="article-title">
+        <a href="/notes/2020/07/22/JS-Array-Methods-%E4%BF%AE%E6%94%B9%E5%8E%9F%E5%A7%8B%E9%99%A3%E5%88%97%E7%9A%84%E6%96%B9%E6%B3%95/">JS Day 28:  Array Methods - 修改原始陣列的方法</a>
+      </header>
+      <div class="article-entry post-inner-html">
+        
+          <ul>
+<li>In-place modification (修改原始陣列)<ul>
+<li><input checked="" disabled="" type="checkbox"> copyWithin()</li>
+<li><input checked="" disabled="" type="checkbox"> fill()</li>
+<li><input checked="" disabled="" type="checkbox"> pop()</li>
+<li><input checked="" disabled="" type="checkbox"> push()</li>
+<li><input checked="" disabled="" type="checkbox"> reverse()</li>
+<li><input checked="" disabled="" type="checkbox"> shift()</li>
+<li><input checked="" disabled="" type="checkbox"> unshift()</li>
+<li><input checked="" disabled="" type="checkbox"> sort()</li>
+<li><input checked="" disabled="" type="checkbox"> splice()</li>
+</ul>
+</li>
+</ul>
+<h1 id="sort-排序"><a href="#sort-排序" class="headerlink" title="sort()  排序"></a>sort()  排序</h1><blockquote>
+<p><code>sort()</code> 方法會原地（in place）對一個陣列的所有元素進行排序，並回傳此陣列。排序不一定是穩定的（stable）。預設的排序順序是根據字串的 Unicode 編碼位置（code points）而定。 —  MDN web docs</p>
+</blockquote>
+<p>驗證：</p>
+<pre><code class="jsx">const array = [&#39;你&#39;,&#39;我&#39;,&#39;他&#39;];
+array.sort(); 
+// =&gt; Array(3) [ &quot;他&quot;, &quot;你&quot;, &quot;我&quot; ]</code></pre>
+<p>找出各個元素的 code points</p>
+<pre><code class="jsx">array.map(item =&gt; item.codePointAt());
+// =&gt; Array(3) [ 20182, 20320, 25105 ]</code></pre>
+<p>其實 <code>[ &quot;他&quot;, &quot;你&quot;, &quot;我&quot; ]</code> 就是按照 各個元素的 code points <code>[ 20182, 20320, 25105 ]</code>來排序的。</p>
+<p>基本上不大需要這樣的排序方式，所以會傳入一個 comparison function 比較函式來進行排序</p>
+<pre><code class="jsx">arr.sort( compareFunc(a,b) {
+    return a - b; // ascending order
+});</code></pre>
+<p>如果比較函式回傳小於 0 (returns less than zero): a 排在 b 前面</p>
+<p>如果比較函式回傳 0 (returns zero): a 與 b 位置保持不變</p>
+<p>如果比較函式回傳大於 0 (returns greater than zero): b 排在 a 前面</p>
+<pre><code class="jsx">const nums = [9, 2, 88, 1000, 348];
+nums.sort( (a, b) =&gt; a - b);
+// 結果 =&gt; Array(5) [ 2, 9, 88, 348, 1000 ]
+</code></pre>
+<p>執行順序：</p>
+<ol>
+<li><p>a - b</p>
+<p> 9 - 2 = 7 (大於 0, b 排在 a 前面)<br> nums = [2, 9, 88, 1000, 348];</p>
+</li>
+<li><p>a - b<br> 9 - 88 = -79 (小於 0, a 排在 b 前面)<br> nums = [2, 9, 88, 1000, 348];</p>
+</li>
+<li><p>a - b<br> 88 - 1000 = -912 (小於 0, a 排在 b 前面)<br> nums = [2, 9, 88, 1000, 348];</p>
+</li>
+<li><p>a - b<br> 1000 - 348 = 652 (大於 0, b 排在 a 前面)<br> nums = [2, 9, 88, 348, 1000];</p>
+</li>
+</ol>
+<p>排序：</p>
+<pre><code class="jsx">const ascendingOrder  = arr.sort( () =&gt; a - b); // 升序
+const descendingOrder = arr.sort( () =&gt; b - a); // 降序</code></pre>
+<p>練習 （<strong>Sorting object array</strong>）：</p>
+<p><a href="https://codepen.io/william_k/pen/gOPdgyB?editors=1111" target="_blank" rel="noopener">JavaScript30 - 04 Array Cardio Day 1</a></p>
+<p><a href="https://codepen.io/william_k/pen/ZEQMxLd" target="_blank" rel="noopener">JS 28</a> </p>
+<p>References:</p>
+<p><a href="https://medium.com/@realdennis/javascript-%E5%BE%9Earray%E7%9A%84sort%E6%96%B9%E6%B3%95-%E8%81%8A%E5%88%B0%E5%90%84%E5%AE%B6%E7%80%8F%E8%A6%BD%E5%99%A8%E7%9A%84%E5%AF%A6%E4%BD%9C%E7%AE%97%E6%B3%95-c23a335b1b80" target="_blank" rel="noopener">[JavaScript] 從 Array 的 sort 方法，聊到各瀏覽器的實作，沒想到 Chrome 和FireFox 的排序如此不同</a></p>
+<h1 id="splice-刪除-加入"><a href="#splice-刪除-加入" class="headerlink" title="splice()  刪除/加入"></a>splice()  刪除/加入</h1><blockquote>
+<p><code>splice()</code> 方法可以藉由刪除既有元素並／或加入新元素來改變一個陣列的內容。 — MDN web docs</p>
+</blockquote>
+<p><code>array.splice( 起始索引, 欲刪除元素數量,  欲增加的元素)</code></p>
+<p>範例：</p>
+<p>// 增加 1 個元素，刪除 0 個元素</p>
+<pre><code class="jsx">let fruits = [&#39;酪梨&#39;,&#39;桃子&#39;,&#39;香蕉&#39;,&#39;葡萄&#39;,&#39;西瓜&#39;];
+fruits.splice(3, 0, &#39;番茄&#39;); 
+// output =&gt; [ &quot;酪梨&quot;, &quot;桃子&quot;, &quot;香蕉&quot;, &quot;番茄&quot;, &quot;葡萄&quot;, &quot;西瓜&quot; ]
+
+   0      1     2     3     4
+[&#39;酪梨&#39;,&#39;桃子&#39;,&#39;香蕉&#39;,&#39;葡萄&#39;,&#39;西瓜&#39;] 
+// 在第 3 個位置加入 &#39;番茄&#39;
+
+   0      1     2     + 3 +     4      5
+[&#39;酪梨&#39;,&#39;桃子&#39;,&#39;香蕉&#39;, &#39;[番茄]&#39;, &#39;葡萄&#39;,&#39;西瓜&#39;] 
+</code></pre>
+<p>// 增加 0 個元素，刪除 2 個元素</p>
+<pre><code class="jsx"> let fruits = [&#39;酪梨&#39;,&#39;桃子&#39;,&#39;香蕉&#39;,&#39;葡萄&#39;,&#39;西瓜&#39;];
+fruits.splice(2, 2);  // 從索引 2 開始，刪除兩個元素 [ &quot;香蕉&quot;, &quot;葡萄&quot; ]
+// output =&gt; [&#39;酪梨&#39;,&#39;桃子&#39;,&#39;西瓜&#39;]</code></pre>
+<p>// 增加 4 個元素，刪除 4 個元素</p>
+<pre><code class="jsx">let fruits = [&#39;酪梨&#39;,&#39;桃子&#39;,&#39;香蕉&#39;,&#39;葡萄&#39;,&#39;西瓜&#39;];
+fruits.splice(1, 4, &#39;九層塔&#39;, &#39;花椰菜&#39;, &#39;紅蘿蔔&#39;, &#39;高麗菜&#39;);
+// 從索引 1 算起，刪除四個元素 [ &quot;桃子&quot;, &quot;香蕉&quot;, &quot;葡萄&quot;, &quot;西瓜&quot; ]
+// output =&gt; [ &quot;酪梨&quot;, &quot;九層塔&quot;, &quot;花椰菜&quot;, &quot;紅蘿蔔&quot;, &quot;高麗菜&quot; ]</code></pre>
+<p>練習：</p>
+<p><a href="https://codepen.io/william_k/pen/mdVGKqV" target="_blank" rel="noopener">JS 28</a> (Terry Yu) - 把 id 206 的物件移動到陣列索引 0（第一個）</p>
+<pre><code class="jsx">const terryElement = data.find(p =&gt; p.id == 206); // return 物件
+const terryIndex = data.findIndex(p =&gt; p.id == 206); // return 索引
+data.splice(terryIndex, 1); // 從索引x刪除一個元素
+data.splice(0, 0, terryElement); // 從索引 0 加入 terryElement 並刪除 0 個元素</code></pre>
+<p>unshift(), shift(), push(), pop() 這四個算是比較好理解的，但是名稱取得很容易讓人搞混(除了 push)。下方的連結都在講解 stack and queue 可以更深入了解這四個方法。</p>
+<p><a href="https://www.youtube.com/watch?v=z_s7D96re_A" target="_blank" rel="noopener">JavaScript Arrays as Queue and Stack</a><br><a href="https://medium.com/swlh/stacks-and-queues-simplified-ef0f838fc534" target="_blank" rel="noopener">Stacks and Queues, Simplified</a><br><a href="https://ithelp.ithome.com.tw/articles/10205260" target="_blank" rel="noopener">堆疊(Stack) &amp; 佇列(Queue)</a><br><a href="https://medium.com/@realdennis/%E4%BD%A0%E5%85%B6%E5%AF%A6%E4%B8%8D%E7%94%A8%E5%9C%A8-javascript-%E5%AF%A6%E4%BD%9C%E4%B8%80%E5%80%8B-queue-b4e788e23bc7" target="_blank" rel="noopener">你其實不用在 JavaScript 實作一個 Queue</a></p>
+<blockquote>
+<p><code>unshift()</code> 方法會添加一個或多個元素至陣列的開頭，並且回傳陣列的新長度。 — MDN web docs</p>
+</blockquote>
+<pre><code class="jsx">// unshift()
+let arr = [1, 3, 5, 7, 9]
+arr.unshift(&#39;你&#39;, &#39;我&#39;, &#39;他&#39;);  // 新增 3 個元素到陣列前</code></pre>
+<p>unshift 被刻意設計為具通用性；此方法可以藉由 called 或 applied 應用於類似陣列的物件上。若欲應用此方法的物件不包含代表一系列啟始為零之數字屬性序列長度的 length 屬性，可能是不具任何意義的行為。 — MDN web docs</p>
+<p>MDN 這部分的描述不太明白，之後會再補上。</p>
+<h1 id="shift-移除第一個元素"><a href="#shift-移除第一個元素" class="headerlink" title="shift()  移除第一個元素"></a>shift()  移除第一個元素</h1><blockquote>
+<p>shift() 方法會移除並回傳陣列的第一個元素。此方法會改變陣列的長度。 — MDN web docs</p>
+</blockquote>
+<pre><code class="jsx">// shift()
+let fruits = [&#39;香蕉&#39;, &#39;酪梨&#39;, &#39;鳳梨&#39;, &#39;葡萄&#39;];
+fruits.shift(); // 移除第一個元素 ”香蕉“
+
+fruits.shift(2); // 參數 2 沒有作用，只有第一個元素會被移除
+console.log(fruits); // =&gt; [&quot;鳳梨&quot;, &quot;葡萄&quot;]</code></pre>
+<h1 id="Push-在末端加入元素"><a href="#Push-在末端加入元素" class="headerlink" title="Push()  在末端加入元素"></a>Push()  在末端加入元素</h1><blockquote>
+<p>push() 方法會添加一個或多個元素至陣列的末端，並且回傳陣列的新長度。 — MDN web docs</p>
+</blockquote>
+<pre><code class="jsx">// push()
+let colors = [&#39;red&#39;, &#39;pink&#39;, &#39;orange&#39;];
+
+colors.push(); // 沒有作用，陣列長度維持一樣
+console.log(colors.length);
+colors.push(&#39;yellow&#39;); // 新增 &#39;yellow&#39; 在末端
+console.log(colors.length);
+colors.push([&#39;black&#39;,&#39;white&#39;]); // 傳入一個陣列在末端
+console.log(colors);</code></pre>
+<h1 id="Pop-在末端移除元素"><a href="#Pop-在末端移除元素" class="headerlink" title="Pop()  在末端移除元素"></a>Pop()  在末端移除元素</h1><blockquote>
+<p>pop() 方法會移除並回傳陣列的最後一個元素。此方法會改變陣列的長度。 — MDN web doc</p>
+</blockquote>
+<pre><code class="jsx">// pop()
+let fruits2 = [&#39;香蕉&#39;, &#39;酪梨&#39;, &#39;鳳梨&#39;, &#39;葡萄&#39;];
+fruits2.pop(); // 移除最後一個元素 &#39;葡萄&#39;
+
+fruits2.pop(2); // 參數 2 沒有作用，但最後一個元素會被移除
+console.log(fruits2); // =&gt; [&quot;香蕉&quot;, &quot;酪梨&quot;]</code></pre>
+<p>CodePen.io: <a href="https://codepen.io/william_k/pen/qBbgWqV" target="_blank" rel="noopener">unshift(), shift(), push(), pop()</a></p>
+<h1 id="copyWithin-陣列內複製元素"><a href="#copyWithin-陣列內複製元素" class="headerlink" title="copyWithin()  陣列內複製元素"></a>copyWithin()  陣列內複製元素</h1><blockquote>
+<p><code>copyWithin()</code> 方法會對陣列的一部分進行<em>淺拷貝(shallow copies)</em>至同一陣列的另一位置並回傳此陣列，而不修改其大小。 — MDN web doc</p>
+</blockquote>
+<p>將一個陣列裡的某一個元素複製到同陣列的某一索引並覆蓋掉。</p>
+<pre><code class="jsx">// copyWithin(終點索引, 被複製的索引, 如沒有輸入會複製到最後);
+let foods = [&#39;🍞&#39;, &#39;🍔&#39;, &#39;🍟&#39;, &#39;🍕&#39;, &#39;🍙&#39;, &#39;🍳&#39;, &#39;🍦&#39;];
+foods.copyWithin(1, 5); 
+// 從索引 5 到最後一個元素 🍳, 🍦
+// 覆蓋掉索引 1 &amp; 2 🍔, 🍟
+// [&#39;🍞&#39;, &#39;🍳&#39;, &#39;🍦&#39;, &#39;🍕&#39;, &#39;🍙&#39;, &#39;🍳&#39;, &#39;🍦&#39;];
+
+let foods2 = [&#39;🍞&#39;, &#39;🍔&#39;, &#39;🍟&#39;, &#39;🍕&#39;, &#39;🍙&#39;, &#39;🍳&#39;, &#39;🍦&#39;];
+foods.copyWithin(0, 4, 5); // 複製索引 4 到 5 個元素 🍙,🍳 到索引 0</code></pre>
+<h1 id="fill-在陣列裡指定的位置覆蓋上靜態值"><a href="#fill-在陣列裡指定的位置覆蓋上靜態值" class="headerlink" title="fill()  在陣列裡指定的位置覆蓋上靜態值"></a>fill()  在陣列裡指定的位置覆蓋上靜態值</h1><pre><code class="jsx">// fill()
+let phil = [1, 2, 3, 4];
+phil.fill(&#39;i&#39;, 1, 3) // 從索引1到索引2 (不包含第3)
+// =&gt; [1, &#39;i&#39;, &#39;i&#39;, 4]</code></pre>
+<h1 id="reverse-把陣列順序顛倒"><a href="#reverse-把陣列順序顛倒" class="headerlink" title="reverse()  把陣列順序顛倒"></a>reverse()  把陣列順序顛倒</h1><pre><code class="jsx">// reverse()
+let num = [&#39;一&#39;, &#39;二&#39;, &#39;三&#39;];
+num.reverse(); // =&gt; [&#39;三&#39;, &#39;二&#39;, &#39;一&#39;];</code></pre>
+<p>References: </p>
+<p><a href="https://www.udemy.com/course/javascript-beginners-complete-tutorial/" target="_blank" rel="noopener">The Modern JavaScript Bootcamp (2020)</a></p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort" target="_blank" rel="noopener">MDN web docs</a></p>
+
+        
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="article-footer">
+    <div class="article-more-info">
+      <div class="article-date">
+  <time datetime="2020-07-21T17:57:39.000Z" itemprop="datePublished">2020-07-22</time>
+</div>
+      
+        <div class="article-category">
+          <a class="article-category-link" href="/notes/categories/JavaScript/">JavaScript</a>
+        </div>
+      
+      
+        <div class="article-tag">
+          <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li></ul>
+        </div>
+      
+    </div>
+  </footer>
+
+
+</article>
+
+    
+  
+    
+      <article
   id="post-JS-Day-30-C3-js-Chart"
   class="article article-type-post"
 >
@@ -360,7 +557,7 @@ Object.entries(chartObj);
   <div class="widget-wrap widget-tags">
     <div class="widget-title"><span>Tags</span></div>
     <div class="widget-inner">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSS/" rel="tag">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DatePicker/" rel="tag">DatePicker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Experiments/" rel="tag">Experiments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Firebase/" rel="tag">Firebase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Flexbox/" rel="tag">Flexbox</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Form/" rel="tag">Form</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HTML/" rel="tag">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HolyGrail/" rel="tag">HolyGrail</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Iterm2/" rel="tag">Iterm2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Layout/" rel="tag">Layout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Powerlevel10K/" rel="tag">Powerlevel10K</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Rails/" rel="tag">Rails</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/SCSS/" rel="tag">SCSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Table/" rel="tag">Table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Token/" rel="tag">Token</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/VueCLI/" rel="tag">VueCLI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/oh-my-zsh/" rel="tag">oh-my-zsh</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSS/" rel="tag">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DatePicker/" rel="tag">DatePicker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Experiments/" rel="tag">Experiments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Firebase/" rel="tag">Firebase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Flexbox/" rel="tag">Flexbox</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Form/" rel="tag">Form</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HTML/" rel="tag">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HolyGrail/" rel="tag">HolyGrail</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Iterm2/" rel="tag">Iterm2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Layout/" rel="tag">Layout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Powerlevel10K/" rel="tag">Powerlevel10K</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Rails/" rel="tag">Rails</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/SCSS/" rel="tag">SCSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Table/" rel="tag">Table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Token/" rel="tag">Token</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/VueCLI/" rel="tag">VueCLI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/background-image/" rel="tag">background-image</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/background-position/" rel="tag">background-position</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/background-repeat/" rel="tag">background-repeat</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/img/" rel="tag">img</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/object-fit/" rel="tag">object-fit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/oh-my-zsh/" rel="tag">oh-my-zsh</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
     </div>
   </div>
 
@@ -371,6 +568,10 @@ Object.entries(chartObj);
     <div class="widget-title"><span>Recent Posts</span></div>
     <div class="widget-inner">
       <ul>
+        
+          <li>
+            <a href="/notes/2020/11/03/%E8%87%AA%E9%81%A9%E6%87%89%E5%9C%96%E7%89%87%EF%BC%86%E8%83%8C%E6%99%AF/">自適應圖片＆背景</a>
+          </li>
         
           <li>
             <a href="/notes/2020/10/15/Holy-Grail-Layout-Using-Flexbox/">Holy Grail Layout Using Flexbox</a>
@@ -388,10 +589,6 @@ Object.entries(chartObj);
             <a href="/notes/2020/09/17/Firebase-Actions/">Firebase Actions</a>
           </li>
         
-          <li>
-            <a href="/notes/2020/09/12/%E5%AD%B8%E7%BF%92%E8%B3%87%E6%BA%90/">學習資源</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -401,7 +598,7 @@ Object.entries(chartObj);
   <div class="widget-wrap widget-archive">
     <div class="widget-title"><span>Archive</span></div>
     <div class="widget-inner">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/notes/archives/2020/10/">2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/notes/archives/2020/11/">2020</a></li></ul>
     </div>
   </div>
 
