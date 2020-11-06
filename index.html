@@ -94,6 +94,65 @@
   
     
       <article
+  id="post-CSS-小技巧：把最後一行的-items-往左推"
+  class="article article-type-post"
+>
+
+  <div class="article-inner">
+    
+
+    <div class="article-body">
+      <header class="article-title">
+        <a href="/notes/2020/11/07/CSS-%E5%B0%8F%E6%8A%80%E5%B7%A7%EF%BC%9A%E6%8A%8A%E6%9C%80%E5%BE%8C%E4%B8%80%E8%A1%8C%E7%9A%84-items-%E5%BE%80%E5%B7%A6%E6%8E%A8/">CSS 小技巧：把最後一行的 items 往左推</a>
+      </header>
+      <div class="article-entry post-inner-html">
+        
+          <p>在做 flex box 排序時經常會遇到最後一行的 item 無法填滿空間而跑道中間。</p>
+<p><a href="https://codepen.io/william_k/pen/xxOagBG" target="_blank" rel="noopener">https://codepen.io/william_k/pen/xxOagBG</a></p>
+<p>在 .container 裡面，items 後方加入</p>
+<pre><code class="html">&lt;i aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;
+&lt;i aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;
+&lt;i aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;</code></pre>
+<pre><code class="css">.container i {
+  width: 300px; //需要把每個 item 的寬設定一樣
+  margin: 10px;
+}</code></pre>
+<p>這樣子可以自動把元素往左推。</p>
+<p><a href="https://codepen.io/william_k/pen/oNLPZNY" target="_blank" rel="noopener">https://codepen.io/william_k/pen/oNLPZNY</a></p>
+<p>Reference:</p>
+<p><a href="https://dev.to/stel/a-little-trick-to-left-align-items-in-last-row-with-flexbox-230l" target="_blank" rel="noopener">https://dev.to/stel/a-little-trick-to-left-align-items-in-last-row-with-flexbox-230l</a></p>
+
+        
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="article-footer">
+    <div class="article-more-info">
+      <div class="article-date">
+  <time datetime="2020-11-06T16:51:58.000Z" itemprop="datePublished">2020-11-07</time>
+</div>
+      
+        <div class="article-category">
+          <a class="article-category-link" href="/notes/categories/FlexBox/">FlexBox</a>
+        </div>
+      
+      
+        <div class="article-tag">
+          <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/CSS/" rel="tag">CSS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/HTML/" rel="tag">HTML</a></li></ul>
+        </div>
+      
+    </div>
+  </footer>
+
+
+</article>
+
+    
+  
+    
+      <article
   id="post-自適應圖片＆背景"
   class="article article-type-post"
 >
@@ -1447,106 +1506,6 @@ function getStartedWeekDay(month, year) {
 
     
   
-    
-      <article
-  id="post-JS-Day-49-如何使用-axios-傳遞-token"
-  class="article article-type-post"
->
-
-  <div class="article-inner">
-    
-
-    <div class="article-body">
-      <header class="article-title">
-        <a href="/notes/2020/08/17/JS-Day-49-%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-axios-%E5%82%B3%E9%81%9E-token/">JS Day 49: 如何使用 axios 傳遞 token</a>
-      </header>
-      <div class="article-entry post-inner-html">
-        
-          <h1 id="AXIO-GET-Request"><a href="#AXIO-GET-Request" class="headerlink" title="AXIO GET Request"></a>AXIO GET Request</h1><pre><code class="jsx">axios
-  .get(&#39;http://www.abcd1234.com/api/users&#39;)
-  .then( res =&gt; {
-    console.log(res);
-  })
-  .catch( err =&gt; {
-    console.log(err)
-  })</code></pre>
-<p>一個 GET 請求可以這樣完成。</p>
-<p>如果需要更多設定，例如回傳的格式、帳密驗證，就可以把需要設定的一些 key:value 寫在 config 裡面傳遞給 axios。</p>
-<h2 id="axios-url-config"><a href="#axios-url-config" class="headerlink" title="axios(url[, config])"></a>axios(url[, config])</h2><pre><code class="jsx">const api = &#39;https://challenge.thef2e.com/api/thef2e2019/stage6/rooms&#39;;
-const token = &#39;token_value&#39;;
-const roomInfo = axios({
-      method: &#39;GET&#39;,
-      url: api,
-      responseType: &#39;json&#39;, // responseType 也可以寫在 header 裡面
-      headers: {
-        // accept: &#39;application/json&#39;,
-      },
-        auth: {
-        username: &#39;xiaoming&#39;,
-        password: &#39;abc123&#39;
-      },
-    })
-    .then(function (response) {
-  console.log(response);
-    })
-    .catch(function (error) {
-      console.log(&#39;錯誤&#39;,error);
-    });</code></pre>
-<p>這邊的 auth 是一個基本的 HTTP 驗證。它會生成一個 Authorization header 並覆蓋掉原有的。官方文件有特別說明，如果要傳遞 <code>Bearer tokens</code> 需要在 headers 裡頭自定義 <code>Authorization</code>。</p>
-<blockquote>
-<p>// <code>auth</code> indicates that HTTP Basic auth should be used, and supplies credentials.<br>// This will set an <code>Authorization</code> header, overwriting any existing<br>// <code>Authorization</code> custom headers you have set using <code>headers</code>.<br>// Please note that only HTTP Basic auth is configurable through this parameter.<br>// <strong><em>For Bearer tokens and such, use <code>Authorization</code> custom headers instead.</em></strong></p>
-</blockquote>
-<p>這邊有更多的 <a href="https://github.com/axios/axios#request-config" target="_blank" rel="noopener">request config</a> 可以參考。</p>
-<pre><code class="jsx">const api = &#39;https://challenge.thef2e.com/api/thef2e2019/stage6/rooms&#39;;
-const token = &#39;token_value&#39;;
-const roomInfo = axios({
-      method: &#39;GET&#39;,
-      url: api,
-      responseType: &#39;json&#39;, // responseType 也可以寫在 header 裡面
-      headers: {
-            Authorization: `Bearer ${token}` // Bearer 跟 token 中間有一個空格
-      }
-    })
-    .then(function (response) {
-  console.log(response);
-    })
-    .catch(function (error) {
-      console.log(&#39;錯誤&#39;,error);
-    });</code></pre>
-<p>Reference:</p>
-<ul>
-<li><a href="https://github.com/axios/axios" target="_blank" rel="noopener">axios</a></li>
-</ul>
-
-        
-      </div>
-    </div>
-
-  </div>
-
-  <footer class="article-footer">
-    <div class="article-more-info">
-      <div class="article-date">
-  <time datetime="2020-08-17T10:06:23.000Z" itemprop="datePublished">2020-08-17</time>
-</div>
-      
-        <div class="article-category">
-          <a class="article-category-link" href="/notes/categories/JavaScript/">JavaScript</a>
-        </div>
-      
-      
-        <div class="article-tag">
-          <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li></ul>
-        </div>
-      
-    </div>
-  </footer>
-
-
-</article>
-
-    
-  
 
   
     <nav class="pagination">
@@ -1568,7 +1527,7 @@ const roomInfo = axios({
   <div class="widget-wrap widget-cate">
     <div class="widget-title"><span>Categories</span></div>
     <div class="widget-inner">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Database/">Database</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/DevTool/">DevTool</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/HTML-CSS/">HTML, CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/JavaScript/">JavaScript</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Resources/">Resources</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Ruby/">Ruby</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Vue-js/">Vue.js</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Database/">Database</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/DevTool/">DevTool</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/FlexBox/">FlexBox</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/HTML-CSS/">HTML, CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/JavaScript/">JavaScript</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Resources/">Resources</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Ruby/">Ruby</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Vue-js/">Vue.js</a></li></ul>
     </div>
   </div>
 
@@ -1591,6 +1550,10 @@ const roomInfo = axios({
       <ul>
         
           <li>
+            <a href="/notes/2020/11/07/CSS-%E5%B0%8F%E6%8A%80%E5%B7%A7%EF%BC%9A%E6%8A%8A%E6%9C%80%E5%BE%8C%E4%B8%80%E8%A1%8C%E7%9A%84-items-%E5%BE%80%E5%B7%A6%E6%8E%A8/">CSS 小技巧：把最後一行的 items 往左推</a>
+          </li>
+        
+          <li>
             <a href="/notes/2020/11/03/%E8%87%AA%E9%81%A9%E6%87%89%E5%9C%96%E7%89%87%EF%BC%86%E8%83%8C%E6%99%AF/">自適應圖片＆背景</a>
           </li>
         
@@ -1604,10 +1567,6 @@ const roomInfo = axios({
         
           <li>
             <a href="/notes/2020/09/18/Vue-CLI-%E7%92%B0%E5%A2%83%E8%AE%8A%E6%95%B8-%E6%A8%A1%E5%BC%8F/">Vue CLI - 環境變數&amp;模式</a>
-          </li>
-        
-          <li>
-            <a href="/notes/2020/09/17/Firebase-Actions/">Firebase Actions</a>
           </li>
         
       </ul>
