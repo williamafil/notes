@@ -94,6 +94,71 @@
   
     
       <article
+  id="post-Chrome-Dev-Tool-CSS-Overview"
+  class="article article-type-post"
+>
+
+  <div class="article-inner">
+    
+
+    <div class="article-body">
+      <header class="article-title">
+        <a href="/notes/2020/08/18/Chrome-Dev-Tool-CSS-Overview/">Chrome Dev Tool: CSS Overview</a>
+      </header>
+      <div class="article-entry post-inner-html">
+        
+          <p>在 Chrome 瀏覽器有個實驗性質的功能，很棒。有時候在瀏覽網站時發現有些設計很棒，想要偷師一下，CSS Overview 裡有幾個的功能真的要推一下。</p>
+<ol>
+<li>首先需要打開 DevTools<br><img src="https://drive.google.com/uc?export=view&id=1LRSNioMxCQViHrgbdsbtuOrw4YN95jX4" alt=""></li>
+</ol>
+<p><code>Mac</code>: command + option + i<br><code>Win</code>: control + shift + i</p>
+<ol start="2">
+<li>進入 Settings<br><img src="https://drive.google.com/uc?export=view&id=1LbidcsVBbioduXCcZwrpLRsVTHzFKXdl" alt=""><br>在 DevTools 最上方右側有個齒輪 icon 可以進入 settings。<br><code>Mac</code>: function + F1<br><code>Win</code>: F1<br>接著把左邊欄位第三行 <code>Experiments</code> 裡面 第四個 CSS Overview 打勾</li>
+</ol>
+<p>重新打開瀏覽器。</p>
+<ol start="3">
+<li><p>打開 DevTools 裡面的 CSS Overview: Capture overview<br><img src="https://drive.google.com/uc?export=view&id=1L9w2m6gSYCnT2du-p1UMNUxeaz5k2u8m" alt=""><br>按下按鈕瀏覽器就會開始分析了。</p>
+</li>
+<li><p>分析報告<br><img src="https://drive.google.com/uc?export=view&id=1zzOWfDFjidenzOe-QXoRxHDNV0W2kviP" alt=""><br>除了摘要一些網頁裡共使用了幾個 HTML 元素，下了幾個 style 定義，用了幾個 css selector 之外還有顏色解析。</p>
+</li>
+</ol>
+<p><img src="https://drive.google.com/uc?export=view&id=1HZPOfJmytW2iXmXadn1FFGa62w_tJ1Xl" alt=""><br>這個部分我很喜歡，清楚看到用了多少種背景顏色、文字顏色，甚至連 border 顏色都有。</p>
+<p><img src="https://drive.google.com/uc?export=view&id=1tdpJ-GnOZCughtwuKVUXY3klmJuBYrvI" alt=""><br>媽呀，用了哪種字型、字體大小，出現幾次都有紀錄。</p>
+<p><img src="https://drive.google.com/uc?export=view&id=1Vm-DqCQsAwP8Cv9lXnhPQEXoTkyuLUJb" alt=""><br>這個網站裡面有已定義卻未使用的 CSS 高達 14 個。這功能對於優化一個網站很棒！<br>下方還有 media queries。目前我觀察了幾個大型網站，media queries 都好長一串，看到眼花。</p>
+<p>—</p>
+<p>Chrome 這個實驗功能對於初學者我剛要練習切版真的太有幫助了。偶而遇到想要臨攀練習的網站，可以透過 CSS Overview 更理解有些元素怎麼規劃會比較恰當。</p>
+
+        
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="article-footer">
+    <div class="article-more-info">
+      <div class="article-date">
+  <time datetime="2020-08-17T17:42:31.000Z" itemprop="datePublished">2020-08-18</time>
+</div>
+      
+        <div class="article-category">
+          <a class="article-category-link" href="/notes/categories/DevTool/">DevTool</a>
+        </div>
+      
+      
+        <div class="article-tag">
+          <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li></ul>
+        </div>
+      
+    </div>
+  </footer>
+
+
+</article>
+
+    
+  
+    
+      <article
   id="post-JS-Day-49-如何使用-axios-傳遞-token"
   class="article article-type-post"
 >
@@ -1676,104 +1741,6 @@ console.log(name, bmiValue, stateText);
 
     
   
-    
-      <article
-  id="post-Selenium-WebDriver-with-Ruby-on-Headless-Chrome-Firefox-無頭爬蟲模式"
-  class="article article-type-post"
->
-
-  <div class="article-inner">
-    
-
-    <div class="article-body">
-      <header class="article-title">
-        <a href="/notes/2020/07/28/Selenium-WebDriver-with-Ruby-on-Headless-Chrome-Firefox-%E7%84%A1%E9%A0%AD%E7%88%AC%E8%9F%B2%E6%A8%A1%E5%BC%8F/">Selenium WebDriver with Ruby on Headless Chrome/Firefox 無頭爬蟲模式</a>
-      </header>
-      <div class="article-entry post-inner-html">
-        
-          <p>使用 geckodriver 來連接 headless Firefox 與 Selenium 或是使用 chromedriver 來連接 Chrome 與 Selenium</p>
-<p>安裝 Geckodriver / Chromedriver</p>
-<pre><code class="bash">$ brew install geckodriver // Firefox
-$ brew cask install chromedriver // Chrome</code></pre>
-<p>安裝 Selenium Gem</p>
-<pre><code class="bash">$ gem install selenium-webdriver</code></pre>
-<p>引用 Selenium WebDriver 模組</p>
-<pre><code class="ruby">require &#39;selenium-webdriver&#39;</code></pre>
-<p>指定欲使用的瀏覽器</p>
-<p>Firefox</p>
-<pre><code class="ruby">options = Selenium::WebDriver::Firefox::Options.new(args: [&#39;-headless&#39;])
-driver = Selenium::WebDriver.for :firefox, options: options</code></pre>
-<p>Chrome</p>
-<pre><code class="ruby">options = Selenium::WebDriver::Chrome::Options.new(args: [&#39;headless&#39;])
-driver = Selenium::WebDriver.for :chrome, options: options</code></pre>
-<p>使用 selenium 操控無頭瀏覽器</p>
-<pre><code class="ruby"># 連結到台灣電子地圖服務網
-driver.get(&#39;http://www.map.com.tw&#39;)
-
-# 點擊搜尋欄位
-# &lt;input type=&quot;text&quot; style=&quot;margin-left:7px;&quot; id=&quot;searchWord&quot; value=&quot;例如:新北市中和區中正路716號&quot; ondblclick=&quot;this.value=&#39;&#39;&quot;&gt;
-driver.find_element(id: &#39;searchWord&#39;).click
-</code></pre>
-<pre><code class="ruby"># 由於 input 的值設定為&#39;例如:新北市中和區中正路716號&#39;，所以必須先清除掉
-driver.find_element(id: &#39;searchWord&#39;).clear
-
-# 讓瀏覽器代替輸入&#39;高雄市苓雅區和平一路147號&#39;並送出表單
-driver.find_element(id: &#39;searchWord&#39;).send_keys &#39;高雄市苓雅區和平一路147號&#39;, :return
-
-# 這邊要等待兩秒, 否則 .winfoIframe 還沒有產生會發生找不到 element
-# 當初在這邊卡超久的，幸好有看到花哥分享了 Python 爬蟲有寫到等待，才發現可以這樣用
-sleep 2
-
-# store iframe web element
-# 另一種方法 iframe = driver.find_element(:css, &quot;.windowInfo &gt; iframe&quot;)
-iframe = driver.find_element(class: &#39;winfoIframe&#39;)
-
-# 切換到 iframe
-driver.switch_to.frame(iframe)
-
-# 點擊 &#39;座標&#39; 圖示進行跳頁
-driver.find_elements(class: &#39;fun&#39;)[1].click
-
-# 使用 xpath 取得頁面上的經緯度
-coordinates = driver.find_element(xpath: &quot;/html/body/form/div[5]/table/tbody/tr[2]/td&quot;).text.split(&#39; &#39;)
-
-# 經緯度
-latitude = coordinates[0].split(&#39;：&#39;)[1]
-longitude = coordinates[1].split(&#39;：&#39;)[1]
-
-puts latitude
-puts longitude</code></pre>
-<p>Reference:<br><a href="https://medium.com/%E8%8A%B1%E5%93%A5%E7%9A%84%E5%A5%87%E5%B9%BB%E6%97%85%E7%A8%8B/geocoding-%E6%89%B9%E9%87%8F%E8%99%95%E7%90%86%E5%9C%B0%E5%9D%80%E8%BD%89%E6%8F%9B%E7%B6%93%E7%B7%AF%E5%BA%A6-721ab2564c88" target="_blank" rel="noopener">Geocoding - 批量處理地址轉換經緯度</a><br><a href="https://www.selenium.dev/documentation/en/getting_started_with_webdriver/locating_elements/" target="_blank" rel="noopener">Selenium</a></p>
-
-        
-      </div>
-    </div>
-
-  </div>
-
-  <footer class="article-footer">
-    <div class="article-more-info">
-      <div class="article-date">
-  <time datetime="2020-07-27T16:56:06.000Z" itemprop="datePublished">2020-07-28</time>
-</div>
-      
-        <div class="article-category">
-          <a class="article-category-link" href="/notes/categories/Ruby/">Ruby</a>
-        </div>
-      
-      
-        <div class="article-tag">
-          <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li></ul>
-        </div>
-      
-    </div>
-  </footer>
-
-
-</article>
-
-    
-  
 
   
     <nav class="pagination">
@@ -1805,7 +1772,7 @@ puts longitude</code></pre>
   <div class="widget-wrap widget-tags">
     <div class="widget-title"><span>Tags</span></div>
     <div class="widget-inner">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSS/" rel="tag">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DatePicker/" rel="tag">DatePicker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Experiments/" rel="tag">Experiments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Firebase/" rel="tag">Firebase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Flexbox/" rel="tag">Flexbox</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Form/" rel="tag">Form</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HTML/" rel="tag">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HolyGrail/" rel="tag">HolyGrail</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Iterm2/" rel="tag">Iterm2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Layout/" rel="tag">Layout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Powerlevel10K/" rel="tag">Powerlevel10K</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Rails/" rel="tag">Rails</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/SCSS/" rel="tag">SCSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Table/" rel="tag">Table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Token/" rel="tag">Token</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/VueCLI/" rel="tag">VueCLI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/background-image/" rel="tag">background-image</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/background-position/" rel="tag">background-position</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/background-repeat/" rel="tag">background-repeat</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/img/" rel="tag">img</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/object-fit/" rel="tag">object-fit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/oh-my-zsh/" rel="tag">oh-my-zsh</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSS/" rel="tag">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DatePicker/" rel="tag">DatePicker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Experiments/" rel="tag">Experiments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Firebase/" rel="tag">Firebase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Flexbox/" rel="tag">Flexbox</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Form/" rel="tag">Form</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HTML/" rel="tag">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HolyGrail/" rel="tag">HolyGrail</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Icons/" rel="tag">Icons</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Iterm2/" rel="tag">Iterm2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Layout/" rel="tag">Layout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Powerlevel10K/" rel="tag">Powerlevel10K</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/RWD/" rel="tag">RWD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Rails/" rel="tag">Rails</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/SCSS/" rel="tag">SCSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Table/" rel="tag">Table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Token/" rel="tag">Token</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/VueCLI/" rel="tag">VueCLI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/background-image/" rel="tag">background-image</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/background-position/" rel="tag">background-position</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/background-repeat/" rel="tag">background-repeat</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/img/" rel="tag">img</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/object-fit/" rel="tag">object-fit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/oh-my-zsh/" rel="tag">oh-my-zsh</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
     </div>
   </div>
 
@@ -1816,6 +1783,10 @@ puts longitude</code></pre>
     <div class="widget-title"><span>Recent Posts</span></div>
     <div class="widget-inner">
       <ul>
+        
+          <li>
+            <a href="/notes/2021/06/07/Resources/">Resources</a>
+          </li>
         
           <li>
             <a href="/notes/2020/11/07/CSS-%E5%B0%8F%E6%8A%80%E5%B7%A7%EF%BC%9A%E6%8A%8A%E6%9C%80%E5%BE%8C%E4%B8%80%E8%A1%8C%E7%9A%84-items-%E5%BE%80%E5%B7%A6%E6%8E%A8/">CSS 小技巧：把最後一行的 items 往左推</a>
@@ -1833,10 +1804,6 @@ puts longitude</code></pre>
             <a href="/notes/2020/10/09/Iterm2-zsh-oh-my-zsh/">Iterm2 + zsh + oh-my-zsh</a>
           </li>
         
-          <li>
-            <a href="/notes/2020/09/18/Vue-CLI-%E7%92%B0%E5%A2%83%E8%AE%8A%E6%95%B8-%E6%A8%A1%E5%BC%8F/">Vue CLI - 環境變數&amp;模式</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -1846,7 +1813,7 @@ puts longitude</code></pre>
   <div class="widget-wrap widget-archive">
     <div class="widget-title"><span>Archive</span></div>
     <div class="widget-inner">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/notes/archives/2020/11/">2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/notes/archives/2021/06/">2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/notes/archives/2020/11/">2020</a></li></ul>
     </div>
   </div>
 
@@ -1861,7 +1828,7 @@ puts longitude</code></pre>
   <footer class="footer">
     <div class="footer-inner">
         <div class="footer-info">
-            <span>&copy; 2013 - 2020 William&#39;s Notes</span>
+            <span>&copy; 2013 - 2021 William&#39;s Notes</span>
         </div>
         <div class="footer-powered">
             <a href="https://github.com/lh1me/hexo-theme-aomori" target="_blank">Aomori</a> Theme · Powered By Hexo
