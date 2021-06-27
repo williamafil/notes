@@ -94,6 +94,113 @@
   
     
       <article
+  id="post-Devise-Confirmable-with-SendGrid"
+  class="article article-type-post"
+>
+
+  <div class="article-inner">
+    
+
+    <div class="article-body">
+      <header class="article-title">
+        <a href="/notes/2021/06/28/Devise-Confirmable-with-SendGrid/">Devise Confirmable with SendGrid</a>
+      </header>
+      <div class="article-entry post-inner-html">
+        
+          <p>After setting up Devise gem, add default_url_option to development.rb.</p>
+<p>config/environments/development.rb</p>
+<pre><code class="ruby">config.action_mailer.default_url_options = { host: &#39;localhost&#39;, port: 3000 }</code></pre>
+<p>Generate a User model</p>
+<pre><code class="shell">$ rails generate devise User</code></pre>
+<p>Uncomment confirmable fields in newly created migration file<br>db/migrate/2020xxxxxxx_devise_create_users.rb</p>
+<pre><code class="ruby">## Confirmable
+t.string   :confirmation_token
+t.datetime :confirmed_at
+t.datetime :confirmation_sent_at
+t.string   :unconfirmed_emailreconfirmable</code></pre>
+<p>Add :confirmable to User.rb</p>
+<p>app/models/user.rb</p>
+<pre><code class="ruby">   devise :database_authenticatable, :registerable,
+          :recoverable, :rememberable, :validatable,
+          :confirmable</code></pre>
+<p>In deveise.rb, configurate sender’s email and reconfirmable state.</p>
+<pre><code class="ruby">  # this email have to be the same as SendGrid Sender Identity
+  config.mailer_sender = &quot;example@gmail.com&quot;</code></pre>
+<p>config/environments/development.rb</p>
+<pre><code class="ruby">  # SendGrid
+ActionMailer::Base.smtp_settings = {
+  :user_name =&gt; Rails.application.credentials.dig(:sendgrid, :username),
+  :password =&gt; Rails.application.credentials.dig(:sendgrid, :password),
+  :domain =&gt; &#39;your domain&#39;,
+  :address =&gt; &#39;smtp.sendgrid.net&#39;,
+  :port =&gt; 587,
+  :authentication =&gt; :plain,
+  :enable_starttls_auto =&gt; true
+}
+</code></pre>
+<p><code>Rails.application.credentials.sendgrid(:username)</code> does not work here!</p>
+<p>Store you credentials in master.key</p>
+<pre><code class="shell">$ EDITOR=&#39;code --wait&#39; rails credentials:edit</code></pre>
+<pre><code class="ruby"> sendgrid:
+   username: &quot;apikey&quot; # leave it as is
+   password: &quot;Your API key&quot;</code></pre>
+<p>Errors I ran into:</p>
+<h3 id="Missing-host-to-link-to-Please-provide-the-host-parameter-set-default-url-options-host"><a href="#Missing-host-to-link-to-Please-provide-the-host-parameter-set-default-url-options-host" class="headerlink" title="Missing host to link to! Please provide the :host parameter, set default_url_options[:host]"></a>Missing host to link to! Please provide the :host parameter, set default_url_options[:host]</h3><p>log/production.log</p>
+<pre><code>I, [2021-06-28T02:29:03.586863 #1835748]  INFO -- : [46c46c7d-2f67-4def-9e9f-7a64dd5d5493] Completed 500 Internal Server Error in 305ms (ActiveRecord: 2.0ms | Allocations: 1831)
+F, [2021-06-28T02:29:03.589058 #1835748] FATAL -- : [46c46c7d-2f67-4def-9e9f-7a64dd5d5493]
+[46c46c7d-2f67-4def-9e9f-7a64dd5d5493] ActionView::Template::Error (Missing host to link to! Please provide the :host parameter, set default_url_options[:host], or set :only_path to true):
+[46c46c7d-2f67-4def-9e9f-7a64dd5d5493]     2:
+[46c46c7d-2f67-4def-9e9f-7a64dd5d5493]     3: &lt;p&gt;You can confirm your account email through the link below:&lt;/p&gt;
+[46c46c7d-2f67-4def-9e9f-7a64dd5d5493]     4:
+[46c46c7d-2f67-4def-9e9f-7a64dd5d5493]     5: &lt;p&gt;&lt;%= link_to &#39;Confirm my account&#39;, confirmation_url(@resource, confirmation_token: @token) %&gt;&lt;/p&gt;
+[46c46c7d-2f67-4def-9e9f-7a64dd5d5493]</code></pre><p>Forgot to configure default_url_options in environments/production.rb</p>
+<h3 id="Net-OpenTimeout-execution-expired"><a href="#Net-OpenTimeout-execution-expired" class="headerlink" title="Net::OpenTimeout (execution expired)"></a>Net::OpenTimeout (execution expired)</h3><p>log/production.log</p>
+<pre><code>I, [2021-06-28T03:09:52.753696 #1845775]  INFO -- : [d23e7eed-eb39-4a53-a330-90bc7719cad6] Delivered mail 60d8cce2b74c7_1c2a0f53fc980c@localhost.mail (30003.8ms)
+I, [2021-06-28T03:09:52.754019 #1845775]  INFO -- : [d23e7eed-eb39-4a53-a330-90bc7719cad6] Completed 500 Internal Server Error in 30014ms (ActiveRecord: 4.1ms | Allocations: 2705)
+F, [2021-06-28T03:09:52.755417 #1845775] FATAL -- : [d23e7eed-eb39-4a53-a330-90bc7719cad6]
+[d23e7eed-eb39-4a53-a330-90bc7719cad6] Net::OpenTimeout (execution expired):
+[d23e7eed-eb39-4a53-a330-90bc7719cad6]</code></pre><p>Need to contact VPS support</p>
+<p>Note:</p>
+<ul>
+<li>Configure SendGrid using SMTP relay.</li>
+<li>SendGrid Sender Identity must be setup in order for this to work</li>
+<li>Must use the verified email (as Sender Identity) on the config.mailer_sender in devise.rb</li>
+<li>Linode have SMTP port restrictions in place on all Linodes by default, need to open up a support ticket to unblock the port</li>
+</ul>
+<p>References:<br><a href="https://www.rubydoc.info/github/heartcombo/devise/master/Devise/Models/Confirmable" target="_blank" rel="noopener">Module: Devise::Models::Confirmable — Documentation for heartcombo/devise (master)</a><br><a href="https://ihower.tw/rails/actionmailer.html" target="_blank" rel="noopener">ActionMailer - E-mail 發送 - Rails 實戰聖經</a><br><a href="http://etrex.blogspot.com/2017/11/ruby-devise-confirmable.html" target="_blank" rel="noopener">卡卡米的記憶體: Ruby - 使用 Devise confirmable</a></p>
+<p><a href="https://www.linode.com/community/questions/19949/unable-to-send-mail-from-my-rails-web-application" target="_blank" rel="noopener">Unable to send mail from my rails web application | Linode Questions</a><br><a href="https://dev.to/rishudc119/devise-and-sendgrid-integration-into-rails-6-4fpm" target="_blank" rel="noopener">Devise and SendGrid integration into rails 6 - DEV Community</a></p>
+
+        
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="article-footer">
+    <div class="article-more-info">
+      <div class="article-date">
+  <time datetime="2021-06-27T20:17:33.000Z" itemprop="datePublished">2021-06-28</time>
+</div>
+      
+        <div class="article-category">
+          <a class="article-category-link" href="/notes/categories/Ruby-on-Rails/">Ruby on Rails</a>
+        </div>
+      
+      
+        <div class="article-tag">
+          <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/ActionMailer/" rel="tag">ActionMailer</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Confirmable/" rel="tag">Confirmable</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Devise/" rel="tag">Devise</a></li></ul>
+        </div>
+      
+    </div>
+  </footer>
+
+
+</article>
+
+    
+  
+    
+      <article
   id="post-Rails-重新部署後-Active-Storage-的圖片-404-Not-Found"
   class="article article-type-post"
 >
@@ -139,7 +246,7 @@ config.active_storage.service = :local</code></pre>
 </div>
       
         <div class="article-category">
-          <a class="article-category-link" href="/notes/categories/Resources/">Resources</a>
+          <a class="article-category-link" href="/notes/categories/Ruby-on-Rails/">Ruby on Rails</a>
         </div>
       
       
@@ -940,105 +1047,6 @@ database.ref().update(messages)</code></pre>
 
     
   
-    
-      <article
-  id="post-在-Table-裡面使用-Form"
-  class="article article-type-post"
->
-
-  <div class="article-inner">
-    
-
-    <div class="article-body">
-      <header class="article-title">
-        <a href="/notes/2020/09/09/%E5%9C%A8-Table-%E8%A3%A1%E9%9D%A2%E4%BD%BF%E7%94%A8-Form/">在 Table 裡面使用 Form</a>
-      </header>
-      <div class="article-entry post-inner-html">
-        
-          <p><img src="https://drive.google.com/uc?export=view&id=1ZY1Ns8ysv-CN7cfABzGhCgQMb9ipRrJo" alt=""><br>把 form 放在 table, tbody, 或 tr 底下，瀏覽器會把 form 移動位子，而裡面的元素則會留在原位。</p>
-<pre><code class="html">&lt;!-- 原來應該是這樣子 --&gt;
-&lt;form&gt;
-    ... input fields ...
-&lt;/form&gt;</code></pre>
-<pre><code class="html">&lt;!-- 現在變成這樣子 --&gt;
-&lt;form&gt;&lt;/form&gt;
-... inputs fields ...</code></pre>
-<p><img src="https://drive.google.com/uc?export=view&id=1z67n84FMbAq6lNJk5m_bCzVP3D_VxAsg" alt=""></p>
-<p>如果將整個 table 封裝在 form 中，問題在於所有表單元素都將在 submit 時發送。此方法允許您為每個 row (tr) 定義一個表單，並在 submit 時僅發送該行資料。 </p>
-<p>將 form 包著 tr 周圍（或將 tr 包著 form）的問題在於它是無效的 html，因為 DOM 已損壞。</p>
-<p><strong>解法1 - HTML form attribute</strong></p>
-<p><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#htmlattrdefform" target="_blank" rel="noopener">https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#htmlattrdefform</a></p>
-<pre><code class="html">&lt;form method=&quot;GET&quot; id=&quot;my_form&quot;&gt;&lt;/form&gt;
-
-&lt;table&gt;
-    &lt;tr&gt;
-        &lt;td&gt;
-            &lt;input type=&quot;text&quot; name=&quot;company&quot; form=&quot;my_form&quot; /&gt;
-            &lt;button type=&quot;button&quot; form=&quot;my_form&quot;&gt;ok&lt;/button&gt;
-        &lt;/td&gt;
-    &lt;/tr&gt;
-&lt;/table&gt;</code></pre>
-<p>把 form fields 跟 form 標籤分離，利用 form tag 的 id 讓 form field 去做關聯。 (IE不支援）</p>
-<p><strong>解法2 - 做個假 table</strong></p>
-<pre><code class="html">&lt;style&gt;
-  DIV.table {
-      display:table;
-  }
-  FORM.tr, DIV.tr{
-      display:table-row;
-  }
-  SPAN.td{
-      display:table-cell;
-  }
-&lt;/style&gt;
-
-...
-
-&lt;div class=&quot;table&quot;&gt;
-  &lt;form class=&quot;tr&quot; method=&quot;post&quot; action=&quot;blah.html&quot;&gt;
-    &lt;span class=&quot;td&quot;&gt;&lt;input type=&quot;text&quot;/&gt;&lt;/span&gt;
-    &lt;span class=&quot;td&quot;&gt;&lt;input type=&quot;text&quot;/&gt;&lt;/span&gt;
-  &lt;/form&gt;
-  &lt;div class=&quot;tr&quot;&gt;
-    &lt;span class=&quot;td&quot;&gt;(cell data)&lt;/span&gt;
-    &lt;span class=&quot;td&quot;&gt;(cell data)&lt;/span&gt;
-  &lt;/div&gt;
-  ...
-&lt;/div&gt;</code></pre>
-<p>IE 7 不支援 CSS table， IE8 需要宣告 doctype 才可以使用。</p>
-<pre><code class="html">&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot;
-&quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;</code></pre>
-<p>Reference:<br><a href="https://stackoverflow.com/questions/5967564/form-inside-a-table/5967613" target="_blank" rel="noopener">Form inside a table</a></p>
-
-        
-      </div>
-    </div>
-
-  </div>
-
-  <footer class="article-footer">
-    <div class="article-more-info">
-      <div class="article-date">
-  <time datetime="2020-09-09T14:56:18.000Z" itemprop="datePublished">2020-09-09</time>
-</div>
-      
-        <div class="article-category">
-          <a class="article-category-link" href="/notes/categories/HTML-CSS/">HTML, CSS</a>
-        </div>
-      
-      
-        <div class="article-tag">
-          <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/CSS/" rel="tag">CSS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Form/" rel="tag">Form</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/HTML/" rel="tag">HTML</a></li></ul>
-        </div>
-      
-    </div>
-  </footer>
-
-
-</article>
-
-    
-  
 
   
     <nav class="pagination">
@@ -1060,7 +1068,7 @@ database.ref().update(messages)</code></pre>
   <div class="widget-wrap widget-cate">
     <div class="widget-title"><span>Categories</span></div>
     <div class="widget-inner">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Database/">Database</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/DevTool/">DevTool</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/FlexBox/">FlexBox</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/HTML-CSS/">HTML, CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/JavaScript/">JavaScript</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Resources/">Resources</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Ruby/">Ruby</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Vue-js/">Vue.js</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Database/">Database</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/DevTool/">DevTool</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/FlexBox/">FlexBox</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/HTML-CSS/">HTML, CSS</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/JavaScript/">JavaScript</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Resources/">Resources</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Ruby/">Ruby</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Ruby-on-Rails/">Ruby on Rails</a></li><li class="category-list-item"><a class="category-list-link" href="/notes/categories/Vue-js/">Vue.js</a></li></ul>
     </div>
   </div>
 
@@ -1070,7 +1078,7 @@ database.ref().update(messages)</code></pre>
   <div class="widget-wrap widget-tags">
     <div class="widget-title"><span>Tags</span></div>
     <div class="widget-inner">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ActiveStorage/" rel="tag">ActiveStorage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSS/" rel="tag">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DatePicker/" rel="tag">DatePicker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Deploy/" rel="tag">Deploy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Experiments/" rel="tag">Experiments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Firebase/" rel="tag">Firebase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Flexbox/" rel="tag">Flexbox</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Form/" rel="tag">Form</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Gitignore/" rel="tag">Gitignore</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HTML/" rel="tag">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HolyGrail/" rel="tag">HolyGrail</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Icons/" rel="tag">Icons</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Iterm2/" rel="tag">Iterm2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Layout/" rel="tag">Layout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Powerlevel10K/" rel="tag">Powerlevel10K</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Production/" rel="tag">Production</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/RWD/" rel="tag">RWD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Rails/" rel="tag">Rails</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/SCSS/" rel="tag">SCSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Table/" rel="tag">Table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Token/" rel="tag">Token</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/VueCLI/" rel="tag">VueCLI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/background-image/" rel="tag">background-image</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/background-position/" rel="tag">background-position</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/background-repeat/" rel="tag">background-repeat</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/img/" rel="tag">img</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/object-fit/" rel="tag">object-fit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/oh-my-zsh/" rel="tag">oh-my-zsh</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ActionMailer/" rel="tag">ActionMailer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ActiveStorage/" rel="tag">ActiveStorage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSS/" rel="tag">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Confirmable/" rel="tag">Confirmable</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DatePicker/" rel="tag">DatePicker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Deploy/" rel="tag">Deploy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Devise/" rel="tag">Devise</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Experiments/" rel="tag">Experiments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Firebase/" rel="tag">Firebase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Flexbox/" rel="tag">Flexbox</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Form/" rel="tag">Form</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Gitignore/" rel="tag">Gitignore</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HTML/" rel="tag">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HolyGrail/" rel="tag">HolyGrail</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Icons/" rel="tag">Icons</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Iterm2/" rel="tag">Iterm2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Layout/" rel="tag">Layout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Powerlevel10K/" rel="tag">Powerlevel10K</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Production/" rel="tag">Production</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/RWD/" rel="tag">RWD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Rails/" rel="tag">Rails</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/SCSS/" rel="tag">SCSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/SendGrid/" rel="tag">SendGrid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Table/" rel="tag">Table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Token/" rel="tag">Token</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/VueCLI/" rel="tag">VueCLI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/background-image/" rel="tag">background-image</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/background-position/" rel="tag">background-position</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/background-repeat/" rel="tag">background-repeat</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/img/" rel="tag">img</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/object-fit/" rel="tag">object-fit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/oh-my-zsh/" rel="tag">oh-my-zsh</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
     </div>
   </div>
 
@@ -1081,6 +1089,10 @@ database.ref().update(messages)</code></pre>
     <div class="widget-title"><span>Recent Posts</span></div>
     <div class="widget-inner">
       <ul>
+        
+          <li>
+            <a href="/notes/2021/06/28/Devise-Confirmable-with-SendGrid/">Devise Confirmable with SendGrid</a>
+          </li>
         
           <li>
             <a href="/notes/2021/06/15/Rails-%E9%87%8D%E6%96%B0%E9%83%A8%E7%BD%B2%E5%BE%8C-Active-Storage-%E7%9A%84%E5%9C%96%E7%89%87-404-Not-Found/">Rails 重新部署後 Active Storage 的圖片 404 Not Found</a>
@@ -1096,10 +1108,6 @@ database.ref().update(messages)</code></pre>
         
           <li>
             <a href="/notes/2020/11/03/%E8%87%AA%E9%81%A9%E6%87%89%E5%9C%96%E7%89%87%EF%BC%86%E8%83%8C%E6%99%AF/">自適應圖片＆背景</a>
-          </li>
-        
-          <li>
-            <a href="/notes/2020/10/15/Holy-Grail-Layout-Using-Flexbox/">Holy Grail Layout Using Flexbox</a>
           </li>
         
       </ul>
