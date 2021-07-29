@@ -94,6 +94,176 @@
   
     
       <article
+  id="post-JS-Day-37-var-let-and-const-part-2-hoisting"
+  class="article article-type-post"
+>
+
+  <div class="article-inner">
+    
+
+    <div class="article-body">
+      <header class="article-title">
+        <a href="/notes/2020/07/31/JS-Day-37-var-let-and-const-part-2-hoisting/">JS Day 37: Var, Let and Const, part 2 - Hoisting</a>
+      </header>
+      <div class="article-entry post-inner-html">
+        
+          <h1 id="Hoisting-提升"><a href="#Hoisting-提升" class="headerlink" title="Hoisting 提升"></a>Hoisting 提升</h1><h2 id="Var-Hoisting-變數提升"><a href="#Var-Hoisting-變數提升" class="headerlink" title="Var Hoisting 變數提升"></a>Var Hoisting 變數提升</h2><pre><code class="jsx">console.log(a); // undefined
+var a = &#39;A&#39;;
+
+// ---- 分隔線 ----
+
+// 實際上這段程式碼對編譯器來說是長這樣
+var a; // 只有宣告 a 這個變數
+console.log(a); // 只有被宣告，但沒有賦予值，自然是 undefined
+a = &#39;A&#39;; // assignment 不會被提升
+</code></pre>
+<p>把上面的例子拆分，這樣子比較好理解。</p>
+<pre><code class="jsx">var a; // 有宣告，但沒有賦予任何值
+console.log(a);  // a 會是 undefined</code></pre>
+<p>使用 var 跟 let 的結果：</p>
+<pre><code class="jsx">console.log(a); // Undefined
+var a = &#39;A&#39;;
+
+console.log(b);  // ReferenceError: b is not defined
+let b = &#39;B&#39;; 
+
+console.log(c);  // ReferenceError: c is not defined
+const c = &#39;C&#39;; </code></pre>
+<p><img src="https://drive.google.com/uc?export=view&id=1ut6WFtMB7-4MUNbgfCZyn24ZzzjFdBxG" alt="https://drive.google.com/uc?export=view&amp;id=1ut6WFtMB7-4MUNbgfCZyn24ZzzjFdBxG"></p>
+<p><strong>undefined =/= not defined</strong><br>undefined 在記憶體已經有準備空間給它<br>not defined 沒有被定義</p>
+<p>var 的特性，只要繼替體有準備位置，使用 <code>var</code> 會出現 hoisting (undefined)，反之使用 <code>let</code>&amp; <code>const</code> 則不會出現 hoisting（not defined)，因為變數 <code>b</code> 之前不存在，所以會出錯。</p>
+<h2 id="提升-＆-函式-Hoisting-amp-Functions"><a href="#提升-＆-函式-Hoisting-amp-Functions" class="headerlink" title="提升 ＆ 函式 (Hoisting &amp; Functions)"></a>提升 ＆ 函式 (Hoisting &amp; Functions)</h2><h3 id="函式運算式-Function-Declaration"><a href="#函式運算式-Function-Declaration" class="headerlink" title="函式運算式 (Function Declaration)"></a>函式運算式 (Function Declaration)</h3><h2 id=""><a href="#" class="headerlink" title=""></a></h2><p>延續上方，<code>console.log(a)</code> 會是 <code>undefined</code></p>
+<pre><code class="jsx">alpha(); // &#39;Alpha calling...&#39;, function 會被提升
+console.log(a); // undefined, var a 會被提升，但 assignment 不會
+var a = &#39;A&#39;;
+
+function alpha() {
+    console.log(&#39;Alpha calling...&#39;);
+};
+
+// output
+// Alpha calling...
+// undefined</code></pre>
+<pre><code class="jsx">console.log(a); // function a()
+var a;
+function a() {
+    console.log(&#39;say a word&#39;);
+};</code></pre>
+<p>為何不是 <code>undefined</code>? 因為 function 被提升了。</p>
+<p>類似範例：</p>
+<pre><code class="jsx">aTest(); // 我被提升了
+function aTest() {
+    console.log(&#39;我被提升了&#39;);
+};</code></pre>
+<p>範例1：</p>
+<pre><code class="jsx">var a = 0;
+
+function a() {
+    return 1;
+};
+
+console.log(typeof a); // number</code></pre>
+<p>可以這樣解讀範例1：</p>
+<pre><code class="jsx">var a; // 提升
+
+function a() {
+    return 1;
+};
+
+// 初始化, 不會被提升
+a = 0
+
+console.log(typeof a); // number</code></pre>
+<p><img src="https://drive.google.com/uc?export=view&id=12oaRQd-9WaquBjqIhyNXLlAniBSu1ohq" alt="https://drive.google.com/uc?export=view&amp;id=12oaRQd-9WaquBjqIhyNXLlAniBSu1ohq"></p>
+<p>這樣子寫 console 輸出也是 number。</p>
+<p>範例2：</p>
+<pre><code class="jsx">// var
+var a;
+function a() {
+  return 1;
+};
+
+console.log(typeof a); // function
+
+// let
+let a;
+function a() {
+  return 1;
+};
+
+console.log(typeof a); // 重複宣告 let a
+                                             // SyntaxError: redeclaration of let a</code></pre>
+<h3 id="函式陳述式-Function-Expression"><a href="#函式陳述式-Function-Expression" class="headerlink" title="函式陳述式 (Function Expression)"></a>函式陳述式 (Function Expression)</h3><pre><code class="jsx">console.log(typeof aTest); // undefined
+aTest(); // function 沒有被提升，出錯了。
+         // TypeError: aTest is not a function
+var aTest = function hoist() {
+    console.log(&#39;我被提升了&#39;);
+};
+</code></pre>
+<p>var aTest 有被提升，但是 function 沒有，aTest 沒有被 initialize，所以是 undefined。</p>
+<pre><code class="jsx">//
+// var
+aTest(); // function 沒有被提升，出錯了。
+         // TypeError: aTest is not a function
+var aTest = function() {
+    console.log(&#39;我被提升了&#39;);
+};
+
+//
+// let
+aTest(); // function 沒有被提升，出錯了。
+         // ReferenceError: can&#39;t access lexical declaration &#39;aTest&#39; before initialization
+let aTest = function() {
+    console.log(&#39;我被提升了&#39;);
+};
+
+//
+// const
+aTest(); // function 沒有被提升，出錯了。
+         // ReferenceError: can&#39;t access lexical declaration &#39;aTest&#39; before initialization
+const aTest = function() {
+    console.log(&#39;我被提升了&#39;);
+};</code></pre>
+<p>一樣都是 function，怎麼一個有被提升一個沒有呢？</p>
+<p>用 <code>let</code> 或 <code>const</code> 宣告 function expression 都會出現很明確的錯誤：ReferenceError: can’t access lexical declaration ‘findProd’ before initialization （暫時性死區 Temporal Dead Zone, TDZ）。</p>
+<ul>
+<li>函式提升 &gt; 變數提升</li>
+<li>assignment (<code>=</code>) 不會被提升</li>
+<li>Function Expression 不會被提升，function declaration 則會</li>
+</ul>
+<p>Reference:<br><a href="https://es6.ruanyifeng.com/#docs/let" target="_blank" rel="noopener">ECMAScript 6 入門: let 和 const 命令</a><br><a href="https://ithelp.ithome.com.tw/articles/10191549" target="_blank" rel="noopener">重新認識 JavaScript: Day 10 函式 Functions 的基本概念</a><br><a href="https://blog.techbridge.cc/2018/11/10/javascript-hoisting/" target="_blank" rel="noopener">我知道你懂 hoisting，可是你了解到多深？</a><br><a href="https://scotch.io/tutorials/understanding-hoisting-in-javascript#toc-hoisting-functions" target="_blank" rel="noopener">Hoisting in JavaScript</a></p>
+
+        
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="article-footer">
+    <div class="article-more-info">
+      <div class="article-date">
+  <time datetime="2020-07-31T15:13:55.000Z" itemprop="datePublished">2020-07-31</time>
+</div>
+      
+        <div class="article-category">
+          <a class="article-category-link" href="/notes/categories/JavaScript/">JavaScript</a>
+        </div>
+      
+      
+        <div class="article-tag">
+          <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li></ul>
+        </div>
+      
+    </div>
+  </footer>
+
+
+</article>
+
+    
+  
+    
+      <article
   id="post-JS-Day-37-var-let-and-const"
   class="article article-type-post"
 >
@@ -1037,7 +1207,7 @@ Object.entries(chartObj);
   <div class="widget-wrap widget-tags">
     <div class="widget-title"><span>Tags</span></div>
     <div class="widget-inner">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ActionMailer/" rel="tag">ActionMailer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ActiveStorage/" rel="tag">ActiveStorage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSS/" rel="tag">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Confirmable/" rel="tag">Confirmable</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DatePicker/" rel="tag">DatePicker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Deploy/" rel="tag">Deploy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Devise/" rel="tag">Devise</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Experiments/" rel="tag">Experiments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Firebase/" rel="tag">Firebase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Flexbox/" rel="tag">Flexbox</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Form/" rel="tag">Form</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Gitignore/" rel="tag">Gitignore</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HTML/" rel="tag">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HolyGrail/" rel="tag">HolyGrail</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Icons/" rel="tag">Icons</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Iterm2/" rel="tag">Iterm2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Layout/" rel="tag">Layout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Powerlevel10K/" rel="tag">Powerlevel10K</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Production/" rel="tag">Production</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/RWD/" rel="tag">RWD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Rails/" rel="tag">Rails</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/SCSS/" rel="tag">SCSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/SendGrid/" rel="tag">SendGrid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Table/" rel="tag">Table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Token/" rel="tag">Token</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/VueCLI/" rel="tag">VueCLI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/background-image/" rel="tag">background-image</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/background-position/" rel="tag">background-position</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/background-repeat/" rel="tag">background-repeat</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/img/" rel="tag">img</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/object-fit/" rel="tag">object-fit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/oh-my-zsh/" rel="tag">oh-my-zsh</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AJAX/" rel="tag">AJAX</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/AXIOS/" rel="tag">AXIOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ActionMailer/" rel="tag">ActionMailer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ActiveStorage/" rel="tag">ActiveStorage</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/ArrowFunction/" rel="tag">ArrowFunction</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSS/" rel="tag">CSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/CSSoverview/" rel="tag">CSSoverview</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Chrome/" rel="tag">Chrome</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Confirmable/" rel="tag">Confirmable</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Const/" rel="tag">Const</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Date/" rel="tag">Date</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DatePicker/" rel="tag">DatePicker</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Deploy/" rel="tag">Deploy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/DevTool/" rel="tag">DevTool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Devise/" rel="tag">Devise</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Experiments/" rel="tag">Experiments</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Fetch/" rel="tag">Fetch</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Firebase/" rel="tag">Firebase</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Flexbox/" rel="tag">Flexbox</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Form/" rel="tag">Form</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/GH-Pages/" rel="tag">GH-Pages</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Gitignore/" rel="tag">Gitignore</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HTML/" rel="tag">HTML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Headless/" rel="tag">Headless</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Hoisting/" rel="tag">Hoisting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/HolyGrail/" rel="tag">HolyGrail</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Icons/" rel="tag">Icons</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Iterm2/" rel="tag">Iterm2</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JSnewbie/" rel="tag">JSnewbie</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Layout/" rel="tag">Layout</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Let/" rel="tag">Let</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Location/" rel="tag">Location</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Powerlevel10K/" rel="tag">Powerlevel10K</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Production/" rel="tag">Production</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/RWD/" rel="tag">RWD</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Rails/" rel="tag">Rails</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Regex/" rel="tag">Regex</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Ruby/" rel="tag">Ruby</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/SCSS/" rel="tag">SCSS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Selenium/" rel="tag">Selenium</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/SendGrid/" rel="tag">SendGrid</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Table/" rel="tag">Table</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Token/" rel="tag">Token</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/Var/" rel="tag">Var</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/VueCLI/" rel="tag">VueCLI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/VueCLI3/" rel="tag">VueCLI3</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/XMLHttpRequest/" rel="tag">XMLHttpRequest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/background-image/" rel="tag">background-image</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/background-position/" rel="tag">background-position</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/background-repeat/" rel="tag">background-repeat</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/img/" rel="tag">img</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/object-fit/" rel="tag">object-fit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/oh-my-zsh/" rel="tag">oh-my-zsh</a></li><li class="tag-list-item"><a class="tag-list-link" href="/notes/tags/this/" rel="tag">this</a></li></ul>
     </div>
   </div>
 
@@ -1048,6 +1218,10 @@ Object.entries(chartObj);
     <div class="widget-title"><span>Recent Posts</span></div>
     <div class="widget-inner">
       <ul>
+        
+          <li>
+            <a href="/notes/2021/07/29/Deploy-Vue-CLI-Project-to-Github-Pages/">Deploy Vue CLI Project to Github Pages</a>
+          </li>
         
           <li>
             <a href="/notes/2021/06/28/Devise-Confirmable-with-SendGrid/">Devise Confirmable with SendGrid</a>
@@ -1065,10 +1239,6 @@ Object.entries(chartObj);
             <a href="/notes/2020/11/07/CSS-%E5%B0%8F%E6%8A%80%E5%B7%A7%EF%BC%9A%E6%8A%8A%E6%9C%80%E5%BE%8C%E4%B8%80%E8%A1%8C%E7%9A%84-items-%E5%BE%80%E5%B7%A6%E6%8E%A8/">CSS 小技巧：把最後一行的 items 往左推</a>
           </li>
         
-          <li>
-            <a href="/notes/2020/11/03/%E8%87%AA%E9%81%A9%E6%87%89%E5%9C%96%E7%89%87%EF%BC%86%E8%83%8C%E6%99%AF/">自適應圖片＆背景</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -1078,7 +1248,7 @@ Object.entries(chartObj);
   <div class="widget-wrap widget-archive">
     <div class="widget-title"><span>Archive</span></div>
     <div class="widget-inner">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/notes/archives/2021/06/">2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/notes/archives/2020/11/">2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/notes/archives/2021/07/">2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/notes/archives/2020/11/">2020</a></li></ul>
     </div>
   </div>
 
